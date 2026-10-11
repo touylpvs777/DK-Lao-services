@@ -165,7 +165,7 @@ export default function ClientDashboardPage() {
               {isLo ? "ໜ້າຫຼັກ" : "Home"}
             </Link>
             <span>/</span>
-            <Link to={`/${locale}/services`} className="hover:text-emerald-600 transition-colors">
+            <Link to="/workshop-4s" className="hover:text-emerald-600 transition-colors">
               {isLo ? "ສູນບໍລິການ 4S" : "4S Services"}
             </Link>
             <span>/</span>

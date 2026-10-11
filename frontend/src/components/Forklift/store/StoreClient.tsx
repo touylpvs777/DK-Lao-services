@@ -1,5 +1,5 @@
-import React, { useState, useMemo, useEffect, useCallback } from "react";
-import { useSearchParams, useNavigate as useRouter, useLocation as usePathname } from "react-router-dom";
+import { useState, useMemo, useEffect, useCallback } from "react";
+import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
 import Fuse from "fuse.js";
 import type { IFuseOptions } from "fuse.js";
 import type { InventoryItem } from "@/actions/store";
@@ -11,16 +11,11 @@ import { TyreFinderModal } from "./TyreFinderModal";
 import { FilterFinderModal } from "./FilterFinderModal";
 import { PartIdentifierModal } from "./PartIdentifierModal";
 import { MobileServiceBookingModal } from "./MobileServiceBookingModal";
-import { HeroCarousel } from "./HeroCarousel";
-import { CategoryCircleGrid } from "./CategoryCircleGrid";
-import { ProductSlider } from "./ProductSlider";
-import { IndustrySolutionsGrid } from "./IndustrySolutionsGrid";
-import { PromoBanners } from "./PromoBanners";
 import { PDFCatalogModal } from "./PDFCatalogModal";
-import { ProjectPackagesSection } from "./ProjectPackagesSection";
 import { PreCategoryNav } from "./PreCategoryNav";
+import { resolveStoreCategory } from "./categoryResolver";
 import { PRE_CATEGORIES, STORE_CATEGORIES } from "@/data/categories";
-import { Truck, Settings, ShoppingBag, ArrowUpDown, Wrench, Sparkles, ArrowRight } from "lucide-react";
+import { Truck, Settings, ShoppingBag, ArrowUpDown, Wrench, Sparkles, ArrowRight, Search } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useCart } from "@/context/CartContext";
 import { Button } from "@/components/Forklift/ui/button";
@@ -82,8 +77,8 @@ const POPULAR_MODELS_DATA = [
 export function StoreClient({ initialItems, rentalItems = [] }: StoreClientProps) {
   const { totalItems, openCart } = useCart();
   const [searchParams] = useSearchParams();
-  const router = useRouter();
-  const pathname = usePathname();
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
   const { i18n } = useTranslation();
   const locale = i18n.language || "lo";
   const isLao = locale === "lo";
@@ -116,7 +111,7 @@ export function StoreClient({ initialItems, rentalItems = [] }: StoreClientProps
   const [isPDFCatalogOpen, setIsPDFCatalogOpen] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [sortBy, setSortBy] = useState<"featured" | "price_asc" | "price_desc" | "name">("featured");
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("list");
   const [visibleCount, setVisibleCount] = useState<number>(24);
 
   const updateUrlParams = useCallback(
@@ -129,9 +124,9 @@ export function StoreClient({ initialItems, rentalItems = [] }: StoreClientProps
           params.delete(key);
         }
       });
-      router(`${pathname}?${params.toString()}`, { preventScrollReset: true, replace: true });
+      navigate(`${pathname}?${params.toString()}`, { preventScrollReset: true, replace: true });
     },
-    [searchParams, pathname, router]
+    [searchParams, pathname, navigate]
   );
 
   // Sync category, pre_category and query from URL query parameters (e.g. ?pre_category=nilfisk-cleaning)
@@ -152,60 +147,7 @@ export function StoreClient({ initialItems, rentalItems = [] }: StoreClientProps
     }
   }, [searchParams]);
 
-  // Curate diverse, cross-category showcase selections for homepage sliders
-  const flashDealsItems = useMemo(() => {
-    const targetSkus = ["JNS-HL-1002", "JNS-WH-1027", "JNS-PK-1017", "JNS-SF-1031", "JNS-CL-1026", "JNS-PR-1015", "JNS-ST-1032", "JNS-PK-1007"];
-    const found = targetSkus.map(s => initialItems.find(i => i.sku_code === s)).filter(Boolean) as InventoryItem[];
-    return found.length >= 6 ? found : initialItems.slice(0, 8);
-  }, [initialItems]);
-
-  const bestSellerItems = useMemo(() => {
-    const targetSkus = [
-      // 1. Industrial Power Generator (Flagship Cummins)
-      "CUM-QSG12-400S",
-      // 2-5. Top-tier Forklifts (Brand-accurate, ມື 1 ຈາກໂຮງງານ)
-      "MFT-FD25N",
-      "TYT-8FD25",
-      "HELI-CPCD25-H3",
-      "JGH-EFG216K",
-      // 6-8. Hand Pallet Trucks (Double Nylon, Double PU, Narrow)
-      "JNS-HL-1001",
-      "JNS-HL-1002",
-      "JNS-HL-1005",
-      // 9-10. Industrial Caster Wheels
-      "JNS-WH-1001",
-      "JNS-WH-1003",
-      // 11-12. Storage & Shelving Racking Systems
-      "JNS-ST-1001",
-      "JNS-ST-1002",
-      // 13-14. Workshop Tool Cabinets
-      "JNS-TL-1001",
-      "JNS-TL-1002",
-      // 15-16. Industrial Safety & Traffic Protection
-      "JNS-SF-1001",
-      "JNS-SF-1002",
-      // 17-18. Industrial Cleaning Machinery
-      "JNS-CL-1001",
-      "JNS-CL-1004",
-      // 19. Packaging Workstation Bench
-      "JNS-PK-1001",
-      // 20. Machinery Precision Bearing Sets
-      "JNS-AC-1001"
-    ];
-    const found = targetSkus.map(s => initialItems.find(i => i.sku_code === s)).filter(Boolean) as InventoryItem[];
-    return found.length >= 12 ? found : initialItems.slice(0, 20);
-  }, [initialItems]);
-
-  const newArrivalItems = useMemo(() => {
-    const targetSkus = ["JNS-PR-1021", "JNS-SF-1034", "JNS-ST-1034", "JNS-ST-1038", "JNS-SF-1039", "JNS-CL-1034", "JNS-PK-1023", "JNS-WH-1038"];
-    const found = targetSkus.map(s => initialItems.find(i => i.sku_code === s)).filter(Boolean) as InventoryItem[];
-    return found.length >= 6 ? found : initialItems.slice(16, 24);
-  }, [initialItems]);
-
   const currentDataset = activeTab === "store" ? initialItems : rentalItems;
-
-  // Build Fuse instance fresh each time dataset changes
-  const fuseInstance = useMemo(() => new Fuse(currentDataset, FUSE_OPTIONS), [currentDataset]);
 
   const filteredItems = useMemo(() => {
     let result = (currentDataset || []).filter(Boolean);
@@ -229,9 +171,7 @@ export function StoreClient({ initialItems, rentalItems = [] }: StoreClientProps
 
     // 1. Filter Category (from Sidebar)
     if (selectedCategory !== "All") {
-      result = result.filter(
-        (item) => item?.category?.toLowerCase() === selectedCategory.toLowerCase()
-      );
+      result = result.filter((item) => resolveStoreCategory(item)?.name.toLowerCase() === selectedCategory.toLowerCase());
     }
 
     // 2. Filter Subsystem Tag (e.g. shock absorbers, brakes, filters)
@@ -343,7 +283,7 @@ export function StoreClient({ initialItems, rentalItems = [] }: StoreClientProps
           </button>
 
           <Link
-            href={`/${locale}/services#management-ecosystem`}
+            to="/workshop-4s#management-ecosystem"
             className="flex-1 sm:flex-initial px-3.5 py-2.5 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 text-[#005BAC] dark:text-blue-400 font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-sm"
           >
             <Sparkles className="w-3.5 h-3.5 text-blue-500" />
@@ -392,7 +332,7 @@ export function StoreClient({ initialItems, rentalItems = [] }: StoreClientProps
             </div>
           </div>
           <Link
-            href={`/${locale}/services#rental`}
+            to="/workshop-4s#rental"
             className="w-full md:w-auto shrink-0 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-black flex items-center justify-center gap-2 transition-all shadow-lg shadow-blue-600/30"
           >
             <span>{isLao ? "ເບິ່ງແພັກເກດເຊົ່າ & ໂຄງສ້າງບໍລິຫານ" : "View Fleet Packages & SLA"}</span>
@@ -402,7 +342,7 @@ export function StoreClient({ initialItems, rentalItems = [] }: StoreClientProps
       )}
 
       {/* Main Grid & Sidebar Layout */}
-      <div className="flex flex-col lg:flex-row gap-8">
+      <div className="flex flex-col lg:flex-row gap-5">
         <div className={activeTab === "rental" ? "hidden" : "hidden lg:block w-64 shrink-0"}>
           <StoreSidebar
             selectedCategory={selectedCategory}
@@ -411,11 +351,6 @@ export function StoreClient({ initialItems, rentalItems = [] }: StoreClientProps
               setSelectedCategory(cat);
             }}
             selectedPreCategory={selectedPreCategory}
-            searchQuery={searchQuery}
-            onSearchChange={(q) => {
-              updateUrlParams({ q: q || null });
-              setSearchQuery(q);
-            }}
             onResetFilters={() => {
               updateUrlParams({ pre_category: null, category: null, subsystem: null, model: null, q: null });
               setSelectedPreCategory("all");
@@ -435,12 +370,24 @@ export function StoreClient({ initialItems, rentalItems = [] }: StoreClientProps
           />
         </div>
 
-        <main className="flex-1 space-y-6 overflow-hidden">
-          {/* 🎛️ Clean Single-Line Status & Sort Bar (Hidden on main homepage) */}
-          {!(activeTab === "store" && selectedPreCategory === "all" && selectedCategory === "All" && !searchQuery && selectedSubsystem === "all" && selectedModel === "all") && (
-            <div className="flex flex-wrap items-center justify-between gap-3 p-4 rounded-2xl bg-white/70 dark:bg-slate-900/70 border border-slate-200/80 dark:border-white/10 backdrop-blur-xl shadow-sm">
+        <main className="flex-1 min-w-0 space-y-4">
+            <div className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">
               {/* Active Badges & Count */}
-              <div className="flex flex-wrap items-center gap-2">
+              <div className="flex flex-1 flex-wrap items-center gap-2">
+                <label className="flex min-w-[220px] flex-1 max-w-md items-center gap-2 rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-500 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-100 dark:border-slate-600 dark:bg-slate-800 dark:focus-within:ring-blue-900">
+                  <Search className="h-4 w-4 shrink-0" />
+                  <input
+                    value={searchQuery}
+                    onChange={(event) => {
+                      const query = event.target.value;
+                      updateUrlParams({ q: query || null });
+                      setSearchQuery(query);
+                    }}
+                    placeholder={isLao ? "ຄົ້ນຫາຊື່ສິນຄ້າ ຫຼື SKU" : "Search item name or SKU"}
+                    aria-label={isLao ? "ຄົ້ນຫາສິນຄ້າ" : "Search inventory"}
+                    className="min-w-0 flex-1 bg-transparent text-sm text-slate-800 outline-none placeholder:text-slate-400 dark:text-slate-100"
+                  />
+                </label>
                 <span className="text-xs font-bold text-slate-500 dark:text-slate-400">{isLao ? "ສະແດງ:" : "Showing:"}</span>
                 {selectedPreCategory !== "all" && (
                   <button
@@ -475,13 +422,21 @@ export function StoreClient({ initialItems, rentalItems = [] }: StoreClientProps
                     <span className="text-[10px] text-amber-400">✕</span>
                   </button>
                 )}
-                <span className="text-xs text-slate-400 dark:text-slate-500 font-bold ml-1">
-                  ({filteredItems.length} {isLao ? "ລາຍການ" : "items"})
+                <span className="text-xs text-slate-500 dark:text-slate-400 font-semibold ml-1">
+                  {filteredItems.length} {isLao ? "ລາຍການ" : "items"}
                 </span>
               </div>
 
               {/* Controls: View Mode & Sort Dropdown */}
               <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={openCart}
+                  className="hidden sm:inline-flex h-9 items-center gap-2 rounded-md border border-slate-300 px-3 text-xs font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-800"
+                >
+                  <ShoppingBag className="h-4 w-4" />
+                  {isLao ? `ກະຕ່າ ${totalItems}` : `Cart ${totalItems}`}
+                </button>
                 {/* View Mode Toggle */}
                 <div className="hidden sm:flex items-center bg-slate-100 dark:bg-slate-950 rounded-xl p-1 border border-slate-200 dark:border-white/10">
                   <button
@@ -519,7 +474,6 @@ export function StoreClient({ initialItems, rentalItems = [] }: StoreClientProps
                 </div>
               </div>
             </div>
-          )}
 
           <div className="flex flex-col space-y-6">
               <ProductGrid items={filteredItems.slice(0, visibleCount)} viewMode={viewMode} />

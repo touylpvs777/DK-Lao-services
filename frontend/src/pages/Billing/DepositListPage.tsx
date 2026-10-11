@@ -1,9 +1,11 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { AlertCircle, RefreshCw, ChevronLeft, ChevronRight, Landmark } from 'lucide-react'
-import { getDeposits } from '@/api/billing'
+import { AlertCircle, RefreshCw, ChevronLeft, ChevronRight, Landmark, CheckCircle } from 'lucide-react'
+import { getDeposits, receiveDeposit } from '@/api/billing'
 import { Badge, type BadgeVariant } from '@/components/ui/Badge'
+import Modal from '@/components/ui/Modal'
+import { toast } from '@/store/toastStore'
 import type { DepositOut } from '@/types/billing'
 import PageHeader from '@/components/layout/PageHeader'
 import '@/styles/shared.css'
@@ -34,6 +36,9 @@ export default function DepositListPage() {
   const [statusFilter, setStatusFilter] = useState('')
   const [typeFilter, setTypeFilter] = useState('')
   const [page, setPage] = useState(1)
+  const [receiveOpen, setReceiveOpen] = useState<DepositOut | null>(null)
+  const [receiveDate, setReceiveDate] = useState(new Date().toISOString().slice(0, 10))
+  const [busy, setBusy] = useState(false)
 
   const load = useCallback(async () => {
     setIsLoading(true); setError(null)
@@ -45,6 +50,18 @@ export default function DepositListPage() {
   }, [statusFilter, typeFilter, page, t])
 
   useEffect(() => { load() }, [load])
+
+  const handleReceive = async () => {
+    if (!receiveOpen) return
+    setBusy(true)
+    try {
+      await receiveDeposit(receiveOpen.id, { received_date: receiveDate })
+      toast.success(t('billing.deposit.toast.received'))
+      setReceiveOpen(null)
+      await load()
+    } catch { toast.error(t('billing.deposit.toast.receiveError')) }
+    finally { setBusy(false) }
+  }
 
   return (
     <div>
@@ -82,6 +99,7 @@ export default function DepositListPage() {
                 <th>{t('common.status')}</th>
                 <th>{t('common.amount')}</th>
                 <th className="col-hide-sm">{t('billing.deposit.table.received')}</th>
+                <th>{t('common.actions')}</th>
               </tr>
             </thead>
             <tbody>
@@ -94,9 +112,10 @@ export default function DepositListPage() {
                   <td><div className="skeleton-cell" style={{ width: 72 }} /></td>
                   <td><div className="skeleton-cell" style={{ width: 70 }} /></td>
                   <td className="col-hide-sm"><div className="skeleton-cell" style={{ width: 80 }} /></td>
+                  <td><div className="skeleton-cell" style={{ width: 50 }} /></td>
                 </tr>
               )) : items.length === 0 ? (
-                <tr><td colSpan={7}>
+                <tr><td colSpan={8}>
                   <div className="table-empty"><Landmark size={40} /><p>{t('billing.deposit.list.empty')}</p></div>
                 </td></tr>
               ) : items.map((d) => {
@@ -114,6 +133,18 @@ export default function DepositListPage() {
                     <td><Badge variant={variant}>{label}</Badge></td>
                     <td className="cell-mono cell-total">{fmtAmt(d.amount)} {d.currency}</td>
                     <td className="cell-muted col-hide-sm">{fmtDate(d.received_date)}</td>
+                    <td>
+                      {d.deposit_status === 'pending' && (
+                        <div className="row-actions" onClick={(event) => event.stopPropagation()}>
+                          <button className="action-btn" title={t('billing.deposit.actions.markReceived')} onClick={() => {
+                            setReceiveDate(new Date().toISOString().slice(0, 10))
+                            setReceiveOpen(d)
+                          }}>
+                            <CheckCircle size={15} />
+                          </button>
+                        </div>
+                      )}
+                    </td>
                   </tr>
                 )
               })}
@@ -131,6 +162,24 @@ export default function DepositListPage() {
           </div>
         )}
       </div>
+
+      <Modal isOpen={!!receiveOpen} onClose={() => setReceiveOpen(null)} title={t('billing.deposit.modal.markReceived.title')} footer={
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button className="btn btn-ghost" onClick={() => setReceiveOpen(null)}>{t('common.cancel')}</button>
+          <button className="btn btn-primary" disabled={busy} onClick={handleReceive}>{t('billing.deposit.modal.markReceived.confirm')}</button>
+        </div>
+      }>
+        <div className="form-grid">
+          <div className="form-group">
+            <label>{t('billing.deposit.modal.markReceived.depositLabel')}</label>
+            <input disabled value={receiveOpen ? `${receiveOpen.deposit_number} — ${fmtAmt(receiveOpen.amount)} ${receiveOpen.currency}` : ''} />
+          </div>
+          <div className="form-group">
+            <label>{t('billing.deposit.modal.markReceived.receivedDateLabel')} <span className="required">*</span></label>
+            <input type="date" value={receiveDate} onChange={(event) => setReceiveDate(event.target.value)} />
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

@@ -35,7 +35,7 @@ export function IndustrySolutionsGrid() {
         {INDUSTRIES.map((industry, idx) => (
           <Link 
             key={industry.id} 
-            href={`/${locale}/store?industry=${encodeURIComponent(industry.nameEn)}`}
+            to={`/forklift-store?industry=${encodeURIComponent(industry.nameEn)}`}
             className="group block"
           >
             <motion.div 

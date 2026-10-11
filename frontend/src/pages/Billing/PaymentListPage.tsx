@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { AlertCircle, RefreshCw, ChevronLeft, ChevronRight, CreditCard, Search } from 'lucide-react'
-import { getPayments } from '@/api/billing'
-import { Badge, type BadgeVariant } from '@/components/ui/Badge'
+import { AlertCircle, RefreshCw, ChevronLeft, ChevronRight, CreditCard, Search, CheckCircle, XCircle } from 'lucide-react'
+import { getPayments, confirmPayment, rejectPayment } from '@/api/billing'
+import PaymentStatusBadge from '@/components/billing/PaymentStatusBadge'
+import { toast } from '@/store/toastStore'
 import type { PaymentOut } from '@/types/billing'
 import PageHeader from '@/components/layout/PageHeader'
 import '@/styles/shared.css'
@@ -11,9 +12,6 @@ import '@/styles/shared.css'
 function fmtDate(iso: string) { return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) }
 function fmtAmt(n: number) { return n.toLocaleString(undefined, { maximumFractionDigits: 0 }) }
 
-const PAY_STATUS_VARIANTS: Record<string, BadgeVariant> = {
-  pending: 'amber', confirmed: 'green', rejected: 'red', refunded: 'gray',
-}
 const STATUSES = ['pending', 'confirmed', 'rejected', 'refunded']
 const METHODS = ['cash', 'bank_transfer', 'check', 'credit_card', 'mobile_payment']
 
@@ -29,6 +27,7 @@ export default function PaymentListPage() {
   const [methodFilter, setMethodFilter] = useState('')
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
+  const [busy, setBusy] = useState<number | null>(null)
 
   const load = useCallback(async () => {
     setIsLoading(true); setError(null)
@@ -43,6 +42,13 @@ export default function PaymentListPage() {
   }, [statusFilter, methodFilter, search, page, t])
 
   useEffect(() => { load() }, [load])
+
+  const quickAction = async (id: number, label: string, action: () => Promise<unknown>) => {
+    setBusy(id)
+    try { await action(); toast.success(label); await load() }
+    catch { toast.error(t('billing.payment.toast.actionFailed', { action: label })) }
+    finally { setBusy(null) }
+  }
 
   return (
     <div>
@@ -82,6 +88,7 @@ export default function PaymentListPage() {
                 <th>{t('common.amount')}</th>
                 <th className="col-hide-sm">{t('common.date')}</th>
                 <th className="col-hide-sm">{t('billing.payment.fields.reference')}</th>
+                <th>{t('common.actions')}</th>
               </tr>
             </thead>
             <tbody>
@@ -94,14 +101,13 @@ export default function PaymentListPage() {
                   <td><div className="skeleton-cell" style={{ width: 70 }} /></td>
                   <td className="col-hide-sm"><div className="skeleton-cell" style={{ width: 80 }} /></td>
                   <td className="col-hide-sm"><div className="skeleton-cell" style={{ width: 70 }} /></td>
+                  <td><div className="skeleton-cell" style={{ width: 50 }} /></td>
                 </tr>
               )) : items.length === 0 ? (
-                <tr><td colSpan={7}>
+                <tr><td colSpan={8}>
                   <div className="table-empty"><CreditCard size={40} /><p>{t('billing.payment.empty')}</p></div>
                 </td></tr>
-              ) : items.map((p) => {
-                const variant = PAY_STATUS_VARIANTS[p.payment_status] ?? 'gray'
-                return (
+              ) : items.map((p) => (
                   <tr key={p.id} onClick={() => navigate(`/billing/payments/${p.id}`)} style={{ cursor: 'pointer' }}>
                     <td className="cell-desc">{p.payment_number}</td>
                     <td>
@@ -109,13 +115,24 @@ export default function PaymentListPage() {
                       {p.customer.company && <div className="cell-sub cell-muted">{p.customer.company}</div>}
                     </td>
                     <td className="cell-muted cell-type">{t(`billing.payment.method.${p.payment_method}Short`, t(`billing.payment.method.${p.payment_method}`, p.payment_method))}</td>
-                    <td><Badge variant={variant}>{t(`billing.payment.status.${p.payment_status}`, p.payment_status)}</Badge></td>
+                    <td><PaymentStatusBadge status={p.payment_status} /></td>
                     <td className="cell-mono cell-total">{fmtAmt(p.amount)} {p.currency}</td>
                     <td className="cell-muted col-hide-sm">{fmtDate(p.payment_date)}</td>
                     <td className="cell-muted col-hide-sm">{p.reference_number || '—'}</td>
+                    <td>
+                      {p.payment_status === 'pending' && (
+                        <div className="row-actions" onClick={(event) => event.stopPropagation()}>
+                          <button className="action-btn" title={t('common.confirm')} disabled={busy === p.id} onClick={() => quickAction(p.id, t('billing.payment.toast.confirmed'), () => confirmPayment(p.id))}>
+                            <CheckCircle size={15} />
+                          </button>
+                          <button className="action-btn danger" title={t('billing.payment.actions.reject')} disabled={busy === p.id} onClick={() => quickAction(p.id, t('billing.payment.toast.rejected'), () => rejectPayment(p.id))}>
+                            <XCircle size={15} />
+                          </button>
+                        </div>
+                      )}
+                    </td>
                   </tr>
-                )
-              })}
+              ))}
             </tbody>
           </table>
         </div>

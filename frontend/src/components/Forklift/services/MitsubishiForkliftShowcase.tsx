@@ -760,7 +760,7 @@ export function MitsubishiForkliftShowcase() {
       </div>
 
       {/* 2K High-Resolution Image Lightbox Modal */}
-      <imgLightboxModal
+      <ImageLightboxModal
         isOpen={lightbox.isOpen}
         onClose={() => setLightbox((prev) => ({ ...prev, isOpen: false }))}
         src={lightbox.src}

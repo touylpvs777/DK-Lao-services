@@ -1,26 +1,22 @@
 import React from "react";
-import { Search, Filter, Layers, Wrench, Settings, Truck, Circle, Archive, Shield, SprayCan, Building2, Package, Briefcase, RotateCcw, PhoneCall, ChevronRight, Zap, Sparkles, ArrowRight, Pickaxe } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Layers, RotateCcw, ChevronRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { STORE_CATEGORIES, PRE_CATEGORIES } from "@/data/categories";
+import { resolveStoreCategory } from "./categoryResolver";
 
 interface StoreSidebarProps {
   selectedCategory?: string;
   onSelectCategory?: (category: string) => void;
   selectedPreCategory?: string;
-  searchQuery?: string;
-  onSearchChange?: (query: string) => void;
   onResetFilters?: () => void;
   hasActiveFilters?: boolean;
-  items?: Array<{ category?: string; pre_category_id?: string }>;
+  items?: Array<{ category?: string; pre_category_id?: string; sku_code?: string }>;
 }
 
 export function StoreSidebar({
   selectedCategory = "All",
   onSelectCategory = () => {},
   selectedPreCategory = "all",
-  searchQuery = "",
-  onSearchChange = () => {},
   onResetFilters = () => {},
   hasActiveFilters = false,
   items = [],
@@ -35,11 +31,10 @@ export function StoreSidebar({
 
   // Compute product counts for each category
   const categoryCounts = React.useMemo(() => {
-    const counts: Record<string, number> = { All: items.length };
+    const counts: Record<number, number> = {};
     items.forEach((item) => {
-      if (item?.category) {
-        counts[item.category] = (counts[item.category] || 0) + 1;
-      }
+      const category = resolveStoreCategory(item);
+      if (category) counts[category.id] = (counts[category.id] || 0) + 1;
     });
     return counts;
   }, [items]);
@@ -54,9 +49,9 @@ export function StoreSidebar({
   }, [selectedPreCategory]);
 
   return (
-    <aside className="w-full lg:w-64 shrink-0 flex flex-col bg-white dark:bg-slate-900 shadow-sm border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden">
+    <aside className="w-full lg:w-64 shrink-0 flex flex-col bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden">
       {/* 1. Category Header with Division Badge */}
-      <div className="bg-slate-100 dark:bg-slate-800/80 px-4 py-3.5 flex flex-col gap-1 border-b border-slate-200 dark:border-slate-800">
+      <div className="bg-slate-50 dark:bg-slate-800 px-3 py-3 flex flex-col gap-1 border-b border-slate-200 dark:border-slate-700">
         <div className="flex items-center justify-between">
           <h2 className="text-[13px] font-bold text-slate-900 dark:text-white uppercase tracking-wider">
             {isLao ? "ໝວດໝູ່ (Categories)" : "Categories"}
@@ -102,7 +97,7 @@ export function StoreSidebar({
         {/* Dynamic Categories */}
         {visibleCategories.map((cat) => {
           const isSelected = selectedCategory.toLowerCase() === cat.name.toLowerCase();
-          const count = categoryCounts[cat.name] || 0;
+          const count = categoryCounts[cat.id] || 0;
 
           return (
             <button
@@ -119,26 +114,27 @@ export function StoreSidebar({
                   <img
                     src={cat.image}
                     alt={cat.name}
-                    className="w-full h-full object-cover mix-blend-multiply dark:mix-blend-normal"
+                    className="w-full h-full object-contain p-0.5 mix-blend-multiply dark:mix-blend-normal"
                     onError={(e) => {
                       // Fallback icon if image fails
                       (e.target as HTMLElement).style.display = 'none';
                     }}
                   />
                 </div>
-                <div className="flex flex-col truncate">
+                <div className="flex min-w-0 flex-col">
                   <span className="truncate text-xs font-semibold">{isLao ? cat.name_lo : cat.name}</span>
                   {cat.brand && (
                     <span className="text-[10px] text-slate-400 truncate">{cat.brand}</span>
                   )}
+                  <span className="line-clamp-2 whitespace-normal text-[10px] leading-4 text-slate-500 dark:text-slate-400" title={cat.description}>
+                    {cat.description}
+                  </span>
                 </div>
               </div>
               <div className="flex items-center gap-1 shrink-0">
-                {count > 0 && (
-                  <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-bold">
-                    {count}
-                  </span>
-                )}
+                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-bold" title={isLao ? "ຈຳນວນລາຍການທີ່ໂຫຼດ" : "Matching loaded items"}>
+                  {count}
+                </span>
                 <ChevronRight className={`h-3.5 w-3.5 transition-transform ${isSelected ? "text-blue-600 translate-x-1" : "text-slate-300 group-hover:text-blue-400"}`} />
               </div>
             </button>
@@ -146,27 +142,6 @@ export function StoreSidebar({
         })}
       </div>
 
-      {/* 3. 360° Management & Fleet Ecosystem Synergy Card */}
-      <div className="p-4 bg-gradient-to-br from-blue-950 via-slate-900 to-indigo-950 border-t border-slate-200 dark:border-slate-800 text-white">
-        <div className="flex items-center gap-1.5 mb-2">
-          <Sparkles className="w-3.5 h-3.5 text-blue-400" />
-          <span className="text-[11px] font-black uppercase tracking-wider text-blue-300">
-            {isLao ? "ໂຄງສ້າງການບໍລິຫານ 360°" : "360° Fleet Care"}
-          </span>
-        </div>
-        <p className="text-[11px] text-slate-300 leading-relaxed mb-3 font-normal">
-          {isLao
-            ? "ບໍລິການເຊົ່າລົດຍົກ 0 CAPEX, ຊ່າງປະຈຳໂຮງງານ 24/7, ແລະ ຕັ້ງສາງ Consignment."
-            : "0 CAPEX Forklift Lease, 24/7 Dedicated Technicians & Factory Consignment."}
-        </p>
-        <Link
-          to={`/${locale}/services#management-ecosystem`}
-          className="w-full py-2 px-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-md shadow-blue-600/30"
-        >
-          <span>{isLao ? "ສຳຫຼວດລະບົບ 360°" : "Explore 360° Fleet"}</span>
-          <ArrowRight className="w-3.5 h-3.5" />
-        </Link>
-      </div>
     </aside>
   );
 }

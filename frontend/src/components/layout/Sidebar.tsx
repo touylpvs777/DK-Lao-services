@@ -118,7 +118,6 @@ const NAV_GROUPS: NavGroup[] = [
       { to: '/inventory', labelKey: 'nav.items.inventory', icon: Box },
       { to: '/inventory/pos', labelKey: 'nav.items.partsPOS', icon: LayoutGrid },
       { to: '/inventory/goods-issue', labelKey: 'nav.items.goodsIssue', icon: PackageMinus },
-      { to: '/inventory/goods-receive', labelKey: 'nav.items.goodsReceive', icon: PackageCheck },
       { to: '/catalog', labelKey: 'nav.items.products', icon: Package },
     ],
   },

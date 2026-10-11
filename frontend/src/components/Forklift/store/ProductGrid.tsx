@@ -1,4 +1,3 @@
-import React from "react";
 import type { InventoryItem } from "@/actions/store";
 
 import { ProductCard } from "./ProductCard";
@@ -34,7 +33,7 @@ export function ProductGrid({ items, viewMode = 'grid' }: ProductGridProps) {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-0">
       <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 px-1">
         <span>
           {isLao ? (
@@ -45,9 +44,17 @@ export function ProductGrid({ items, viewMode = 'grid' }: ProductGridProps) {
         </span>
       </div>
 
+      {viewMode === 'list' && (
+        <div className="hidden lg:grid grid-cols-[72px_minmax(0,1.4fr)_minmax(250px,1fr)] items-center gap-4 border-y border-slate-200 bg-slate-50 px-3 py-2 text-[11px] font-semibold uppercase text-slate-500 dark:border-slate-700 dark:bg-slate-800/70 dark:text-slate-400">
+          <span />
+          <span>{isLao ? "ລາຍການສິນຄ້າ" : "Inventory item"}</span>
+          <span>{isLao ? "ລາຄາ ແລະ ຄຳສັ່ງ" : "Price and actions"}</span>
+        </div>
+      )}
+
       <div className={`grid gap-5 ${
         viewMode === 'list' 
-          ? 'grid-cols-1' 
+          ? 'grid-cols-1 gap-0 divide-y divide-slate-200 dark:divide-slate-700 border-b border-slate-200 dark:border-slate-700'
           : 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5'
       }`}>
         {items.map((item) => (

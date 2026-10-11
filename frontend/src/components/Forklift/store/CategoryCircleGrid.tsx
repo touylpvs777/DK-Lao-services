@@ -16,7 +16,7 @@ export function CategoryCircleGrid() {
     id: cat.id,
     name: isLao ? (cat.name_lo || cat.name) : cat.name,
     image: cat.image,
-    link: `/${locale}/store?category=${encodeURIComponent(cat.name)}`
+    link: `/forklift-store?category=${encodeURIComponent(cat.name)}`
   }));
 
   const scroll = (direction: 'left' | 'right') => {
@@ -34,7 +34,7 @@ export function CategoryCircleGrid() {
         <h3 className="text-xl md:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
           {isLao ? "ໝວດໝູ່ສິນຄ້າ ແລະ ອຸປະກອນອຸດສາຫະກຳ" : "Industrial Equipment & Machinery Categories"}
         </h3>
-        <Link to={`/${locale}/store`} className="text-sm font-bold text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 hidden md:flex items-center gap-1 transition-colors">
+        <Link to="/forklift-store" className="text-sm font-bold text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 hidden md:flex items-center gap-1 transition-colors">
           {isLao ? "ເບິ່ງສິນຄ້າທັງໝົດ" : "View All Catalog"} <span>&rarr;</span>
         </Link>
       </div>
@@ -64,7 +64,7 @@ export function CategoryCircleGrid() {
           {categories.map((cat, idx) => (
             <Link 
               key={cat.id} 
-              href={cat.link} 
+              to={cat.link} 
               className="flex flex-col items-center gap-4 group min-w-[120px] md:min-w-[160px] snap-start"
             >
               {/* Image Circle Container */}

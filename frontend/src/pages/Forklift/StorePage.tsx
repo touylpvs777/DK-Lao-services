@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { fetchInventory, fetchRentals } from "@/actions/store";
 import type { InventoryItem } from "@/actions/store";
@@ -34,13 +34,13 @@ export default function ForkliftStorePage() {
 
   return (
     <CartProvider>
-      <div className="p-6 max-w-[1400px] mx-auto overflow-x-hidden">
+      <div className="p-4 md:p-6 max-w-[1400px] mx-auto min-w-0">
         <PageHeader
-          title={isLao ? "ຮ້ານຄ້າລົດຟອກລິບ" : "Forklift Store"}
-          subtitle={isLao ? "ຄົ້ນຫາ, ສັ່ງຊື້ ແລະ ຂໍລາຄາລົດຟອກລິບ ແລະ ອາໄຫຼ່" : "Search, order and request quotes for forklifts and parts"}
+          title={isLao ? "ລາຍການອາໄຫຼ່ ແລະ ອຸປະກອນ" : "Parts & Equipment Catalog"}
+          subtitle={isLao ? "ຈັດການລາຍການສາງ, ລາຄາ ແລະ ຄຳສັ່ງຊື້" : "Manage inventory items, pricing, and purchasing"}
         />
 
-        <div className="mt-6 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 shadow-sm">
+        <div className="mt-4 min-w-0">
           <StoreClient initialItems={inventory} rentalItems={rentals} />
         </div>
       </div>

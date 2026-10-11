@@ -16,7 +16,7 @@ export function EnterpriseGuarantees() {
       desc_lo: "ນຳເຂົ້າຈາກໂຮງງານຜູ້ຜະລິດໂດຍກົງ",
       title_en: "100% Genuine OEM Certified",
       desc_en: "Direct from factory manufacturers",
-      href: `/${locale}/services#spare-parts`,
+      href: "/workshop-4s#spare-parts",
     },
     {
       icon: Truck,
@@ -25,7 +25,7 @@ export function EnterpriseGuarantees() {
       desc_lo: "ຈັດສົ່ງພາຍໃນມື້ດຽວໃນນະຄອນຫຼວງ",
       title_en: "Express Nationwide Dispatch",
       desc_en: "Same-day delivery in Vientiane capital",
-      href: `/${locale}/services#sale`,
+      href: "/workshop-4s#sale",
     },
     {
       icon: FileText,
@@ -34,7 +34,7 @@ export function EnterpriseGuarantees() {
       desc_lo: "ຫັກອາກອນ ແລະ ເຂົ້າບັນຊີບໍລິສັດໄດ້ 100%",
       title_en: "Official Lao VAT Invoices",
       desc_en: "Full tax deduction compliance",
-      href: `/${locale}/services#management-ecosystem`,
+      href: "/workshop-4s#management-ecosystem",
     },
     {
       icon: Wrench,
@@ -43,7 +43,7 @@ export function EnterpriseGuarantees() {
       desc_lo: "ຊ່າງຊຳນານງານພ້ອມລົງໄຊງານດ່ວນ",
       title_en: "24/7 Mobile Service PM",
       desc_en: "On-site maintenance & emergency support",
-      href: `/${locale}/services#service`,
+      href: "/workshop-4s#service",
     },
   ];
 
@@ -54,7 +54,7 @@ export function EnterpriseGuarantees() {
         return (
           <Link
             key={idx}
-            href={g.href}
+            to={g.href}
             className="group flex items-center justify-between p-4 rounded-2xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border border-slate-200/80 dark:border-white/10 shadow-sm transition-all duration-300 hover:border-blue-500/50 dark:hover:border-blue-500/40 hover:-translate-y-1 hover:shadow-lg"
           >
             <div className="flex items-center gap-3 min-w-0">

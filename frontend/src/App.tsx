@@ -8,7 +8,6 @@ import { Loader2 } from 'lucide-react'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 
 const LoginPage = lazy(() => import('@/pages/Login/LoginPage'))
-const PortalPage = lazy(() => import('@/pages/Portal/PortalPage'))
 const DashboardPage = lazy(() => import('@/pages/Dashboard/DashboardPage'))
 const CustomersPage = lazy(() => import('@/pages/Customers/CustomersPage'))
 const Customer360Page = lazy(() => import('@/pages/Customers/Customer360Page'))
@@ -99,6 +98,7 @@ export default function App() {
 
         <Route element={<PrivateRoute />}>
           <Route element={<AppLayout />}>
+            <Route path="/portal" element={<Suspense fallback={<PageLoader />}><DashboardPage /></Suspense>} />
             <Route path="/dashboard" element={<Suspense fallback={<PageLoader />}><DashboardPage /></Suspense>} />
             <Route path="/customers" element={<Suspense fallback={<PageLoader />}><CustomersPage /></Suspense>} />
             <Route path="/customers/:id" element={<Suspense fallback={<PageLoader />}><Customer360Page /></Suspense>} />

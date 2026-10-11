@@ -3,9 +3,9 @@ import { motion } from "framer-motion";
 import { INITIAL_CATALOG } from "@/data/catalog";
 import type { InventoryItem } from "@/data/catalog";
 
-import { ShoppingCart, Package, Check, Eye, Zap, FileText, Download, Clock, MessageCircle, Sliders, Sparkles, ArrowRight, ShieldAlert, ShieldCheck, Info } from "lucide-react";
+import { ShoppingCart, Package, Check, Eye, FileText, Download, Clock, MessageCircle, Sliders, Sparkles, ArrowRight, ShieldAlert, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/Forklift/ui/button";
-import { useCart, calculateLAKPrice, calculateRetailForeignPrice, FACTORY_MARKUP_PERCENT, FACTORY_MARKUP_RATE } from "@/context/CartContext";
+import { useCart, calculateLAKPrice, calculateRetailForeignPrice } from "@/context/CartContext";
 import { Link } from "react-router-dom";
 import { RFQModal } from "./RFQModal";
 import { useTranslation } from "react-i18next";
@@ -65,21 +65,6 @@ function formatSpecKey(key: string, isLao: boolean): string {
   if (found) return SPEC_TRANSLATIONS_LO[found];
   return key;
 }
-
-const GALLERY_IMAGE_META: Record<string, { lo: string; en: string }> = {
-  "front": { lo: "ມຸມໜ້າ", en: "Front View" },
-  "rear": { lo: "ມຸມຫຼັງ", en: "Rear View" },
-  "left": { lo: "ມຸມຊ້າຍ", en: "Left Profile" },
-  "right": { lo: "ມຸມຂວາ", en: "Right Profile" },
-  "tire_front": { lo: "ຢາງໜ້າ", en: "Front Tire" },
-  "tire_rear": { lo: "ຢາງຫຼັງ", en: "Rear Tire" },
-  "dashboard": { lo: "ໜ້າປັດ", en: "Dashboard" },
-  "seat": { lo: "ເບາະນັ່ງ", en: "Operator Seat" },
-  "pedals": { lo: "ແປ້ນຄັນເລັ່ງ/ເບຣກ", en: "Pedals Controls" },
-  "levers": { lo: "ຄັນໂຍກ", en: "Hydraulic Levers" },
-  "mast": { lo: "ເສົາຍົກ", en: "Mast & Lift" },
-  "forks": { lo: "ງ່າຍົກ", en: "Forks & Carriage" },
-};
 
 function getGalleryImageLabel(url: string, isLao: boolean): string {
   if (url.includes("tire_front")) return isLao ? "ຢາງໜ້າ" : "Front Tire";
@@ -276,18 +261,26 @@ export function ProductCard({ item, viewMode = 'grid' }: ProductCardProps) {
   return (
     <>
       <motion.div
-        whileHover={{ y: -4, boxShadow: "0 20px 40px -15px rgba(0,91,172,0.18)" }}
+        whileHover={viewMode === 'list' ? { borderColor: "#93c5fd" } : { y: -4, boxShadow: "0 20px 40px -15px rgba(0,91,172,0.18)" }}
         transition={{ duration: 0.3 }}
-        className="group relative flex flex-col justify-between overflow-hidden rounded-[1.5rem] border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm hover:border-[#005BAC]/50 transition-all duration-300"
+        className={`group relative overflow-hidden border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 transition-colors duration-200 ${
+          viewMode === 'list'
+            ? 'flex items-center gap-3 sm:gap-4 px-3 py-2.5'
+            : 'flex flex-col justify-between rounded-xl shadow-sm hover:border-[#005BAC]/50'
+        }`}
       >
         {/* Product Image Box */}
-        <div className="relative mb-0 h-56 w-full overflow-hidden bg-slate-50 dark:bg-slate-800/50 flex items-center justify-center p-6 border-b border-slate-100 dark:border-white/5">
+        <div className={`relative overflow-hidden bg-slate-50 dark:bg-slate-800/50 flex items-center justify-center ${
+          viewMode === 'list'
+            ? 'hidden sm:flex h-12 w-[72px] shrink-0 rounded-md border border-slate-200 dark:border-slate-700'
+            : 'mb-0 h-56 w-full p-6 border-b border-slate-100 dark:border-white/5'
+        }`}>
           {item.image_url ? (
             <img
               src={item.image_url}
               alt={displayName}
               
-              className="object-contain p-3 transition-transform duration-500 group-hover:scale-105"
+              className="h-full w-full object-contain p-3 transition-transform duration-500 group-hover:scale-105"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               loading="lazy"
             />
@@ -296,7 +289,7 @@ export function ProductCard({ item, viewMode = 'grid' }: ProductCardProps) {
           )}
 
           {/* Badges Overlay — DK Lao Styling */}
-          <div className="absolute top-4 left-4 flex flex-col gap-2 z-10">
+          <div className={`absolute z-10 ${viewMode === 'list' ? 'hidden' : 'top-4 left-4 flex flex-col gap-2'}`}>
             {isRental ? (
               <span className="bg-[#005BAC] text-white text-[11px] font-black px-2.5 py-1 rounded-md shadow-lg shadow-blue-600/30">
                 {isLao ? "ໃຫ້ເຊົ່າ" : "Rental"}
@@ -330,15 +323,15 @@ export function ProductCard({ item, viewMode = 'grid' }: ProductCardProps) {
 
           <button
             onClick={() => setShowQuickView(true)}
-            className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/90 dark:bg-slate-900/90 hover:bg-white text-slate-400 hover:text-[#005BAC] flex items-center justify-center backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-sm hover:scale-110 z-10"
+            className={`absolute top-2 right-2 w-8 h-8 rounded-full bg-white/90 dark:bg-slate-900/90 hover:bg-white text-slate-500 hover:text-[#005BAC] flex items-center justify-center backdrop-blur-md transition-all shadow-sm z-10 ${viewMode === 'list' ? 'opacity-100' : 'opacity-0 group-hover:opacity-100 hover:scale-110'}`}
           >
             <Eye className="w-4 h-4" />
           </button>
         </div>
 
         {/* Content Section */}
-        <div className={`flex flex-col flex-1 p-5 ${viewMode === 'list' ? 'w-full justify-between' : ''}`}>
-          <div className={viewMode === 'list' ? 'mb-4' : 'flex-1'}>
+        <div className={`min-w-0 flex-1 ${viewMode === 'list' ? 'grid grid-cols-1 lg:grid-cols-[minmax(0,1.4fr)_minmax(250px,1fr)] items-center gap-x-4' : 'flex flex-col p-5'}`}>
+          <div className={viewMode === 'list' ? 'min-w-0 py-1' : 'flex-1'}>
             <div className="flex justify-between items-start mb-2">
               <span className="text-[10px] font-mono font-bold text-[#005BAC] dark:text-blue-300 bg-blue-50 dark:bg-blue-900/40 border border-blue-100 dark:border-blue-800 px-2 py-0.5 rounded-md inline-block">
                 SKU: {item.sku_code}
@@ -355,7 +348,7 @@ export function ProductCard({ item, viewMode = 'grid' }: ProductCardProps) {
             </h3>
 
             {viewMode === 'list' && (
-              <p className="text-sm text-slate-500 dark:text-slate-400 mt-2 line-clamp-2 leading-relaxed">
+              <p className="hidden sm:block text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-1 leading-relaxed">
                 {displayDesc}
               </p>
             )}
@@ -374,10 +367,16 @@ export function ProductCard({ item, viewMode = 'grid' }: ProductCardProps) {
                 )}
               </div>
             )}
+            {viewMode === 'list' && !isRental && (
+              <span className="mt-1 inline-flex items-center gap-1.5 text-[11px] text-emerald-700 dark:text-emerald-400">
+                <span className={`h-1.5 w-1.5 rounded-full ${isLowStock ? 'bg-amber-500' : 'bg-emerald-500'}`} />
+                {isLao ? `ສາງ VTE: ${stockCount} ລາຍການ` : `VTE stock: ${stockCount}`}
+              </span>
+            )}
           </div>
 
           {/* Pricing & Actions */}
-          <div className={`pt-4 mt-4 border-t border-slate-100 dark:border-white/5 ${viewMode === 'list' ? 'flex items-center justify-between gap-4' : 'flex flex-col gap-4'}`}>
+          <div className={`min-w-0 ${viewMode === 'list' ? 'flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4 py-1' : 'pt-4 mt-4 border-t border-slate-100 dark:border-white/5 flex flex-col gap-4'}`}>
             <div>
               <div className="flex flex-col gap-1">
                 {/* 1. Currency Reference / Internal Cost Intelligence */}
@@ -426,7 +425,7 @@ export function ProductCard({ item, viewMode = 'grid' }: ProductCardProps) {
                 </div>
 
                 {/* 3. Live Online Rate Footnote */}
-                <div className="text-[10px] text-slate-400 flex items-center gap-1">
+                <div className={`text-[10px] text-slate-400 items-center gap-1 ${viewMode === 'list' ? 'hidden' : 'flex'}`}>
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                   <span>
                     {itemCurrency === 'USD'
@@ -437,7 +436,7 @@ export function ProductCard({ item, viewMode = 'grid' }: ProductCardProps) {
               </div>
             </div>
 
-            <div className={`grid ${isRental ? 'grid-cols-1' : 'grid-cols-2'} gap-2 ${viewMode === 'list' ? 'w-64' : 'w-full'}`}>
+            <div className={`grid ${isRental ? 'grid-cols-1' : 'grid-cols-2'} gap-2 ${viewMode === 'list' ? 'w-full sm:w-64 shrink-0' : 'w-full'}`}>
               {!isRental && (
                 <Button
                   onClick={handleAddToCart}
@@ -491,7 +490,7 @@ export function ProductCard({ item, viewMode = 'grid' }: ProductCardProps) {
                 {isRental ? (isLao ? "ການບໍລິຫານ:" : "Management:") : (isLao ? "ທາງເລືອກ B2B:" : "B2B Option:")}
               </span>
               <Link
-                href={isRental ? `/${locale}/services#rental` : `/${locale}/services#management-ecosystem`}
+                to={isRental ? '/workshop-4s#rental' : '/workshop-4s#management-ecosystem'}
                 className="text-[#005BAC] dark:text-blue-400 hover:underline font-bold flex items-center gap-0.5"
               >
                 <span>{isRental ? (isLao ? "ແພັກເກດ 0 CAPEX" : "0 CAPEX Lease") : (isLao ? "ບໍລິຫານ 360°" : "360° Care")}</span>
@@ -527,7 +526,7 @@ export function ProductCard({ item, viewMode = 'grid' }: ProductCardProps) {
               {/* Main Image View with Current Angle Badge */}
               <div className="relative h-64 md:h-[400px] lg:h-[500px] w-full rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-white/10 shadow-inner">
                 {mainImage ? (
-                  <img src={mainImage} alt={displayName}  className="object-contain p-2" priority />
+                  <img src={mainImage} alt={displayName} className="h-full w-full object-contain p-2" />
                 ) : (
                   <Package className="w-16 h-16 m-auto text-slate-400 dark:text-slate-600 absolute inset-0" />
                 )}
@@ -554,7 +553,7 @@ export function ProductCard({ item, viewMode = 'grid' }: ProductCardProps) {
                         className={`relative flex flex-col items-center gap-1 shrink-0 snap-start group/thumb`}
                       >
                          <div className={`relative w-16 h-16 md:w-20 md:h-20 rounded-xl overflow-hidden border-2 transition-all ${mainImage === item.image_url ? 'border-[#E1251B] ring-2 ring-[#E1251B]/40 shadow-md scale-[1.03] bg-white' : 'border-slate-200 dark:border-white/10 hover:border-[#005BAC] bg-white'}`}>
-                           <img src={item.image_url!} alt="thumbnail-main"  className="object-contain p-1" />
+                           <img src={item.image_url!} alt="thumbnail-main" className="h-full w-full object-contain p-1" />
                          </div>
                          <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded transition-colors ${mainImage === item.image_url ? 'bg-[#E1251B] text-white' : 'text-slate-600 dark:text-slate-300 group-hover/thumb:text-[#005BAC]'}`}>
                            {isLao ? "ຮູບຫຼັກ" : "Main"}
@@ -571,7 +570,7 @@ export function ProductCard({ item, viewMode = 'grid' }: ProductCardProps) {
                           className={`relative flex flex-col items-center gap-1 shrink-0 snap-start group/thumb`}
                         >
                            <div className={`relative w-16 h-16 md:w-20 md:h-20 rounded-xl overflow-hidden border-2 transition-all ${isSelected ? 'border-[#E1251B] ring-2 ring-[#E1251B]/40 shadow-md scale-[1.03] bg-white' : 'border-slate-200 dark:border-white/10 hover:border-[#005BAC] bg-white'}`}>
-                             <img src={img} alt={`thumbnail-${idx}`}  className="object-cover" />
+                             <img src={img} alt={`thumbnail-${idx}`} className="h-full w-full object-contain p-1" />
                            </div>
                            <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded truncate max-w-[84px] text-center transition-colors ${isSelected ? 'bg-[#E1251B] text-white' : 'text-slate-600 dark:text-slate-300 group-hover/thumb:text-[#005BAC]'}`}>
                              {label}
@@ -925,7 +924,7 @@ export function ProductCard({ item, viewMode = 'grid' }: ProductCardProps) {
 
             <div className="flex items-center gap-2 w-full sm:w-auto shrink-0">
               <Link
-                href={`/${locale}/services#management-ecosystem`}
+                to="/workshop-4s#management-ecosystem"
                 className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold text-center flex items-center justify-center gap-1.5 transition-all shadow-md shadow-blue-600/30"
               >
                 <span>{isLao ? "ສຳຫຼວດລະບົບ 360°" : "Explore 360°"}</span>

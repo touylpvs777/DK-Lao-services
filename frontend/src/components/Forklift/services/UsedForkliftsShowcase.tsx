@@ -134,8 +134,6 @@ export function UsedForkliftsShowcase() {
             src="/images/solutions/used-refurbished-forklifts-yard.png"
             alt="DK LAO Used Forklift Yard - Refurbished and Conditioned Fleet"
             
-            unoptimized
-            priority
             className="object-contain p-2 sm:p-4 crisp-diagram group-hover/img:scale-[1.02] transition-transform duration-700"
           />
           <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-slate-950/80 backdrop-blur-md border border-white/20 text-xs font-bold text-yellow-400">
@@ -199,7 +197,7 @@ export function UsedForkliftsShowcase() {
       </div>
 
       {/* 2K High-Resolution Image Lightbox Modal */}
-      <imgLightboxModal
+      <ImageLightboxModal
         isOpen={lightbox.isOpen}
         onClose={() => setLightbox((prev) => ({ ...prev, isOpen: false }))}
         src={lightbox.src}

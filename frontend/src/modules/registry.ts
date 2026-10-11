@@ -99,10 +99,9 @@ export const MODULE_REGISTRY: ModuleConfig[] = [
     description: 'Project management with milestones, status boards, and team assignment',
     path: '/projects',
     group: 'main',
-    status: 'planned',
+    status: 'active',
     color: '#16a34a',
     iconName: 'FolderKanban',
-    plannedVersion: 'v2.0',
   },
   {
     id: 'services',
@@ -130,12 +129,11 @@ export const MODULE_REGISTRY: ModuleConfig[] = [
     id: 'invoices',
     label: 'Invoices',
     description: 'Invoice generation, payment tracking, and revenue reporting',
-    path: '/invoices',
+    path: '/billing/invoices',
     group: 'admin',
-    status: 'planned',
+    status: 'active',
     color: '#7c3aed',
     iconName: 'Receipt',
-    plannedVersion: 'v2.1',
   },
 ]
 

@@ -513,12 +513,19 @@ async def health_check():
 # of rendering as an unstyled page.
 FRONTEND_DIST_DIR = Path(__file__).resolve().parent.parent.parent / "frontend" / "dist"
 
-if FRONTEND_DIST_DIR.exists():
-    app.mount(
-        "/assets",
-        StaticFiles(directory=FRONTEND_DIST_DIR / "assets"),
-        name="frontend-assets",
-    )
+if FRONTEND_DIST_DIR.is_dir():
+    FRONTEND_ASSETS_DIR = FRONTEND_DIST_DIR / "assets"
+    if FRONTEND_ASSETS_DIR.is_dir():
+        app.mount(
+            "/assets",
+            StaticFiles(directory=FRONTEND_ASSETS_DIR),
+            name="frontend-assets",
+        )
+    else:
+        logger.warning(
+            "Frontend assets directory not found at %s - skipping assets mount.",
+            FRONTEND_ASSETS_DIR,
+        )
 
     _STATIC_ASSET_SUFFIXES = {
         ".js", ".css", ".map", ".json", ".webmanifest",

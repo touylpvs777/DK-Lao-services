@@ -434,7 +434,7 @@ export function RackingAndStorageShowcase() {
 
           <div className="flex flex-wrap items-center gap-3 shrink-0">
             <Link
-              href={`/${locale}/store?pre_category=warehouse-storage`}
+              to="/forklift-store?pre_category=warehouse-storage"
               className="py-2.5 px-4 rounded-xl border border-white/20 hover:bg-white/10 text-white font-bold text-xs flex items-center gap-1.5 transition-all"
             >
               <ShoppingBag className="w-3.5 h-3.5 text-amber-400" />
@@ -459,7 +459,7 @@ export function RackingAndStorageShowcase() {
       </div>
 
       {/* 2K High-Resolution Image Lightbox Modal */}
-      <imgLightboxModal
+      <ImageLightboxModal
         isOpen={lightbox.isOpen}
         onClose={() => setLightbox((prev) => ({ ...prev, isOpen: false }))}
         src={lightbox.src}

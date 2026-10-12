@@ -70,18 +70,21 @@ export function PreCategoryNav({
   ];
 
   return (
-    <div className="w-full bg-white dark:bg-slate-900 rounded-lg p-3 border border-slate-200 dark:border-slate-700 mb-4">
+    <div className="w-full bg-white dark:bg-slate-900/90 rounded-2xl p-4 border border-slate-200/80 dark:border-slate-800 shadow-sm backdrop-blur-xl mb-5">
       {/* Top Header Label */}
-      <div className="flex items-center justify-between px-2 mb-3">
+      <div className="flex items-center justify-between px-1 mb-3">
         <div className="flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full bg-blue-600" />
-          <span className="text-xs font-bold text-slate-800 dark:text-white">
-            {isLao ? "ສາຍງານ" : "Business division"}
+          <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
+          <span className="text-xs font-extrabold uppercase tracking-wider text-slate-800 dark:text-slate-200">
+            {isLao ? "ສາຍງານທຸລະກິດ (Business Divisions)" : "Business Divisions"}
           </span>
         </div>
+        <span className="text-[11px] font-medium text-slate-400">
+          {isLao ? "ເລືອກເພື່ອຈັດໝວດໝູ່ດ່ວນ" : "Quick filter by division"}
+        </span>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
         {navItems.map((item) => {
           const isSelected = selectedPreCategory === item.id;
           const Icon = item.icon;
@@ -90,41 +93,46 @@ export function PreCategoryNav({
             <button
               key={item.id}
               onClick={() => onSelectPreCategory(item.id)}
-              className={`group min-w-0 flex items-center gap-3 px-3 py-2.5 rounded-md transition-colors text-left cursor-pointer ${
+              className={`group relative min-w-0 flex items-center justify-between p-3 rounded-xl transition-all duration-200 text-left cursor-pointer border ${
                 isSelected
-                  ? "bg-blue-50 text-blue-800 dark:bg-blue-500/10 dark:text-blue-300 border border-blue-300 dark:border-blue-700"
-                  : "bg-slate-50 dark:bg-slate-800/60 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700"
+                  ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-blue-600 shadow-md shadow-blue-600/20 ring-2 ring-blue-500/30"
+                  : "bg-slate-50/70 hover:bg-white dark:bg-slate-800/50 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200 border-slate-200/70 dark:border-slate-700/60 hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-sm"
               }`}
             >
-              {/* Icon Bubble */}
-              <div
-                className={`w-8 h-8 rounded-md flex items-center justify-center shrink-0 ${
-                  isSelected
-                    ? "bg-white/20 text-white"
-                    : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200/60 dark:border-slate-700"
-                }`}
-              >
-                <Icon className="w-4 h-4" />
-              </div>
+              <div className="flex items-center gap-3 min-w-0">
+                {/* Icon Bubble */}
+                <div
+                  className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-transform duration-200 group-hover:scale-105 ${
+                    isSelected
+                      ? "bg-white/20 text-white shadow-inner"
+                      : "bg-white dark:bg-slate-700/80 text-blue-600 dark:text-blue-400 border border-slate-200/80 dark:border-slate-600 shadow-xs"
+                  }`}
+                >
+                  <Icon className="w-4.5 h-4.5" />
+                </div>
 
-              {/* Title & Badge */}
-              <div className="flex flex-col pr-1">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-xs font-semibold truncate">
+                {/* Title */}
+                <div className="flex flex-col min-w-0">
+                  <span className={`text-xs font-bold truncate leading-tight ${isSelected ? "text-white" : "text-slate-800 dark:text-slate-100"}`}>
                     {item.name}
                   </span>
-                </div>
-                <div className="flex items-center gap-2 mt-0.5">
-                  <span
-                    className={`text-[10px] font-medium px-1.5 py-0.5 rounded ${
-                      isSelected
-                        ? "bg-white/20 text-blue-100"
-                        : "bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400"
-                    }`}
-                  >
-                    {item.count} {isLao ? "ລາຍການ" : "items"}
+                  <span className={`text-[10px] mt-0.5 truncate ${isSelected ? "text-blue-100" : "text-slate-400 dark:text-slate-400"}`}>
+                    {item.badge}
                   </span>
                 </div>
+              </div>
+
+              {/* Count Badge */}
+              <div className="shrink-0 pl-2">
+                <span
+                  className={`text-[11px] font-bold px-2 py-0.5 rounded-full transition-colors ${
+                    isSelected
+                      ? "bg-white/20 text-white"
+                      : "bg-slate-200/70 dark:bg-slate-700/60 text-slate-600 dark:text-slate-300 group-hover:bg-blue-50 group-hover:text-blue-600 dark:group-hover:bg-blue-900/30 dark:group-hover:text-blue-300"
+                  }`}
+                >
+                  {item.count}
+                </span>
               </div>
             </button>
           );

@@ -45,16 +45,16 @@ export function ProductGrid({ items, viewMode = 'grid' }: ProductGridProps) {
       </div>
 
       {viewMode === 'list' && (
-        <div className="hidden lg:grid grid-cols-[72px_minmax(0,1.4fr)_minmax(250px,1fr)] items-center gap-4 border-y border-slate-200 bg-slate-50 px-3 py-2 text-[11px] font-semibold uppercase text-slate-500 dark:border-slate-700 dark:bg-slate-800/70 dark:text-slate-400">
-          <span />
-          <span>{isLao ? "ລາຍການສິນຄ້າ" : "Inventory item"}</span>
-          <span>{isLao ? "ລາຄາ ແລະ ຄຳສັ່ງ" : "Price and actions"}</span>
+        <div className="hidden lg:grid grid-cols-[80px_minmax(0,1.4fr)_minmax(270px,1fr)] items-center gap-4 rounded-xl border border-slate-200/80 bg-slate-50/90 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-slate-500 dark:border-slate-800 dark:bg-slate-800/80 dark:text-slate-400 mb-2 shadow-2xs">
+          <span>{isLao ? "ຮູບພາບ" : "Image"}</span>
+          <span>{isLao ? "ລາຍການອາໄຫຼ່ / ອຸປະກອນ" : "Equipment / Part Details"}</span>
+          <span className="text-right sm:text-left">{isLao ? "ລາຄາ ແລະ ຄຳສັ່ງ" : "Price & Actions"}</span>
         </div>
       )}
 
-      <div className={`grid gap-5 ${
+      <div className={`grid gap-4 ${
         viewMode === 'list' 
-          ? 'grid-cols-1 gap-0 divide-y divide-slate-200 dark:divide-slate-700 border-b border-slate-200 dark:border-slate-700'
+          ? 'grid-cols-1 gap-2.5'
           : 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5'
       }`}>
         {items.map((item) => (

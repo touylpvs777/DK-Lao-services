@@ -261,31 +261,29 @@ export function ProductCard({ item, viewMode = 'grid' }: ProductCardProps) {
   return (
     <>
       <motion.div
-        whileHover={viewMode === 'list' ? { borderColor: "#93c5fd" } : { y: -4, boxShadow: "0 20px 40px -15px rgba(0,91,172,0.18)" }}
-        transition={{ duration: 0.3 }}
-        className={`group relative overflow-hidden border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 transition-colors duration-200 ${
+        whileHover={viewMode === 'list' ? { y: -1, boxShadow: "0 10px 25px -5px rgba(0,0,0,0.06)" } : { y: -4, boxShadow: "0 20px 40px -15px rgba(0,91,172,0.18)" }}
+        transition={{ duration: 0.2 }}
+        className={`group relative overflow-hidden border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 transition-all duration-200 ${
           viewMode === 'list'
-            ? 'flex items-center gap-3 sm:gap-4 px-3 py-2.5'
-            : 'flex flex-col justify-between rounded-xl shadow-sm hover:border-[#005BAC]/50'
+            ? 'flex items-center gap-3.5 sm:gap-4 p-3.5 rounded-2xl shadow-2xs hover:border-blue-300 dark:hover:border-blue-700'
+            : 'flex flex-col justify-between rounded-2xl shadow-xs hover:border-blue-500/50'
         }`}
       >
         {/* Product Image Box */}
-        <div className={`relative overflow-hidden bg-slate-50 dark:bg-slate-800/50 flex items-center justify-center ${
+        <div className={`relative overflow-hidden bg-slate-50/80 dark:bg-slate-800/60 flex items-center justify-center ${
           viewMode === 'list'
-            ? 'hidden sm:flex h-12 w-[72px] shrink-0 rounded-md border border-slate-200 dark:border-slate-700'
+            ? 'hidden sm:flex h-16 w-20 shrink-0 rounded-xl border border-slate-200/80 dark:border-slate-700/80'
             : 'mb-0 h-56 w-full p-6 border-b border-slate-100 dark:border-white/5'
         }`}>
           {item.image_url ? (
             <img
               src={item.image_url}
               alt={displayName}
-              
-              className="h-full w-full object-contain p-3 transition-transform duration-500 group-hover:scale-105"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              className="h-full w-full object-contain p-1.5 transition-transform duration-500 group-hover:scale-105"
               loading="lazy"
             />
           ) : (
-            <Package className="h-16 w-16 text-slate-300 dark:text-slate-700 group-hover:scale-110 transition-transform duration-500 m-auto" />
+            <Package className="h-8 w-8 text-slate-300 dark:text-slate-600 group-hover:scale-110 transition-transform duration-500 m-auto" />
           )}
 
           {/* Badges Overlay — DK Lao Styling */}
@@ -436,20 +434,20 @@ export function ProductCard({ item, viewMode = 'grid' }: ProductCardProps) {
               </div>
             </div>
 
-            <div className={`grid ${isRental ? 'grid-cols-1' : 'grid-cols-2'} gap-2 ${viewMode === 'list' ? 'w-full sm:w-64 shrink-0' : 'w-full'}`}>
+            <div className={`grid ${isRental ? 'grid-cols-1' : 'grid-cols-2'} gap-2 ${viewMode === 'list' ? 'w-full sm:w-60 shrink-0' : 'w-full'}`}>
               {!isRental && (
                 <Button
                   onClick={handleAddToCart}
-                  className={`h-11 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all duration-300 active:scale-95 group/btn ${
+                  className={`h-10 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all duration-200 active:scale-95 group/btn ${
                     isAdded
-                      ? "bg-[#005BAC] hover:bg-[#00478a] text-white shadow-lg shadow-blue-600/25"
-                      : "bg-slate-900 hover:bg-[#005BAC] text-white dark:bg-slate-800 dark:hover:bg-[#005BAC] shadow-lg shadow-slate-900/10"
+                      ? "bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-600/20"
+                      : "bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-600/20"
                   }`}
                 >
                   {isAdded ? (
                     <><Check className="w-4 h-4" /> {isLao ? "ເພີ່ມແລ້ວ" : "Added"}</>
                   ) : (
-                    <><ShoppingCart className="w-4 h-4 transition-transform group-hover/btn:-translate-x-1" /> {isLao ? "ໃສ່ກະຕ່າ" : "Add to Cart"}</>
+                    <><ShoppingCart className="w-4 h-4 transition-transform group-hover/btn:-translate-x-0.5" /> {isLao ? "ໃສ່ກະຕ່າ" : "Add to Cart"}</>
                   )}
                 </Button>
               )}
@@ -457,9 +455,9 @@ export function ProductCard({ item, viewMode = 'grid' }: ProductCardProps) {
               <Button
                 onClick={() => setShowRfq(true)}
                 variant={isRental ? "default" : "secondary"}
-                className={`h-11 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all duration-300 hover:shadow-md ${
+                className={`h-10 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all duration-200 ${
                   isRental 
-                    ? "bg-[#005BAC] text-white hover:bg-[#00478a] w-full shadow-lg shadow-blue-600/20" 
+                    ? "bg-blue-600 text-white hover:bg-blue-700 w-full shadow-md shadow-blue-600/20" 
                     : "bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
                 }`}
               >
@@ -468,7 +466,7 @@ export function ProductCard({ item, viewMode = 'grid' }: ProductCardProps) {
               </Button>
             </div>
 
-            {/* Direct WhatsApp Quick Order & Technical Inquiry */}
+            {/* Direct WhatsApp Quick Order */}
             <a
               href={`https://wa.me/8562058929299?text=${encodeURIComponent(
                 isLao
@@ -477,7 +475,7 @@ export function ProductCard({ item, viewMode = 'grid' }: ProductCardProps) {
               )}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full py-2 px-3 rounded-xl text-[11px] font-bold bg-emerald-500/10 hover:bg-emerald-600 text-emerald-700 hover:text-white dark:bg-emerald-500/20 dark:text-emerald-400 dark:hover:text-white border border-emerald-500/30 flex items-center justify-center gap-1.5 transition-all duration-200 shadow-sm group/wa"
+              className={`w-full py-1.5 px-3 rounded-xl text-[11px] font-bold bg-emerald-500/10 hover:bg-emerald-600 text-emerald-700 hover:text-white dark:bg-emerald-500/20 dark:text-emerald-400 dark:hover:text-white border border-emerald-500/25 flex items-center justify-center gap-1.5 transition-all duration-200 shadow-2xs group/wa ${viewMode === 'list' ? 'hidden sm:flex mt-1.5' : 'mt-1'}`}
               title={isLao ? "ສັ່ງຊື້ ຫຼື ສອບຖາມດ່ວນຜ່ານ WhatsApp (020 5892 9299)" : "Order or Inquire instantly via WhatsApp"}
             >
               <MessageCircle className="w-3.5 h-3.5 transition-transform group-hover/wa:scale-110" />

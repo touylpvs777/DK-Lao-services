@@ -17,6 +17,7 @@ export default defineConfig({
       workbox: {
         globPatterns: ['**/*.{html,js,css,woff2,png,svg}'],
         navigateFallback: '/index.html',
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
       },
       manifest: {
         name: 'DK Forklift',

@@ -160,9 +160,6 @@ export function JLGAccessPlatformsShowcase() {
             <img
               src="/images/solutions/jlg-access-platforms-4s.png"
               alt="JLG Access Platform Lineup - Scissor, Boom, Ultra Boom, Telehandler"
-              
-              unoptimized
-              priority
               className="object-contain crisp-diagram group-hover/img:scale-[1.01] transition-transform duration-500"
             />
             <div className="absolute top-4 right-4 bg-slate-900/90 hover:bg-slate-900 text-white border border-white/20 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2 shadow-xl opacity-90 group-hover/img:opacity-100 group-hover/img:scale-105 transition-all">

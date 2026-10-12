@@ -358,9 +358,6 @@ export function JungheinrichEFGShowcase() {
                 <img
                   src="/images/solutions/counterbalance-portfolio-efg.png"
                   alt="DK LAO Jungheinrich Counterbalance Portfolio EFG Series"
-                  
-                  unoptimized
-                  priority
                   className="object-contain p-2 sm:p-4 crisp-diagram transition-transform duration-700 group-hover/img:scale-[1.02]"
                 />
                 <div className="absolute top-4 right-4 bg-slate-900/90 hover:bg-slate-900 text-white border border-white/20 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2 shadow-xl opacity-90 group-hover/img:opacity-100 group-hover/img:scale-105 transition-all">
@@ -560,8 +557,6 @@ export function JungheinrichEFGShowcase() {
                   <img
                     src="/images/solutions/li-ion-80-percent-cost-savings.png"
                     alt="Save more than 80% costs with Jungheinrich Li-Ion"
-                    
-                    unoptimized
                     className="object-contain p-2 crisp-diagram group-hover/img:scale-[1.02] transition-transform duration-500"
                   />
                   <div className="absolute top-3 right-3 bg-slate-900/90 hover:bg-slate-900 text-white border border-white/20 backdrop-blur-md px-2.5 py-1 rounded-full text-[11px] font-semibold flex items-center gap-1.5 shadow-xl opacity-90 group-hover/img:opacity-100 group-hover/img:scale-105 transition-all">
@@ -627,8 +622,6 @@ export function JungheinrichEFGShowcase() {
                   <img
                     src="/images/solutions/li-ion-5-years-guarantee.png"
                     alt="5 Years Guarantee on Li-Ion Batteries and Cells"
-                    
-                    unoptimized
                     className="object-contain p-2 crisp-diagram group-hover/img:scale-[1.02] transition-transform duration-500"
                   />
                   <div className="absolute top-3 right-3 bg-slate-900/90 hover:bg-slate-900 text-white border border-white/20 backdrop-blur-md px-2.5 py-1 rounded-full text-[11px] font-semibold flex items-center gap-1.5 shadow-xl opacity-90 group-hover/img:opacity-100 group-hover/img:scale-105 transition-all">
@@ -703,8 +696,6 @@ export function JungheinrichEFGShowcase() {
                     <img
                       src="/images/solutions/li-ion-fast-charge-comparison.png"
                       alt="Li-Ion Fast Charge Comparison Chart"
-                      
-                      unoptimized
                       className="object-contain p-4 crisp-diagram group-hover/img:scale-[1.02] transition-transform duration-500"
                     />
                     <div className="absolute top-3 right-3 bg-slate-900/90 hover:bg-slate-900 text-white border border-white/20 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2 shadow-xl opacity-90 group-hover/img:opacity-100 group-hover/img:scale-105 transition-all">
@@ -742,8 +733,6 @@ export function JungheinrichEFGShowcase() {
                 <img
                   src="/images/solutions/jungheinrich-li-ion-dawn.png"
                   alt="Jungheinrich Lithium-Ion Triple Fleet: EFG, EKX, ETV"
-                  
-                  unoptimized
                   className="object-contain p-4 crisp-diagram group-hover/img:scale-[1.02] transition-transform duration-500"
                 />
                 <div className="absolute top-4 right-4 bg-slate-900/90 hover:bg-slate-900 text-white border border-white/20 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2 shadow-xl opacity-90 group-hover/img:opacity-100 group-hover/img:scale-105 transition-all">

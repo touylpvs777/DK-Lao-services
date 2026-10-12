@@ -346,9 +346,6 @@ export function MitsubishiForkliftShowcase() {
                 <img
                   src="/images/solutions/mitsubishi-powerful-efficiency.png"
                   alt="Mitsubishi Forklift Trucks Powerful Efficiency"
-                  
-                  unoptimized
-                  priority
                   className="object-contain p-3 crisp-diagram group-hover/img:scale-105 transition-transform duration-700"
                 />
                 <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-slate-950/80 backdrop-blur-md border border-white/20 text-[11px] font-bold text-emerald-400">
@@ -375,8 +372,6 @@ export function MitsubishiForkliftShowcase() {
                 <img
                   src="/images/solutions/mitsubishi-powertrain-matrix.png"
                   alt="Mitsubishi Forklift Trucks Powertrain Matrix"
-                  
-                  unoptimized
                   className="object-contain p-3 crisp-diagram group-hover/img:scale-105 transition-transform duration-700"
                 />
                 <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-slate-950/80 backdrop-blur-md border border-white/20 text-[11px] font-bold text-teal-400">
@@ -506,8 +501,6 @@ export function MitsubishiForkliftShowcase() {
               <img
                 src="/images/solutions/mitsubishi-warehouse-lineup.png"
                 alt="Mitsubishi Warehouse Lineup - Pallet Trucks, Stackers, Reach Trucks, Order Pickers"
-                
-                unoptimized
                 className="object-contain p-3 crisp-diagram group-hover/img:scale-105 transition-transform duration-700"
               />
               <div className="absolute top-4 left-4 px-3.5 py-1.5 rounded-full bg-slate-950/80 backdrop-blur-md border border-white/20 text-xs font-bold text-teal-400">
@@ -598,8 +591,6 @@ export function MitsubishiForkliftShowcase() {
                 <img
                   src="/images/solutions/mhe-attachments-application.png"
                   alt="Industrial Attachments - Multiple Load Handlers, Paper Roll Clamps, Carton Clamps"
-                  
-                  unoptimized
                   className="object-contain p-3 crisp-diagram group-hover/img:scale-105 transition-transform duration-700"
                 />
                 <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-slate-950/80 backdrop-blur-md border border-white/20 text-[11px] font-bold text-amber-400">
@@ -626,8 +617,6 @@ export function MitsubishiForkliftShowcase() {
                 <img
                   src="/images/solutions/mhe-7-specialized-attachments.png"
                   alt="7 Specialized Forklift Attachments on Mitsubishi Green Forklifts"
-                  
-                  unoptimized
                   className="object-contain p-3 crisp-diagram group-hover/img:scale-105 transition-transform duration-700"
                 />
                 <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-slate-950/80 backdrop-blur-md border border-white/20 text-[11px] font-bold text-amber-400">

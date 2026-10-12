@@ -282,9 +282,6 @@ export function MaintenanceChecklistShowcase({ onOpenInspectionModal }: Maintena
             <img
               src="/images/solutions/maintenance-checklist-part1.png"
               alt="Forklift Maintenance Checklist Part 1 - Engine, Electrical, Lights"
-              
-              unoptimized
-              priority
               className="object-contain p-2 sm:p-3 crisp-diagram group-hover/img:scale-105 transition-transform duration-700"
             />
             <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-slate-950/80 backdrop-blur-md border border-white/20 text-[11px] font-bold text-amber-400">
@@ -311,8 +308,6 @@ export function MaintenanceChecklistShowcase({ onOpenInspectionModal }: Maintena
             <img
               src="/images/solutions/maintenance-checklist-part2.png"
               alt="Forklift Maintenance Checklist Part 2 - Tyres, Mast, Chassis, Hydraulics, Brakes"
-              
-              unoptimized
               className="object-contain p-2 sm:p-3 crisp-diagram group-hover/img:scale-105 transition-transform duration-700"
             />
             <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-slate-950/80 backdrop-blur-md border border-white/20 text-[11px] font-bold text-emerald-400">

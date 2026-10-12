@@ -105,9 +105,6 @@ export function MultiBrandPartsShowcase() {
             <img
               src="/images/solutions/multi-brand-spare-parts.png"
               alt="Multi-Brand Forklift Spare Parts & Accessories - 10 Global Brands"
-              
-              unoptimized
-              priority
               className="object-contain p-2 sm:p-4 crisp-diagram group-hover/img:scale-[1.02] transition-transform duration-700"
             />
             <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-slate-950/80 backdrop-blur-md border border-white/20 text-xs font-bold text-blue-400">
@@ -179,8 +176,6 @@ export function MultiBrandPartsShowcase() {
             <img
               src="/images/solutions/led-warning-safety-lights.png"
               alt="LED Warning Safety Light for Forklifts - Blue Spot, Red Zone, Perimeter Halo"
-              
-              unoptimized
               className="object-contain p-2 sm:p-4 crisp-diagram group-hover/img:scale-[1.02] transition-transform duration-700"
             />
             <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-slate-950/80 backdrop-blur-md border border-white/20 text-xs font-bold text-red-400">
@@ -271,8 +266,6 @@ export function MultiBrandPartsShowcase() {
             <img
               src="/images/solutions/heavy-machinery-mining-spare-parts.jpg"
               alt="Heavy Machinery Spare Parts Experts - Mining Dump Trucks and 35+ Global Brands"
-              
-              unoptimized
               className="object-contain p-2 sm:p-4 crisp-diagram group-hover/img:scale-[1.02] transition-transform duration-700"
             />
             <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-slate-950/80 backdrop-blur-md border border-white/20 text-xs font-bold text-amber-400">

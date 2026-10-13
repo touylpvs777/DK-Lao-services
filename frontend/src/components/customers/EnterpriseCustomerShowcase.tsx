@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useTranslation } from "react-i18next";
+import { useCurrentLocale } from "@/i18n/useCurrentLocale";
 import { 
   Building2, 
   ShieldCheck, 
@@ -15,11 +15,11 @@ import {
 } from "lucide-react";
 import { ENTERPRISE_CUSTOMERS } from "@/data/customers";
 import type { CustomerClient } from "@/data/customers";
+import { getForkliftText } from "@/i18n/forkliftLocale";
 
 export function EnterpriseCustomerShowcase() {
-  const { i18n } = useTranslation();
-  const locale = i18n.language || "lo";
-  const isLo = locale === "lo";
+  const locale = useCurrentLocale();
+  const isLo = locale.toLowerCase().startsWith("lo");
 
   const [activeCategory, setActiveCategory] = useState<string>("all");
 
@@ -55,13 +55,11 @@ export function EnterpriseCustomerShowcase() {
           </div>
 
           <h2 className="text-3xl md:text-5xl font-black tracking-tight text-slate-900 dark:text-white mb-4">
-            {isLo ? "ກຸ່ມລູກຄ້າອົງກອນຊັ້ນນຳທີ່ໄວ້ວາງໃຈພວກເຮົາ" : "Trusted by Nation-Leading Enterprises & Concessions"}
+            {getForkliftText("ກຸ່ມລູກຄ້າອົງກອນຊັ້ນນຳທີ່ໄວ້ວາງໃຈພວກເຮົາ", "Trusted by Nation-Leading Enterprises & Concessions")}
           </h2>
 
           <p className="text-sm md:text-base text-slate-600 dark:text-slate-400 leading-relaxed">
-            {isLo 
-              ? "ພວກເຮົາພູມໃຈທີ່ໄດ້ເປັນຄູ່ຄ້າຫຼັກໃນການສະໜອງລົດຍົກໃຫ້ເຊົ່າ, ອາໄຫຼ່ແທ້ OEM ແລະ ລະບົບບໍລິຫານກອງລົດ ໃຫ້ແກ່ 20 ອົງກອນ, ໂຮງງານອຸດສາຫະກຳ ແລະ ໂຄງການສຳປະທານທີ່ໃຫຍ່ທີ່ສຸດໃນ ສປປ ລາວ"
-              : "Proudly serving as the primary forklift leasing, OEM spare parts, and fleet management partner for 20 of the largest industrial enterprises and national concessions in Lao PDR."}
+            {getForkliftText("ພວກເຮົາພູມໃຈທີ່ໄດ້ເປັນຄູ່ຄ້າຫຼັກໃນການສະໜອງລົດຍົກໃຫ້ເຊົ່າ, ອາໄຫຼ່ແທ້ OEM ແລະ ລະບົບບໍລິຫານກອງລົດ ໃຫ້ແກ່ 20 ອົງກອນ, ໂຮງງານອຸດສາຫະກຳ ແລະ ໂຄງການສຳປະທານທີ່ໃຫຍ່ທີ່ສຸດໃນ ສປປ ລາວ", "Proudly serving as the primary forklift leasing, OEM spare parts, and fleet management partner for 20 of the largest industrial enterprises and national concessions in Lao PDR.")}
           </p>
 
           {/* Category Filter Tabs */}
@@ -150,33 +148,33 @@ export function EnterpriseCustomerShowcase() {
           <div>
             <div className="text-3xl sm:text-4xl font-black text-blue-600 dark:text-blue-400">20+</div>
             <div className="text-xs font-bold text-slate-700 dark:text-slate-300 mt-1">
-              {isLo ? "ອົງກອນຊັ້ນນຳລະດັບປະເທດ" : "Nation-Leading Clients"}
+              {getForkliftText("ອົງກອນຊັ້ນນຳລະດັບປະເທດ", "Nation-Leading Clients")}
             </div>
-            <div className="text-[10px] text-slate-400">{isLo ? "ອຸດສາຫະກຳ, ບໍ່ແຮ່ & ສຳປະທານ" : "FMCG, Mining & Concessions"}</div>
+            <div className="text-[10px] text-slate-400">{getForkliftText("ອຸດສາຫະກຳ, ບໍ່ແຮ່ & ສຳປະທານ", "FMCG, Mining & Concessions")}</div>
           </div>
 
           <div>
             <div className="text-3xl sm:text-4xl font-black text-emerald-600 dark:text-emerald-400">100%</div>
             <div className="text-xs font-bold text-slate-700 dark:text-slate-300 mt-1">
-              {isLo ? "Zero Downtime SLA" : "Zero Downtime Guarantee"}
+              {getForkliftText("Zero Downtime SLA", "Zero Downtime Guarantee")}
             </div>
-            <div className="text-[10px] text-slate-400">{isLo ? "ລົດສຳຮອງປ່ຽນແທນຟຣີ 24/7" : "Free Standby Replacement"}</div>
+            <div className="text-[10px] text-slate-400">{getForkliftText("ລົດສຳຮອງປ່ຽນແທນຟຣີ 24/7", "Free Standby Replacement")}</div>
           </div>
 
           <div>
             <div className="text-3xl sm:text-4xl font-black text-indigo-600 dark:text-indigo-400">150+</div>
             <div className="text-xs font-bold text-slate-700 dark:text-slate-300 mt-1">
-              {isLo ? "ຄັນ ລົດຍົກໃນລະບົບ Fleet" : "Forklifts Deployed"}
+              {getForkliftText("ຄັນ ລົດຍົກໃນລະບົບ Fleet", "Forklifts Deployed")}
             </div>
-            <div className="text-[10px] text-slate-400">{isLo ? "Toyota, Mitsubishi, Heli, Li-Ion" : "Diesel, Electric & Reach Trucks"}</div>
+            <div className="text-[10px] text-slate-400">{getForkliftText("Toyota, Mitsubishi, Heli, Li-Ion", "Diesel, Electric & Reach Trucks")}</div>
           </div>
 
           <div>
             <div className="text-3xl sm:text-4xl font-black text-amber-500 dark:text-amber-400">17+</div>
             <div className="text-xs font-bold text-slate-700 dark:text-slate-300 mt-1">
-              {isLo ? "ແຂວງ ທົ່ວປະເທດລາວ" : "Provinces Covered"}
+              {getForkliftText("ແຂວງ ທົ່ວປະເທດລາວ", "Provinces Covered")}
             </div>
-            <div className="text-[10px] text-slate-400">{isLo ? "Mobile Service ເຖິງໜ້າໂຮງງານ" : "Rapid On-Site Mobile Support"}</div>
+            <div className="text-[10px] text-slate-400">{getForkliftText("Mobile Service ເຖິງໜ້າໂຮງງານ", "Rapid On-Site Mobile Support")}</div>
           </div>
         </div>
       </div>

@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { useCurrentLocale, isLaoLocale } from "@/i18n/useCurrentLocale";
 import { fetchInventory, fetchRentals } from "@/actions/store";
 import type { InventoryItem } from "@/actions/store";
 import { StoreClient } from "@/components/Forklift/store/StoreClient";
 import { CartProvider } from "@/context/CartContext";
 import { Sparkles, Package, Wrench, ShieldCheck } from "lucide-react";
+import { getForkliftText } from "@/i18n/forkliftLocale";
 
 export default function ForkliftStorePage() {
-  const { i18n } = useTranslation();
-  const isLao = (i18n.language || "lo") === "lo";
+  const locale = useCurrentLocale();
+  const isLao = isLaoLocale(locale);
   
   const [inventory, setInventory] = useState<InventoryItem[]>([]);
   const [rentals, setRentals] = useState<InventoryItem[]>([]);
@@ -31,7 +32,7 @@ export default function ForkliftStorePage() {
           <div className="h-4 w-96 bg-white/10 rounded-md" />
         </div>
         <div className="py-24 text-center text-slate-400 font-medium">
-          {isLao ? "ກຳລັງໂຫຼດຂໍ້ມູນສິນຄ້າ ແລະ ອຸປະກອນ..." : "Loading catalog and parts..."}
+          {getForkliftText("ກຳລັງໂຫຼດຂໍ້ມູນສິນຄ້າ ແລະ ອຸປະກອນ...", "Loading catalog and parts...")}
         </div>
       </div>
     );
@@ -53,12 +54,10 @@ export default function ForkliftStorePage() {
                 <span>DK Lao Industrial Equipment & Spare Parts Ecosystem</span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white drop-shadow-sm">
-                {isLao ? "ລາຍການອາໄຫຼ່ ແລະ ອຸປະກອນອຸດສາຫະກຳ" : "Parts & Industrial Equipment Catalog"}
+                {getForkliftText("ລາຍການອາໄຫຼ່ ແລະ ອຸປະກອນອຸດສາຫະກຳ", "Parts & Industrial Equipment Catalog")}
               </h1>
               <p className="text-sm text-blue-100/80 leading-relaxed font-normal">
-                {isLao
-                  ? "ສູນລວມລາຍການອາໄຫຼ່ແທ້, ລົດຍົກ, ອຸປະກອນສາງ ແລະ ບໍລິການເຊົ່າ-ສ້ອມແປງຄົບວົງຈອນ ພ້ອມຈັດສົ່ງດ່ວນທົ່ວປະເທດ"
-                  : "Comprehensive enterprise catalog for genuine OEM parts, forklift fleet sales, rentals, and certified workshop maintenance."}
+                {getForkliftText("ສູນລວມລາຍການອາໄຫຼ່ແທ້, ລົດຍົກ, ອຸປະກອນສາງ ແລະ ບໍລິການເຊົ່າ-ສ້ອມແປງຄົບວົງຈອນ ພ້ອມຈັດສົ່ງດ່ວນທົ່ວປະເທດ", "Comprehensive enterprise catalog for genuine OEM parts, forklift fleet sales, rentals, and certified workshop maintenance.")}
               </p>
             </div>
 
@@ -69,7 +68,7 @@ export default function ForkliftStorePage() {
                   <Package className="w-5 h-5" />
                 </div>
                 <div>
-                  <div className="text-xs text-blue-200/70 font-medium">{isLao ? "ສິນຄ້າທັງໝົດ" : "Total Items"}</div>
+                  <div className="text-xs text-blue-200/70 font-medium">{getForkliftText("ສິນຄ້າທັງໝົດ", "Total Items")}</div>
                   <div className="text-lg font-extrabold text-white">{inventory.length + rentals.length}+</div>
                 </div>
               </div>
@@ -79,7 +78,7 @@ export default function ForkliftStorePage() {
                   <ShieldCheck className="w-5 h-5" />
                 </div>
                 <div>
-                  <div className="text-xs text-cyan-200/70 font-medium">{isLao ? "ມາດຕະຖານແທ້" : "Genuine Parts"}</div>
+                  <div className="text-xs text-cyan-200/70 font-medium">{getForkliftText("ມາດຕະຖານແທ້", "Genuine Parts")}</div>
                   <div className="text-lg font-extrabold text-white">100% OEM</div>
                 </div>
               </div>
@@ -89,7 +88,7 @@ export default function ForkliftStorePage() {
                   <Wrench className="w-5 h-5" />
                 </div>
                 <div>
-                  <div className="text-xs text-amber-200/70 font-medium">{isLao ? "ຊ່າງ PM ບໍລິການ" : "Mobile Support"}</div>
+                  <div className="text-xs text-amber-200/70 font-medium">{getForkliftText("ຊ່າງ PM ບໍລິການ", "Mobile Support")}</div>
                   <div className="text-lg font-extrabold text-white">24h Response</div>
                 </div>
               </div>

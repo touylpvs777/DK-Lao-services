@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
+import { useCurrentLocale } from "@/i18n/useCurrentLocale";
 import {
   ShieldCheck,
   CheckCircle2,
@@ -16,11 +16,11 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/Forklift/ui/button";
 import { ImageLightboxModal } from "@/components/Forklift/ui/ImageLightboxModal";
+import { getForkliftText } from "@/i18n/forkliftLocale";
 
 export function JLGAccessPlatformsShowcase() {
-  const { i18n } = useTranslation();
-  const locale = i18n.language || "lo";
-  const isLo = locale === "lo";
+  const locale = useCurrentLocale();
+  const isLo = locale.toLowerCase().startsWith("lo");
 
   const [lightbox, setLightbox] = useState<{
     isOpen: boolean;
@@ -137,9 +137,7 @@ export function JLGAccessPlatformsShowcase() {
           </h3>
 
           <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
-            {isLo
-              ? "ດີເຄ ລາວ ພູມໃຈນຳສະເໜີໂຊລູຊັນລົດກະເຊົ້າເຮັດວຽກໃນທີ່ສູງມາດຕະຖານອັນດັບ 1 ຂອງໂລກ 'JLG reaching out™'. ຄົບວົງຈອນທັງຂາຍລົດໃໝ່, ລົດມືສອງປັບສະພາບ, ໃຫ້ເຊົ່າ, ບໍລິການສ້ອມແປງ ແລະ ສູນອາໄຫຼ່ແທ້."
-              : "DK LAO delivers premier aerial work platforms engineered by global leader JLG. Offering end-to-end 4S solutions: brand new units, certified reconditioned machines, long/short-term rentals, certified field service, and OEM spares."}
+            {getForkliftText("ດີເຄ ລາວ ພູມໃຈນຳສະເໜີໂຊລູຊັນລົດກະເຊົ້າເຮັດວຽກໃນທີ່ສູງມາດຕະຖານອັນດັບ 1 ຂອງໂລກ 'JLG reaching out™'. ຄົບວົງຈອນທັງຂາຍລົດໃໝ່, ລົດມືສອງປັບສະພາບ, ໃຫ້ເຊົ່າ, ບໍລິການສ້ອມແປງ ແລະ ສູນອາໄຫຼ່ແທ້.", "DK LAO delivers premier aerial work platforms engineered by global leader JLG. Offering end-to-end 4S solutions: brand new units, certified reconditioned machines, long/short-term rentals, certified field service, and OEM spares.")}
           </p>
         </div>
 
@@ -164,18 +162,18 @@ export function JLGAccessPlatformsShowcase() {
             />
             <div className="absolute top-4 right-4 bg-slate-900/90 hover:bg-slate-900 text-white border border-white/20 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2 shadow-xl opacity-90 group-hover/img:opacity-100 group-hover/img:scale-105 transition-all">
               <ZoomIn className="w-3.5 h-3.5 text-orange-400" />
-              <span>{isLo ? "🔍 ຊູມພາບ 2K" : "🔍 Zoom 2K"}</span>
+              <span>{getForkliftText("🔍 ຊູມພາບ 2K", "🔍 Zoom 2K")}</span>
             </div>
           </div>
           <div className="p-4 bg-slate-900/95 backdrop-blur-md border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
             <div className="flex items-center gap-2 text-slate-300 font-bold">
               <span className="text-orange-400 font-mono text-sm">JLG reaching out™</span>
               <span className="text-slate-500">|</span>
-              <span>{isLo ? "ໃໝ່ • ເກົ່າ • ເຊົ່າ • ບໍລິການ • ອາໄຫຼ່" : "New • Pre-Owned • Rental • Service • Spares"}</span>
+              <span>{getForkliftText("ໃໝ່ • ເກົ່າ • ເຊົ່າ • ບໍລິການ • ອາໄຫຼ່", "New • Pre-Owned • Rental • Service • Spares")}</span>
             </div>
             <div className="flex items-center gap-2 text-[11px] font-bold text-emerald-400">
               <ShieldCheck className="w-4 h-4" />
-              <span>{isLo ? "ມາດຕະຖານ ANSI / OSHA Safety Compliant" : "ANSI / OSHA Certified Aerial Platforms"}</span>
+              <span>{getForkliftText("ມາດຕະຖານ ANSI / OSHA Safety Compliant", "ANSI / OSHA Certified Aerial Platforms")}</span>
             </div>
           </div>
         </div>
@@ -234,12 +232,12 @@ export function JLGAccessPlatformsShowcase() {
               </div>
 
               <div className="pt-4 mt-4 border-t border-white/10 flex items-center justify-between text-xs">
-                <span className="text-slate-400 font-semibold">{isLo ? "ພ້ອມສົ່ງມອບທັນທີ" : "In-Stock Availability"}</span>
+                <span className="text-slate-400 font-semibold">{getForkliftText("ພ້ອມສົ່ງມອບທັນທີ", "In-Stock Availability")}</span>
                 <a
                   href="#booking-form"
                   className="text-orange-400 hover:text-orange-300 font-bold flex items-center gap-1 group-hover:translate-x-1 transition-transform"
                 >
-                  <span>{isLo ? "ຂໍໃບສະເໜີລາຄາ" : "Request RFQ"}</span>
+                  <span>{getForkliftText("ຂໍໃບສະເໜີລາຄາ", "Request RFQ")}</span>
                   <ChevronRight className="w-3.5 h-3.5" />
                 </a>
               </div>
@@ -251,12 +249,10 @@ export function JLGAccessPlatformsShowcase() {
         <div className="p-6 rounded-2xl bg-gradient-to-r from-orange-950/60 via-slate-900 to-amber-950/60 border border-orange-500/40 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="space-y-1 text-center md:text-left">
             <h4 className="text-base sm:text-lg font-black text-white">
-              {isLo ? "ຕ້ອງການຊື້ ຫຼື ເຊົ່າລົດກະເຊົ້າ JLG ສຳລັບໄຊທ໌ງານຂອງທ່ານ?" : "Need JLG Aerial Platforms for Your High-Bay Operations?"}
+              {getForkliftText("ຕ້ອງການຊື້ ຫຼື ເຊົ່າລົດກະເຊົ້າ JLG ສຳລັບໄຊທ໌ງານຂອງທ່ານ?", "Need JLG Aerial Platforms for Your High-Bay Operations?")}
             </h4>
             <p className="text-xs text-slate-300">
-              {isLo
-                ? "ທີມວິສະວະກອນ DK LAO ພ້ອມໃຫ້ຄຳປຶກສາເລືອກລຸ້ນທີ່ເໝາະສົມກັບຄວາມສູງ ແລະ ນ້ຳໜັກບັນທຸກ ຕະຫຼອດ 24/7."
-                : "DK LAO aerial engineers offer 24/7 technical sizing consultation for height clearance, reach envelopes, and ground loads."}
+              {getForkliftText("ທີມວິສະວະກອນ DK LAO ພ້ອມໃຫ້ຄຳປຶກສາເລືອກລຸ້ນທີ່ເໝາະສົມກັບຄວາມສູງ ແລະ ນ້ຳໜັກບັນທຸກ ຕະຫຼອດ 24/7.", "DK LAO aerial engineers offer 24/7 technical sizing consultation for height clearance, reach envelopes, and ground loads.")}
             </p>
           </div>
 
@@ -272,7 +268,7 @@ export function JLGAccessPlatformsShowcase() {
               href="#booking-form"
               className="py-2.5 px-4 rounded-xl border border-white/20 hover:bg-white/10 text-white font-bold text-xs flex items-center gap-1.5 transition-all"
             >
-              <span>{isLo ? "ນັດໝາຍຂໍໃບສະເໜີລາຄາ" : "Book Consultation"}</span>
+              <span>{getForkliftText("ນັດໝາຍຂໍໃບສະເໜີລາຄາ", "Book Consultation")}</span>
               <ChevronRight className="w-3.5 h-3.5" />
             </a>
           </div>

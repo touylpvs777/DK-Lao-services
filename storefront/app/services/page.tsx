@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useLocale } from "next-intl";
+import { useLocale } from "@/lib/locale";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ShoppingCart,
@@ -159,7 +159,7 @@ export default function ForkliftServicesHubPage() {
           <div className="text-center mb-16">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 dark:bg-blue-500/20 border border-blue-500/30 text-blue-700 dark:text-blue-300 text-xs font-bold uppercase tracking-wider mb-4">
               <Layers className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-              <span>THE 4S HUB ECOSYSTEM</span>
+              <span>{isLo ? "ລະບົບສູນບໍລິການ 4S" : "THE 4S HUB ECOSYSTEM"}</span>
             </div>
             <h2 className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white mb-6">
               {isLo ? "ລະບົບນິເວດອຸດສາຫະກຳ ແລະ ສາງສິນຄ້າຄົບວົງຈອນ" : "Complete Industrial & Warehouse Ecosystem"}
@@ -293,7 +293,7 @@ export default function ForkliftServicesHubPage() {
               <div className="text-center mb-16">
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 dark:bg-blue-500/20 text-blue-700 dark:text-blue-300 font-semibold mb-4 text-xs tracking-wider">
                   <Globe2 className="w-4 h-4" />
-                  <span>AUTHORIZED GLOBAL BRAND PRINCIPALS</span>
+                  <span>{isLo ? "ຕົວແທນຈຳໜ່າຍແບຣນຊັ້ນນຳລະດັບໂລກ" : "AUTHORIZED GLOBAL BRAND PRINCIPALS"}</span>
                 </div>
                 <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-6">
                   {isLo ? "ກົນຈັກ ແລະ ອຸປະກອນມາດຕະຖານລະດັບໂລກ" : "World-Class Industrial Equipment"}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/lib/locale";
 import { WalletIcon, QrCodeIcon, MonitorSmartphoneIcon, TrendingUpIcon, ArrowDownRight, ArrowUpRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 

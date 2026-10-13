@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import { useCurrentLocale } from "@/i18n/useCurrentLocale";
 import {
   Boxes,
   ShieldAlert,
@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/Forklift/ui/button";
 import { ImageLightboxModal } from "@/components/Forklift/ui/ImageLightboxModal";
+import { getForkliftText } from "@/i18n/forkliftLocale";
 
 const SUPPORTED_BRANDS = [
   { name: "Mitsubishi Forklift Trucks", origin: "Japan", highlight: "Official Authorized Partner" },
@@ -34,9 +35,8 @@ const SUPPORTED_BRANDS = [
 ];
 
 export function MultiBrandPartsShowcase() {
-  const { i18n } = useTranslation();
-  const locale = i18n.language || "lo";
-  const isLo = locale === "lo";
+  const locale = useCurrentLocale();
+  const isLo = locale.toLowerCase().startsWith("lo");
 
   const [lightbox, setLightbox] = useState<{
     isOpen: boolean;
@@ -83,9 +83,7 @@ export function MultiBrandPartsShowcase() {
             </h3>
 
             <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-              {isLo
-                ? "DK LAO ບໍ່ພຽງແຕ່ເປັນຕົວແທນ Mitsubishi & Jungheinrich, ແຕ່ຍັງເປັນສູນອາໄຫຼ່ຄົບວົງຈອນສຳລັບລົດຍົກຍີ່ປຸ່ນ, ເອີຣົບ, ແລະ ອາເມລິກາ ຫຼາຍກວ່າ 16,000 ລາຍການໃນສະຕ໋ອກ."
-                : "DK LAO is your universal one-stop spare parts center, providing 16,000+ in-stock components for Japanese, European, and American forklift fleets."}
+              {getForkliftText("DK LAO ບໍ່ພຽງແຕ່ເປັນຕົວແທນ Mitsubishi & Jungheinrich, ແຕ່ຍັງເປັນສູນອາໄຫຼ່ຄົບວົງຈອນສຳລັບລົດຍົກຍີ່ປຸ່ນ, ເອີຣົບ, ແລະ ອາເມລິກາ ຫຼາຍກວ່າ 16,000 ລາຍການໃນສະຕ໋ອກ.", "DK LAO is your universal one-stop spare parts center, providing 16,000+ in-stock components for Japanese, European, and American forklift fleets.")}
             </p>
           </div>
 
@@ -112,7 +110,7 @@ export function MultiBrandPartsShowcase() {
             </div>
             <div className="absolute top-4 right-4 bg-slate-900/90 hover:bg-slate-900 text-white border border-white/20 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2 shadow-xl opacity-90 group-hover/img:opacity-100 group-hover/img:scale-105 transition-all">
               <ZoomIn className="w-3.5 h-3.5 text-blue-400" />
-              <span>{isLo ? "🔍 ຊູມພາບ 2K" : "🔍 Zoom 2K"}</span>
+              <span>{getForkliftText("🔍 ຊູມພາບ 2K", "🔍 Zoom 2K")}</span>
             </div>
           </div>
 
@@ -154,9 +152,7 @@ export function MultiBrandPartsShowcase() {
             </h3>
 
             <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-              {isLo
-                ? "ປ້ອງກັນອຸບັດຕິເຫດຄົນຍ່າງໃນສາງສິນຄ້າ 100%. ສ່ອງແສງລຳແສງສີຟ້າ ແລະ ເສັ້ນແດງກຳນົດເຂດອັນຕະລາຍຮອບຕົວລົດ (Danger Perimeter) ເຫັນຊັດເຈນທຸກມຸມບອດ."
-                : "Prevent warehouse pedestrian collisions. Intense blue spot beams and red perimeter boundary halos clearly define no-go zones around moving forklifts."}
+              {getForkliftText("ປ້ອງກັນອຸບັດຕິເຫດຄົນຍ່າງໃນສາງສິນຄ້າ 100%. ສ່ອງແສງລຳແສງສີຟ້າ ແລະ ເສັ້ນແດງກຳນົດເຂດອັນຕະລາຍຮອບຕົວລົດ (Danger Perimeter) ເຫັນຊັດເຈນທຸກມຸມບອດ.", "Prevent warehouse pedestrian collisions. Intense blue spot beams and red perimeter boundary halos clearly define no-go zones around moving forklifts.")}
             </p>
           </div>
 
@@ -183,7 +179,7 @@ export function MultiBrandPartsShowcase() {
             </div>
             <div className="absolute top-4 right-4 bg-slate-900/90 hover:bg-slate-900 text-white border border-white/20 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2 shadow-xl opacity-90 group-hover/img:opacity-100 group-hover/img:scale-105 transition-all">
               <ZoomIn className="w-3.5 h-3.5 text-red-400" />
-              <span>{isLo ? "🔍 ຊູມພາບ 2K" : "🔍 Zoom 2K"}</span>
+              <span>{getForkliftText("🔍 ຊູມພາບ 2K", "🔍 Zoom 2K")}</span>
             </div>
           </div>
 
@@ -193,9 +189,7 @@ export function MultiBrandPartsShowcase() {
               <span className="text-xs font-bold text-blue-400 block">1. BLUE SPOT BEAM</span>
               <h4 className="text-sm font-extrabold text-white">ລູກສອນ & ຈຸດສີຟ້າສ່ອງພື້ນ</h4>
               <p className="text-xs text-slate-300 leading-relaxed">
-                {isLo
-                  ? "ສ່ອງລຳແສງສີຟ້າລົງພື້ນລ່ວງໜ້າ 5-8 ແມັດ ເຕືອນຄົນຍ່າງໃນຈຸດຕັດ, ທາງແຍກບອດ, ແລະ ປະຕູສາງ."
-                  : "Projects high-intensity blue beam 5-8 meters ahead/behind to warn cross-aisle workers before the forklift appears."}
+                {getForkliftText("ສ່ອງລຳແສງສີຟ້າລົງພື້ນລ່ວງໜ້າ 5-8 ແມັດ ເຕືອນຄົນຍ່າງໃນຈຸດຕັດ, ທາງແຍກບອດ, ແລະ ປະຕູສາງ.", "Projects high-intensity blue beam 5-8 meters ahead/behind to warn cross-aisle workers before the forklift appears.")}
               </p>
             </div>
 
@@ -203,9 +197,7 @@ export function MultiBrandPartsShowcase() {
               <span className="text-xs font-bold text-red-400 block">2. RED ZONE DANGER LINE</span>
               <h4 className="text-sm font-extrabold text-white">ແຖບເສັ້ນສີແດງຄຸ້ມກັນຂ້າງລົດ</h4>
               <p className="text-xs text-slate-300 leading-relaxed">
-                {isLo
-                  ? "ສ່ອງແຖບແສງສີແດງຂະໜານທັງສອງຂ້າງຕົວລົດ ເພື່ອກຳນົດໄລຍະຫ່າງທີ່ປອດໄພ ຫ້າມຄົນຍ່າງເຂົ້າໃກ້."
-                  : "Creates an unmistakable red side boundary line, keeping pedestrians outside the vehicle pinch point."}
+                {getForkliftText("ສ່ອງແຖບແສງສີແດງຂະໜານທັງສອງຂ້າງຕົວລົດ ເພື່ອກຳນົດໄລຍະຫ່າງທີ່ປອດໄພ ຫ້າມຄົນຍ່າງເຂົ້າໃກ້.", "Creates an unmistakable red side boundary line, keeping pedestrians outside the vehicle pinch point.")}
               </p>
             </div>
 
@@ -213,9 +205,7 @@ export function MultiBrandPartsShowcase() {
               <span className="text-xs font-bold text-red-400 block">3. PERIMETER HALO ARC</span>
               <h4 className="text-sm font-extrabold text-white">ເຄິ່ງວົງມົນ & ກອບສີ່ຫຼ່ຽມແດງ</h4>
               <p className="text-xs text-slate-300 leading-relaxed">
-                {isLo
-                  ? "ສ້າງກອບແສງໂຄ້ງຮອບທ້າຍລົດ ເຕືອນວົງລ້ຽວທ້າຍປັດ (Rear Swing Danger Zone) ປ້ອງກັນການຊົນຄົນງານ."
-                  : "Rear curved arc warning pedestrians of rear-end swing radius during tight warehouse corner turns."}
+                {getForkliftText("ສ້າງກອບແສງໂຄ້ງຮອບທ້າຍລົດ ເຕືອນວົງລ້ຽວທ້າຍປັດ (Rear Swing Danger Zone) ປ້ອງກັນການຊົນຄົນງານ.", "Rear curved arc warning pedestrians of rear-end swing radius during tight warehouse corner turns.")}
               </p>
             </div>
           </div>
@@ -244,9 +234,7 @@ export function MultiBrandPartsShowcase() {
             </h3>
 
             <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-              {isLo
-                ? "DK LAO ຜູ້ຊ່ຽວຊານສະໜອງອາໄຫຼ່ແທ້ OEM ສຳລັບກົນຈັກໜັກບໍ່ແຮ່, ລົດບັນທຸກຍັກ, ລົດຂຸດເຈາະ ແລະ ໂຮງງານຊີມັງຂະໜາດໃຫຍ່ (MMG Lane Xang, Phu Bia Mining, KCL Cement, Phonesack Group). ຄອບຄຸມຫຼາຍກວ່າ 35 ແບຣນຊັ້ນນຳຂອງໂລກ."
-                : "Specialized OEM spare parts supply for heavy mining haul trucks (Hitachi, Caterpillar, Komatsu), giant excavators, crushers, and cement plants across Laos."}
+              {getForkliftText("DK LAO ຜູ້ຊ່ຽວຊານສະໜອງອາໄຫຼ່ແທ້ OEM ສຳລັບກົນຈັກໜັກບໍ່ແຮ່, ລົດບັນທຸກຍັກ, ລົດຂຸດເຈາະ ແລະ ໂຮງງານຊີມັງຂະໜາດໃຫຍ່ (MMG Lane Xang, Phu Bia Mining, KCL Cement, Phonesack Group). ຄອບຄຸມຫຼາຍກວ່າ 35 ແບຣນຊັ້ນນຳຂອງໂລກ.", "Specialized OEM spare parts supply for heavy mining haul trucks (Hitachi, Caterpillar, Komatsu), giant excavators, crushers, and cement plants across Laos.")}
             </p>
           </div>
 
@@ -273,14 +261,14 @@ export function MultiBrandPartsShowcase() {
             </div>
             <div className="absolute top-4 right-4 bg-slate-900/90 hover:bg-slate-900 text-white border border-white/20 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2 shadow-xl opacity-90 group-hover/img:opacity-100 group-hover/img:scale-105 transition-all">
               <ZoomIn className="w-3.5 h-3.5 text-amber-400" />
-              <span>{isLo ? "🔍 ຊູມພາບ 2K" : "🔍 Zoom 2K"}</span>
+              <span>{getForkliftText("🔍 ຊູມພາບ 2K", "🔍 Zoom 2K")}</span>
             </div>
           </div>
 
           {/* 35+ Brands Pills */}
           <div className="space-y-3">
             <div className="text-xs font-bold text-slate-400 text-center uppercase tracking-wider">
-              {isLo ? "ແບຣນກົນຈັກໜັກ ແລະ ເຄື່ອງຈັກອຸດສາຫະກຳທີ່ຮອງຮັບອາໄຫຼ່ແທ້:" : "Supported Global Heavy Machinery & Engine Brands:"}
+              {getForkliftText("ແບຣນກົນຈັກໜັກ ແລະ ເຄື່ອງຈັກອຸດສາຫະກຳທີ່ຮອງຮັບອາໄຫຼ່ແທ້:", "Supported Global Heavy Machinery & Engine Brands:")}
             </div>
             <div className="flex flex-wrap justify-center gap-1.5 max-w-5xl mx-auto">
               {[
@@ -306,7 +294,7 @@ export function MultiBrandPartsShowcase() {
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition-all shadow-lg shadow-amber-500/20"
               >
                 <ShoppingBag className="w-4 h-4 text-slate-950" />
-                <span>{isLo ? "ເລືອກຊື້ອາໄຫຼ່ກົນຈັກບໍ່ແຮ່ໃນ Store 🛒" : "Browse Mining Spares in Store 🛒"}</span>
+                <span>{getForkliftText("ເລືອກຊື້ອາໄຫຼ່ກົນຈັກບໍ່ແຮ່ໃນ Store 🛒", "Browse Mining Spares in Store 🛒")}</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
@@ -317,12 +305,10 @@ export function MultiBrandPartsShowcase() {
         <div className="p-6 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-700 text-white flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl">
           <div className="space-y-1 text-center sm:text-left">
             <h4 className="text-lg font-black text-white">
-              {isLo ? "ຕ້ອງການສັ່ງຊື້ອາໄຫຼ່ແທ້ ຫຼື ຕິດຕັ້ງໄຟນິລະໄພ LED?" : "Order Genuine Spare Parts or LED Safety Kits?"}
+              {getForkliftText("ຕ້ອງການສັ່ງຊື້ອາໄຫຼ່ແທ້ ຫຼື ຕິດຕັ້ງໄຟນິລະໄພ LED?", "Order Genuine Spare Parts or LED Safety Kits?")}
             </h4>
             <p className="text-xs text-blue-100">
-              {isLo
-                ? "ເຊັກສະຕັອກອາໄຫຼ່ໄດ້ທັນທີໃນ Store ຫຼື ສົ່ງຮູບ Nameplate ມາຍັງ WhatsApp ເພື່ອໃຫ້ຊ່າງທຽບເບີອາໄຫຼ່."
-                : "Browse live store inventory or send your forklift nameplate photo via WhatsApp for exact part matching."}
+              {getForkliftText("ເຊັກສະຕັອກອາໄຫຼ່ໄດ້ທັນທີໃນ Store ຫຼື ສົ່ງຮູບ Nameplate ມາຍັງ WhatsApp ເພື່ອໃຫ້ຊ່າງທຽບເບີອາໄຫຼ່.", "Browse live store inventory or send your forklift nameplate photo via WhatsApp for exact part matching.")}
             </p>
           </div>
 
@@ -332,7 +318,7 @@ export function MultiBrandPartsShowcase() {
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-slate-950 font-bold text-xs hover:bg-slate-100 transition-all shadow-md"
             >
               <ShoppingBag className="w-4 h-4 text-blue-600" />
-              <span>{isLo ? "ເລືອກຊື້ໃນ Store 🛒" : "Shop in Store 🛒"}</span>
+              <span>{getForkliftText("ເລືອກຊື້ໃນ Store 🛒", "Shop in Store 🛒")}</span>
             </Link>
 
             <a

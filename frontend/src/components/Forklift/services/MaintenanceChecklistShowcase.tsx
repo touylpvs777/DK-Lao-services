@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
+import { useCurrentLocale } from "@/i18n/useCurrentLocale";
 import {
   Wrench,
   ShieldCheck,
@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/Forklift/ui/button";
 import { ImageLightboxModal } from "@/components/Forklift/ui/ImageLightboxModal";
+import { getForkliftText } from "@/i18n/forkliftLocale";
 
 interface MaintenanceChecklistProps {
   onOpenInspectionModal?: () => void;
@@ -175,9 +176,8 @@ const CHECKLIST_ITEMS: ChecklistItem[] = [
 ];
 
 export function MaintenanceChecklistShowcase({ onOpenInspectionModal }: MaintenanceChecklistProps = {}) {
-  const { i18n } = useTranslation();
-  const locale = i18n.language || "lo";
-  const isLo = locale === "lo";
+  const locale = useCurrentLocale();
+  const isLo = locale.toLowerCase().startsWith("lo");
   const [selectedPart, setSelectedPart] = useState<"all" | 1 | 2>("all");
 
   const [lightbox, setLightbox] = useState<{
@@ -227,9 +227,7 @@ export function MaintenanceChecklistShowcase({ onOpenInspectionModal }: Maintena
           </h3>
 
           <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-            {isLo
-              ? "ມາດຕະຖານການກວດເຊັກທີ່ຖອດແບບຈາກສູນບໍລິການ Mitsubishi & Jungheinrich ສາກົນ ຄຸ້ມຄອງຄົບທັງ 12 ຈຸດສຳຄັນ ເພື່ອໃຫ້ລົດຍົກຂອງທ່ານພ້ອມໃຊ້ງານ ແລະ ປອດໄພ 100%."
-              : "Standardized 12-point inspection protocol derived from Mitsubishi & Jungheinrich factory standards, guaranteeing peak operational reliability and workplace safety."}
+            {getForkliftText("ມາດຕະຖານການກວດເຊັກທີ່ຖອດແບບຈາກສູນບໍລິການ Mitsubishi & Jungheinrich ສາກົນ ຄຸ້ມຄອງຄົບທັງ 12 ຈຸດສຳຄັນ ເພື່ອໃຫ້ລົດຍົກຂອງທ່ານພ້ອມໃຊ້ງານ ແລະ ປອດໄພ 100%.", "Standardized 12-point inspection protocol derived from Mitsubishi & Jungheinrich factory standards, guaranteeing peak operational reliability and workplace safety.")}
           </p>
 
           {/* Part Switcher */}
@@ -240,7 +238,7 @@ export function MaintenanceChecklistShowcase({ onOpenInspectionModal }: Maintena
                 selectedPart === "all" ? "bg-white text-slate-900 shadow-md" : "bg-white/10 text-slate-300 hover:bg-white/15"
               }`}
             >
-              {isLo ? "ທັງໝົດ (12 ລະບົບ)" : "All 12 Checkpoints"}
+              {getForkliftText("ທັງໝົດ (12 ລະບົບ)", "All 12 Checkpoints")}
             </button>
 
             <button
@@ -250,7 +248,7 @@ export function MaintenanceChecklistShowcase({ onOpenInspectionModal }: Maintena
               }`}
             >
               <span>Part 1:</span>
-              <span>{isLo ? "ເຄື່ອງຈັກ, ລະບົບໄຟຟ້າ & ອຸປະກອນ (1-6)" : "Engine & Electrical (1-6)"}</span>
+              <span>{getForkliftText("ເຄື່ອງຈັກ, ລະບົບໄຟຟ້າ & ອຸປະກອນ (1-6)", "Engine & Electrical (1-6)")}</span>
             </button>
 
             <button
@@ -260,7 +258,7 @@ export function MaintenanceChecklistShowcase({ onOpenInspectionModal }: Maintena
               }`}
             >
               <span>Part 2:</span>
-              <span>{isLo ? "ໂຄງສ້າງ, ໄຮໂດຼລິກ & ເບຣກ (7-12)" : "Chassis & Hydraulics (7-12)"}</span>
+              <span>{getForkliftText("ໂຄງສ້າງ, ໄຮໂດຼລິກ & ເບຣກ (7-12)", "Chassis & Hydraulics (7-12)")}</span>
             </button>
           </div>
         </div>
@@ -289,7 +287,7 @@ export function MaintenanceChecklistShowcase({ onOpenInspectionModal }: Maintena
             </div>
             <div className="absolute top-3 right-3 bg-slate-900/90 hover:bg-slate-900 text-white border border-white/20 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2 shadow-xl opacity-90 group-hover/img:opacity-100 group-hover/img:scale-105 transition-all">
               <ZoomIn className="w-3.5 h-3.5 text-amber-400" />
-              <span>{isLo ? "🔍 ຊູມ 2K" : "🔍 Zoom 2K"}</span>
+              <span>{getForkliftText("🔍 ຊູມ 2K", "🔍 Zoom 2K")}</span>
             </div>
           </div>
 
@@ -315,7 +313,7 @@ export function MaintenanceChecklistShowcase({ onOpenInspectionModal }: Maintena
             </div>
             <div className="absolute top-3 right-3 bg-slate-900/90 hover:bg-slate-900 text-white border border-white/20 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2 shadow-xl opacity-90 group-hover/img:opacity-100 group-hover/img:scale-105 transition-all">
               <ZoomIn className="w-3.5 h-3.5 text-emerald-400" />
-              <span>{isLo ? "🔍 ຊູມ 2K" : "🔍 Zoom 2K"}</span>
+              <span>{getForkliftText("🔍 ຊູມ 2K", "🔍 Zoom 2K")}</span>
             </div>
           </div>
         </div>
@@ -350,7 +348,7 @@ export function MaintenanceChecklistShowcase({ onOpenInspectionModal }: Maintena
               </div>
 
               <div className="pt-3 border-t border-white/10 flex items-center justify-between">
-                <span className="text-[10px] text-slate-400 font-bold">{isLo ? "ມາດຕະຖານ Mobile Service" : "Mobile Service Ready"}</span>
+                <span className="text-[10px] text-slate-400 font-bold">{getForkliftText("ມາດຕະຖານ Mobile Service", "Mobile Service Ready")}</span>
                 <span className="text-xs font-bold text-emerald-400 flex items-center gap-1">
                   <CheckCircle2 className="w-3.5 h-3.5" /> 100% Passed
                 </span>
@@ -364,9 +362,7 @@ export function MaintenanceChecklistShowcase({ onOpenInspectionModal }: Maintena
           <div className="flex items-center gap-3 text-xs text-slate-300 text-center sm:text-left">
             <FileCheck2 className="w-5 h-5 text-amber-400 shrink-0" />
             <span>
-              {isLo
-                ? "ຕ້ອງການໃຫ້ທີມຊ່າງ DK LAO ເຂົ້າກວດເຊັກລົດຍົກໂຮງງານຂອງທ່ານຕາມມາດຕະຖານ 12 ຈຸດນີ້ບໍ?"
-                : "Need DK LAO certified mobile technicians to perform this 12-point checklist at your facility?"}
+              {getForkliftText("ຕ້ອງການໃຫ້ທີມຊ່າງ DK LAO ເຂົ້າກວດເຊັກລົດຍົກໂຮງງານຂອງທ່ານຕາມມາດຕະຖານ 12 ຈຸດນີ້ບໍ?", "Need DK LAO certified mobile technicians to perform this 12-point checklist at your facility?")}
             </span>
           </div>
 
@@ -379,7 +375,7 @@ export function MaintenanceChecklistShowcase({ onOpenInspectionModal }: Maintena
                 onClick={onOpenInspectionModal}
               >
                 <Printer className="w-3.5 h-3.5 mr-1.5 text-sky-400" />
-                <span>{isLo ? "ພິມໃບຢັ້ງຢືນ SOP 24 ຈຸດ" : "Print 24-Point SOP Certificate"}</span>
+                <span>{getForkliftText("ພິມໃບຢັ້ງຢືນ SOP 24 ຈຸດ", "Print 24-Point SOP Certificate")}</span>
               </Button>
             )}
 
@@ -391,7 +387,7 @@ export function MaintenanceChecklistShowcase({ onOpenInspectionModal }: Maintena
                 if (el) el.scrollIntoView({ behavior: "smooth" });
               }}
             >
-              <span>{isLo ? "ນັດໝາຍຊ່າງກວດເຊັກ (Mobile Service)" : "Book 12-Point Inspection"}</span>
+              <span>{getForkliftText("ນັດໝາຍຊ່າງກວດເຊັກ (Mobile Service)", "Book 12-Point Inspection")}</span>
               <ChevronRight className="w-3.5 h-3.5 ml-1" />
             </Button>
           </div>

@@ -46,3 +46,10 @@ class Customer(Base):
     creator: Mapped["User | None"] = relationship(
         "User", foreign_keys="[Customer.created_by]", back_populates="created_customers"
     )
+    portal_account: Mapped["CustomerPortalAccount | None"] = relationship(
+        "CustomerPortalAccount",
+        back_populates="customer",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+        uselist=False,
+    )

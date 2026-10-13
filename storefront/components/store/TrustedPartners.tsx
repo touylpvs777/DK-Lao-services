@@ -4,7 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { ShieldCheck } from "lucide-react";
-import { useLocale } from "next-intl";
+import { useLocale } from "@/lib/locale";
 import { ENTERPRISE_CUSTOMERS } from "@/data/customers";
 
 export function TrustedPartners() {

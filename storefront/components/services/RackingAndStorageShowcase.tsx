@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { useLocale } from "next-intl";
+import { useLocale } from "@/lib/locale";
 import {
   Warehouse,
   Boxes,
@@ -436,7 +436,7 @@ export function RackingAndStorageShowcase() {
 
           <div className="flex flex-wrap items-center gap-3 shrink-0">
             <Link
-              href={`/${locale}/store?pre_category=warehouse-storage`}
+              href="/store?pre_category=warehouse-storage"
               className="py-2.5 px-4 rounded-xl border border-white/20 hover:bg-white/10 text-white font-bold text-xs flex items-center gap-1.5 transition-all"
             >
               <ShoppingBag className="w-3.5 h-3.5 text-amber-400" />

@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { KeySquare, TrendingDown, Clock, ShieldCheck, Wrench, RefreshCw, CheckCircle2, ShieldAlert, BookOpen, Percent, Handshake, Info, Award, Truck } from "lucide-react";
 import { Button } from "@/components/Forklift/ui/button";
 import { useBookingContext } from "./BookingContext";
+import { getForkliftText } from "@/i18n/forkliftLocale";
 
 export const ServiceRentalPillar = ({ isLo }: { isLo: boolean }) => {
   const { handleBookConsultation } = useBookingContext();
@@ -41,15 +42,13 @@ export const ServiceRentalPillar = ({ isLo }: { isLo: boolean }) => {
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 font-semibold mb-4"
           >
             <KeySquare className="w-5 h-5" />
-            <span>{isLo ? "2. RENTAL | ການເຊົ່າລົດຍົກລະດັບອົງກອນ & ບໍລິຫານກອງລົດ" : "2. ENTERPRISE FLEET LEASING & RENTAL"}</span>
+            <span>{getForkliftText("2. RENTAL | ການເຊົ່າລົດຍົກລະດັບອົງກອນ & ບໍລິຫານກອງລົດ", "2. ENTERPRISE FLEET LEASING & RENTAL")}</span>
           </motion.div>
           <h2 className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white mb-6">
-            {isLo ? "ເຊົ່າລົດຍົກແບບ Zero CAPEX & ຄວາມອຸ່ນໃຈສູງສຸດ" : "Zero CAPEX Fleet Leasing Solutions"}
+            {getForkliftText("ເຊົ່າລົດຍົກແບບ Zero CAPEX & ຄວາມອຸ່ນໃຈສູງສຸດ", "Zero CAPEX Fleet Leasing Solutions")}
           </h2>
           <p className="text-lg text-slate-600 dark:text-slate-300 max-w-3xl mx-auto">
-            {isLo 
-              ? "ຕອບໂຈດຜູ້ບໍລິຫານ (CFO & Operation Directors) ທີ່ຕ້ອງການຄວບຄຸມຕົ້ນທຶນການດຳເນີນງານຢ່າງຊັດເຈນ. ຕັດຄວາມກັງວົນເລື່ອງລົດເພ, ຄ່າອາໄຫຼ່ແພງ ແລະ ບັນຫາຊ່າງ." 
-              : "Tailored for CFOs and Operations Directors seeking predictable operating costs, guaranteed vehicle uptime, and zero maintenance headaches."}
+            {getForkliftText("ຕອບໂຈດຜູ້ບໍລິຫານ (CFO & Operation Directors) ທີ່ຕ້ອງການຄວບຄຸມຕົ້ນທຶນການດຳເນີນງານຢ່າງຊັດເຈນ. ຕັດຄວາມກັງວົນເລື່ອງລົດເພ, ຄ່າອາໄຫຼ່ແພງ ແລະ ບັນຫາຊ່າງ.", "Tailored for CFOs and Operations Directors seeking predictable operating costs, guaranteed vehicle uptime, and zero maintenance headaches.")}
           </p>
         </div>
 
@@ -65,67 +64,63 @@ export const ServiceRentalPillar = ({ isLo }: { isLo: boolean }) => {
           <div className="relative z-10">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 text-xs font-bold mb-6 tracking-wide backdrop-blur-md">
               <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              {isLo ? "ຄວາມສະບາຍໃຈຂອງຜູ້ບໍລິຫານ (EXECUTIVE PEACE-OF-MIND)" : "EXECUTIVE PEACE-OF-MIND GUARANTEE"}
+              {getForkliftText("ຄວາມສະບາຍໃຈຂອງຜູ້ບໍລິຫານ (EXECUTIVE PEACE-OF-MIND)", "EXECUTIVE PEACE-OF-MIND GUARANTEE")}
             </div>
             
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               <div className="col-span-1 lg:col-span-2">
                 <h3 className="text-2xl lg:text-4xl font-black mb-4 tracking-tight">
-                  {isLo ? "ແພັກເກັດການເຊົ່າລວມທຸກຢ່າງ (All-Inclusive Fleet Lease)" : "All-Inclusive Fleet Rental Solution"}
+                  {getForkliftText("ແພັກເກັດການເຊົ່າລວມທຸກຢ່າງ (All-Inclusive Fleet Lease)", "All-Inclusive Fleet Rental Solution")}
                 </h3>
                 <p className="text-indigo-200 text-base lg:text-lg mb-6 max-w-2xl leading-relaxed">
-                  {isLo 
-                    ? "ຈ່າຍຄ່າເຊົ່າລາຍເດືອນຄົງທີ່ ບໍລິສັດຂອງທ່ານຈະໄດ້ຮັບການດູແລຄົບທຸກຢ່າງ ໂດຍບໍ່ມີຄ່າໃຊ້ຈ່າຍແອບແຝງແມ້ແຕ່ກີບດຽວ." 
-                    : "A fixed, predictable monthly fee that covers all servicing, genuine wear-and-tear components, and replacement trucks."}
+                  {getForkliftText("ຈ່າຍຄ່າເຊົ່າລາຍເດືອນຄົງທີ່ ບໍລິສັດຂອງທ່ານຈະໄດ້ຮັບການດູແລຄົບທຸກຢ່າງ ໂດຍບໍ່ມີຄ່າໃຊ້ຈ່າຍແອບແຝງແມ້ແຕ່ກີບດຽວ.", "A fixed, predictable monthly fee that covers all servicing, genuine wear-and-tear components, and replacement trucks.")}
                 </p>
                 <ul className="space-y-4 mb-4">
                   <li className="flex items-start gap-3 text-base lg:text-lg">
                     <CheckCircle2 className="w-6 h-6 text-emerald-400 shrink-0 mt-0.5" />
                     <span>
-                      <strong className="text-white">{isLo ? "Zero Maintenance Liability: " : "Zero Maintenance Liability: "}</strong>
-                      {isLo ? "ຟຣີ ຄ່າແຮງຊ່າງ, ຄ່ານ້ຳມັນເຄື່ອງ, ນ້ຳມັນໄຮໂດຣລິກ ແລະ ອາໄຫຼ່ສິ້ນເປືອງທຸກຊິ້ນຕະຫຼອດສັນຍາ" : "Free labor, oils, hydraulic fluids, and wear parts throughout the entire lease."}
+                      <strong className="text-white">{getForkliftText("Zero Maintenance Liability: ", "Zero Maintenance Liability: ")}</strong>
+                      {getForkliftText("ຟຣີ ຄ່າແຮງຊ່າງ, ຄ່ານ້ຳມັນເຄື່ອງ, ນ້ຳມັນໄຮໂດຣລິກ ແລະ ອາໄຫຼ່ສິ້ນເປືອງທຸກຊິ້ນຕະຫຼອດສັນຍາ", "Free labor, oils, hydraulic fluids, and wear parts throughout the entire lease.")}
                     </span>
                   </li>
                   <li className="flex items-start gap-3 text-base lg:text-lg">
                     <CheckCircle2 className="w-6 h-6 text-emerald-400 shrink-0 mt-0.5" />
                     <span>
-                      <strong className="text-white">{isLo ? "Standby Replacement Unit: " : "Standby Replacement Guarantee: "}</strong>
-                      {isLo ? "ຫາກລົດມີບັນຫາຕ້ອງສ້ອມແປງເກີນ 4 ຊົ່ວໂມງ, DK LAO ຈັດສົ່ງລົດສຳຮອງໄປປ່ຽນທັນທີ" : "If repairs exceed 4 hours, a backup forklift is deployed immediately to eliminate downtime."}
+                      <strong className="text-white">{getForkliftText("Standby Replacement Unit: ", "Standby Replacement Guarantee: ")}</strong>
+                      {getForkliftText("ຫາກລົດມີບັນຫາຕ້ອງສ້ອມແປງເກີນ 4 ຊົ່ວໂມງ, DK LAO ຈັດສົ່ງລົດສຳຮອງໄປປ່ຽນທັນທີ", "If repairs exceed 4 hours, a backup forklift is deployed immediately to eliminate downtime.")}
                     </span>
                   </li>
                   <li className="flex items-start gap-3 text-base lg:text-lg">
                     <CheckCircle2 className="w-6 h-6 text-emerald-400 shrink-0 mt-0.5" />
                     <span>
-                      <strong className="text-white">{isLo ? "Tax-Deductible OPEX: " : "Tax-Deductible OPEX: "}</strong>
-                      {isLo ? "ຄ່າເຊົ່າສາມາດນຳໄປຫັກເປັນລາຍຈ່າຍບໍລິສັດໄດ້ 100% ຕາມກົດໝາຍສ່ວຍສາອາກອນ ສປປ ລາວ" : "100% corporate tax deductible under Lao PDR revenue regulations."}
+                      <strong className="text-white">{getForkliftText("Tax-Deductible OPEX: ", "Tax-Deductible OPEX: ")}</strong>
+                      {getForkliftText("ຄ່າເຊົ່າສາມາດນຳໄປຫັກເປັນລາຍຈ່າຍບໍລິສັດໄດ້ 100% ຕາມກົດໝາຍສ່ວຍສາອາກອນ ສປປ ລາວ", "100% corporate tax deductible under Lao PDR revenue regulations.")}
                     </span>
                   </li>
                   <li className="flex items-start gap-3 text-base lg:text-lg">
                     <CheckCircle2 className="w-6 h-6 text-emerald-400 shrink-0 mt-0.5" />
                     <span>
-                      <strong className="text-white">{isLo ? "Fleet Telematics & PM Report: " : "Fleet Telematics & PM Reports: "}</strong>
-                      {isLo ? "ລາຍງານປະຫວັດການບຳລຸງຮັກສາ ແລະ ຊົ່ວໂມງແລ່ນແບບໂປ່ງໃສທຸກເດືອນ" : "Transparent monthly hour meter logs and certified maintenance records."}
+                      <strong className="text-white">{getForkliftText("Fleet Telematics & PM Report: ", "Fleet Telematics & PM Reports: ")}</strong>
+                      {getForkliftText("ລາຍງານປະຫວັດການບຳລຸງຮັກສາ ແລະ ຊົ່ວໂມງແລ່ນແບບໂປ່ງໃສທຸກເດືອນ", "Transparent monthly hour meter logs and certified maintenance records.")}
                     </span>
                   </li>
                 </ul>
               </div>
               <div className="flex flex-col justify-center gap-4 bg-white/10 p-6 rounded-2xl backdrop-blur-md border border-white/20">
                 <h4 className="font-bold text-xl mb-1 text-center text-indigo-300">
-                  {isLo ? "ລົດສຳຮອງປະຈຳໜ້າງານ" : "Dedicated Standby"}
+                  {getForkliftText("ລົດສຳຮອງປະຈຳໜ້າງານ", "Dedicated Standby")}
                 </h4>
                 <div className="flex items-start gap-3 text-sm text-indigo-100 leading-relaxed">
                   <RefreshCw className="w-5 h-5 text-indigo-300 shrink-0 mt-0.5" />
                   <span>
-                    {isLo 
-                      ? "ສຳລັບລູກຄ້າ Fleet ຂະໜາດໃຫຍ່, DK LAO ສະແຕນບາຍ (Standby) ລົດສຳຮອງໄວ້ໃນສາງຂອງທ່ານເລີຍ ເພື່ອຮັບປະກັນວຽກບໍ່ມີມື້ສະດຸດ." 
-                      : "For enterprise fleets, we position dedicated backup units directly inside your distribution facility."}
+                    {getForkliftText("ສຳລັບລູກຄ້າ Fleet ຂະໜາດໃຫຍ່, DK LAO ສະແຕນບາຍ (Standby) ລົດສຳຮອງໄວ້ໃນສາງຂອງທ່ານເລີຍ ເພື່ອຮັບປະກັນວຽກບໍ່ມີມື້ສະດຸດ.", "For enterprise fleets, we position dedicated backup units directly inside your distribution facility.")}
                   </span>
                 </div>
                 <Button 
-                  onClick={() => handleBookConsultation(isLo ? "ປຶກສາແພັກເກັດເຊົ່າລົດຍົກ (Rental Fleet)" : "Consult Fleet Rental Options")}
+                  onClick={() => handleBookConsultation(getForkliftText("ປຶກສາແພັກເກັດເຊົ່າລົດຍົກ (Rental Fleet)", "Consult Fleet Rental Options"))}
                   className="w-full mt-4 bg-yellow-400 hover:bg-yellow-300 text-slate-950 font-bold py-6 text-base lg:text-lg rounded-xl shadow-lg transition-all hover:scale-[1.02]"
                 >
-                  {isLo ? "ປຶກສາແພັກເກັດເຊົ່າລົດຍົກ" : "Consult Fleet Rental Options"}
+                  {getForkliftText("ປຶກສາແພັກເກັດເຊົ່າລົດຍົກ", "Consult Fleet Rental Options")}
                 </Button>
               </div>
             </div>
@@ -137,20 +132,20 @@ export const ServiceRentalPillar = ({ isLo }: { isLo: boolean }) => {
           <div className="flex items-center gap-3 mb-6">
             <BookOpen className="w-8 h-8 text-indigo-500" />
             <h3 className="text-2xl font-bold text-slate-900 dark:text-white">
-              {isLo ? "ຄຳແນະນຳດ້ານການເງິນ: ການຊື້ (CAPEX) vs ການເຊົ່າ (OPEX)" : "Financial Advisory: Purchasing (CAPEX) vs Leasing (OPEX)"}
+              {getForkliftText("ຄຳແນະນຳດ້ານການເງິນ: ການຊື້ (CAPEX) vs ການເຊົ່າ (OPEX)", "Financial Advisory: Purchasing (CAPEX) vs Leasing (OPEX)")}
             </h3>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-slate-700 dark:text-slate-300">
             <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border-l-4 border-red-500">
               <h4 className="font-bold text-lg mb-2 flex items-center gap-2"><TrendingDown className="w-5 h-5 text-red-500"/>ການຊື້ (CAPEX)</h4>
               <p className="text-sm leading-relaxed">
-                {isLo ? "ເວລາຊື້ລົດ ຕົ້ນທຶນແອບແຝງ (Hidden Costs) ທີ່ຄົນມັກລືມຄິດຄື: ຄ່າຈ້າງຊ່າງ, ຄ່າອາໄຫຼ່, ຄ່າລົດຍົກເສຍເວລາລໍຖ້າສ້ອມແປງ (Downtime cost) ເຊິ່ງອາດສູງເຖິງ 30% ຂອງລາຄາລົດໃນ 5 ປີ." : "Buying incurs hidden costs: mechanic payroll, spare parts, and downtime costs which can equal 30% of the forklift's value over 5 years."}
+                {getForkliftText("ເວລາຊື້ລົດ ຕົ້ນທຶນແອບແຝງ (Hidden Costs) ທີ່ຄົນມັກລືມຄິດຄື: ຄ່າຈ້າງຊ່າງ, ຄ່າອາໄຫຼ່, ຄ່າລົດຍົກເສຍເວລາລໍຖ້າສ້ອມແປງ (Downtime cost) ເຊິ່ງອາດສູງເຖິງ 30% ຂອງລາຄາລົດໃນ 5 ປີ.", "Buying incurs hidden costs: mechanic payroll, spare parts, and downtime costs which can equal 30% of the forklift's value over 5 years.")}
               </p>
             </div>
             <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border-l-4 border-green-500">
               <h4 className="font-bold text-lg mb-2 flex items-center gap-2"><Handshake className="w-5 h-5 text-green-500"/>ການເຊົ່າ (OPEX)</h4>
               <p className="text-sm leading-relaxed">
-                {isLo ? "ຄ່າເຊົ່າທີ່ຈ່າຍລວມທຸກຢ່າງແລ້ວ (All-Inclusive). ບໍລິສັດສາມາດເອົາເງິນກ້ອນໄປລົງທຶນຂະຫຍາຍທຸລະກິດຫຼັກ (Core Business) ແທນທີ່ຈະເອົາມາຈົມກັບຊັບສິນທີ່ເສື່ອມລາຄາທຸກປີ." : "Rental is all-inclusive. Free up your working capital to invest in your core business instead of depreciating assets."}
+                {getForkliftText("ຄ່າເຊົ່າທີ່ຈ່າຍລວມທຸກຢ່າງແລ້ວ (All-Inclusive). ບໍລິສັດສາມາດເອົາເງິນກ້ອນໄປລົງທຶນຂະຫຍາຍທຸລະກິດຫຼັກ (Core Business) ແທນທີ່ຈະເອົາມາຈົມກັບຊັບສິນທີ່ເສື່ອມລາຄາທຸກປີ.", "Rental is all-inclusive. Free up your working capital to invest in your core business instead of depreciating assets.")}
               </p>
             </div>
           </div>
@@ -198,12 +193,10 @@ export const ServiceRentalPillar = ({ isLo }: { isLo: boolean }) => {
           <div className="text-center mb-10 relative z-10">
             <h3 className="text-2xl md:text-4xl font-bold text-white mb-4 flex items-center justify-center gap-3">
               <ShieldAlert className="w-8 h-8 text-indigo-400" />
-              {isLo ? "ສັນຍາຄຸ້ມຄອງຜູກມັດທາງກົດໝາຍ (Legal Binding SLA)" : "Legal Binding SLA Guarantee"}
+              {getForkliftText("ສັນຍາຄຸ້ມຄອງຜູກມັດທາງກົດໝາຍ (Legal Binding SLA)", "Legal Binding SLA Guarantee")}
             </h3>
             <p className="text-slate-300 max-w-2xl mx-auto">
-              {isLo 
-                ? "ເອກະສານສັນຍາ B2B ທີ່ຊັດເຈນ (Place & Product Strategy) ຮັບປະກັນວ່າຖ້າລົດເປ່ເພເກີນ 4 ຊົ່ວໂມງ ພວກເຮົາຈະສົ່ງລົດຄັນໃໝ່ໄປປ່ຽນໃຫ້ທັນທີ ເພື່ອບໍ່ໃຫ້ວຽກຂອງທ່ານສະດຸດ." 
-                : "Clear B2B SLAs guarantee that if a breakdown exceeds 4 hours, a replacement unit is deployed immediately."}
+              {getForkliftText("ເອກະສານສັນຍາ B2B ທີ່ຊັດເຈນ (Place & Product Strategy) ຮັບປະກັນວ່າຖ້າລົດເປ່ເພເກີນ 4 ຊົ່ວໂມງ ພວກເຮົາຈະສົ່ງລົດຄັນໃໝ່ໄປປ່ຽນໃຫ້ທັນທີ ເພື່ອບໍ່ໃຫ້ວຽກຂອງທ່ານສະດຸດ.", "Clear B2B SLAs guarantee that if a breakdown exceeds 4 hours, a replacement unit is deployed immediately.")}
             </p>
           </div>
           

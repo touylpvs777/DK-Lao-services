@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { STORE_CATEGORIES } from '@/data/categories';
-import { useTranslation } from "react-i18next";
+import { useCurrentLocale } from "@/i18n/useCurrentLocale";
 import { Layers, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface StoreTopNavProps {
@@ -9,9 +9,8 @@ interface StoreTopNavProps {
 }
 
 export function StoreTopNav({ selectedCategory, onSelectCategory }: StoreTopNavProps) {
-  const { i18n } = useTranslation();
-  const locale = i18n.language || "lo";
-  const isLao = locale === 'lo';
+  const locale = useCurrentLocale();
+  const isLao = locale.toLowerCase().startsWith("lo");
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const scroll = (dir: 'left' | 'right') => {

@@ -1,6 +1,7 @@
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import { submitWebsiteInquiry } from "@/actions/inquiries";
 
 export interface BookingContextType {
   selectedForkliftType: "diesel" | "electric";
@@ -25,9 +26,12 @@ export interface BookingContextType {
   setUrgency: (val: "sale_inquiry" | "rental_b2b" | "standard" | "spare_parts") => void;
   issueDetails: string;
   setIssueDetails: (val: string) => void;
+  submissionStatus: "idle" | "submitting" | "success" | "error";
+  submissionReference: string;
+  submissionMessage: string;
   handleBookPackage: (hoursIndex: number, pkgNameLo: string, pkgNameEn: string, label: string, isLo: boolean) => void;
   handleBookConsultation: (topic: string) => void;
-  handleBookingSubmit: (e: React.FormEvent, isLo: boolean) => void;
+  handleBookingSubmit: (e: React.FormEvent, isLo: boolean) => Promise<void>;
 }
 
 export const BookingContext = createContext<BookingContextType | null>(null);
@@ -49,10 +53,33 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
   
   const [companyName, setCompanyName] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
-  const [province, setProvince] = useState<string>("ນະຄອນຫຼວງວຽງຈັນ (Vientiane Capital)");
+  const [province, setProvince] = useState<string>("ນະຄອນຫຼວງວຽງຈັນ");
   const [brand, setBrand] = useState<string>("Toyota");
   const [urgency, setUrgency] = useState<"sale_inquiry" | "rental_b2b" | "standard" | "spare_parts">("rental_b2b");
   const [issueDetails, setIssueDetails] = useState<string>("");
+  const [submissionStatus, setSubmissionStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [submissionReference, setSubmissionReference] = useState<string>("");
+  const [submissionMessage, setSubmissionMessage] = useState<string>("");
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const unitId = params.get("unit");
+    if (!unitId) return;
+
+    const model = params.get("model");
+    const brandName = params.get("brand");
+    const location = params.get("location");
+    setUrgency("standard");
+    if (brandName) setBrand(brandName);
+    setIssueDetails(
+      [
+        `Fleet PM request for unit ${unitId}`,
+        model ? `Model: ${model}` : null,
+        brandName ? `Brand: ${brandName}` : null,
+        location ? `Operating location: ${location}` : null,
+      ].filter(Boolean).join("\n")
+    );
+  }, []);
 
   const handleBookPackage = (hoursIndex: number, pkgNameLo: string, pkgNameEn: string, label: string, isLo: boolean) => {
     setSelectedHoursIndex(hoursIndex);
@@ -78,45 +105,36 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const handleBookingSubmit = (e: React.FormEvent, isLo: boolean) => {
+  const handleBookingSubmit = async (e: React.FormEvent, isLo: boolean) => {
     e.preventDefault();
-    if (isLo) {
-      const serviceLabelMap = {
-        sale_inquiry: "🚜 1. ສົນໃຈຊື້ລົດຟອກລີບໃໝ່/ມືສອງ (Forklift Sale Inquiry)",
-        rental_b2b: "⏱️ 2. ຂໍໃບສະເໜີລາຄາ ເຊົ່າລົດຟອກລີບໄລຍະຍາວ 1-5 ປີ (B2B Fleet Rental)",
-        standard: "🛠️ 3. ນັດໝາຍສູນສ້ອມບຳລຸງ / PM ຕາມຮອບ / ລົດເສຍ (Service & PM)",
-        spare_parts: "⚙️ 4. ສັ່ງຊື້ອາໄຫຼ່ແທ້, ຢາງຕັນ, ນ້ຳມັນໄຮໂດຣລິກ (Spare Parts Order)"
-      };
-      const urgencyText = serviceLabelMap[urgency as keyof typeof serviceLabelMap];
-      const message = 
-        `ສະບາຍດີ DK LAO 4S Forklift Hub!\n` +
-        `ຂ້ອຍຕ້ອງການຕິດຕໍ່ສູນລົດຟອກລີບຄົບວົງຈອນ:\n\n` +
-        `🏢 ຊື່ບໍລິສັດ/ໂຮງງານ: ${companyName || "ບໍ່ໄດ້ລະບຸ"}\n` +
-        `📞 ເບີໂທຕິດຕໍ່: ${phone || "ກະລຸນາຕິດຕໍ່ກັບ"}\n` +
-        `📍 ສະຖານທີ່/ແຂວງ: ${province}\n` +
-        `🚜 ຍີ່ຫໍ້ລົດຍົກທີ່ສົນໃຈ/ນຳໃຊ້: ${brand}\n` +
-        `📌 ປະເພດຄວາມຕ້ອງການ (4S): ${urgencyText}\n` +
-        `📝 ລາຍລະອຽດຄວາມຕ້ອງການ / ຈຳນວນຄັນ / ອາໄຫຼ່: ${issueDetails || "ຕ້ອງການໃບສະເໜີລາຄາ ຫຼື ຄຳປຶກສາ"}`;
-      window.open(`https://wa.me/8562058929299?text=${encodeURIComponent(message)}`, "_blank");
-    } else {
-      const serviceLabelMapEn = {
-        sale_inquiry: "🚜 1. Forklift Purchase Inquiry (New & Inspected Pre-Owned)",
-        rental_b2b: "⏱️ 2. B2B Long-Term Fleet Leasing (1-5 Years)",
-        standard: "🛠️ 3. Maintenance Service / Scheduled PM / Urgent Breakdown",
-        spare_parts: "⚙️ 4. Genuine OEM Parts / Solid Tires / Certified Lubricants"
-      };
-      const urgencyTextEn = serviceLabelMapEn[urgency as keyof typeof serviceLabelMapEn];
-      const messageEn = 
-        `Hello DK LAO 4S Forklift Hub!\n` +
-        `I would like to submit an inquiry regarding your 4S forklift solutions:\n\n` +
-        `🏢 Company / Facility: ${companyName || "Not specified"}\n` +
-        `📞 Contact Number: ${phone || "Please call back"}\n` +
-        `📍 Location / Province: ${province}\n` +
-        `🚜 Forklift Brand of Interest: ${brand}\n` +
-        `📌 4S Category: ${urgencyTextEn}\n` +
-        `📝 Operational Details / Fleet Requirements: ${issueDetails || "Requesting quotation and technical consultation"}`;
-      window.open(`https://wa.me/8562058929299?text=${encodeURIComponent(messageEn)}`, "_blank");
+    setSubmissionStatus("submitting");
+    setSubmissionReference("");
+    setSubmissionMessage("");
+
+    const result = await submitWebsiteInquiry({
+      inquiry_type: "service",
+      category: urgency,
+      customer_name: companyName.trim(),
+      company_name: companyName.trim(),
+      phone_number: phone.trim(),
+      province,
+      brand,
+      details: issueDetails || (isLo ? "ຕ້ອງການຂໍຄຳປຶກສາ" : "Requesting a consultation"),
+    });
+
+    if (!result.success) {
+      setSubmissionStatus("error");
+      setSubmissionMessage(result.message);
+      return;
     }
+
+    setSubmissionStatus("success");
+    setSubmissionReference(result.reference_number);
+    setSubmissionMessage(
+      isLo
+        ? "ຄຳຮ້ອງຂໍຖືກບັນທຶກໃນ CRM ແລ້ວ. ທີມງານຈະຕິດຕໍ່ກັບເພື່ອຢືນຢັນ."
+        : "Your request was saved to CRM. Our team will contact you to confirm the details.",
+    );
   };
 
   return (
@@ -132,6 +150,7 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
       brand, setBrand,
       urgency, setUrgency,
       issueDetails, setIssueDetails,
+      submissionStatus, submissionReference, submissionMessage,
       handleBookPackage, handleBookConsultation, handleBookingSubmit
     }}>
       {children}

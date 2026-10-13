@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/Forklift/ui/button";
 import { useBookingContext } from "./BookingContext";
+import { getForkliftText } from "@/i18n/forkliftLocale";
 
 interface FieldStoriesProps {
   isLo: boolean;
@@ -93,7 +94,7 @@ export function FieldStoriesShowcase({ isLo }: FieldStoriesProps) {
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 dark:bg-blue-500/20 text-blue-700 dark:text-blue-300 border border-blue-500/30 text-xs font-bold uppercase tracking-wider">
             <HeartHandshake className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-            <span>{isLo ? "ເລື່ອງລາວຈາກໜ້າງານ & ຄວາມມຸ່ງໝັ້ນ" : "STORIES FROM THE FIELD: CRAFTSMANSHIP & CARE"}</span>
+            <span>{getForkliftText("ເລື່ອງລາວຈາກໜ້າງານ & ຄວາມມຸ່ງໝັ້ນ", "STORIES FROM THE FIELD: CRAFTSMANSHIP & CARE")}</span>
           </div>
 
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight">
@@ -109,9 +110,7 @@ export function FieldStoriesShowcase({ isLo }: FieldStoriesProps) {
           </h2>
 
           <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base leading-relaxed">
-            {isLo
-              ? "ເບື້ອງຫຼັງຄວາມສຳເລັດຂອງລູກຄ້າອຸດສາຫະກຳ ແລະ ໂລຈິສຕິກຊັ້ນນຳໃນ ສປປ ລາວ ຄືທີມງານວິສະວະກອນ ແລະ ນາຍຊ່າງ DK LAO ທີ່ພ້ອມລົງໜ້າງານຕົວຈິງ ດູແລເອົາໃຈໃສ່ດ້ວຍຄວາມຈິງໃຈ."
-              : "Behind every seamless logistics operation in Lao PDR is our team of dedicated mechanics and engineers who show up on-site with craftsmanship and genuine commitment."}
+            {getForkliftText("ເບື້ອງຫຼັງຄວາມສຳເລັດຂອງລູກຄ້າອຸດສາຫະກຳ ແລະ ໂລຈິສຕິກຊັ້ນນຳໃນ ສປປ ລາວ ຄືທີມງານວິສະວະກອນ ແລະ ນາຍຊ່າງ DK LAO ທີ່ພ້ອມລົງໜ້າງານຕົວຈິງ ດູແລເອົາໃຈໃສ່ດ້ວຍຄວາມຈິງໃຈ.", "Behind every seamless logistics operation in Lao PDR is our team of dedicated mechanics and engineers who show up on-site with craftsmanship and genuine commitment.")}
           </p>
         </div>
 
@@ -168,7 +167,7 @@ export function FieldStoriesShowcase({ isLo }: FieldStoriesProps) {
                     <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-100 dark:border-slate-800">
                       <strong className="text-slate-900 dark:text-white block mb-1 font-semibold flex items-center gap-1.5">
                         <Clock className="w-3.5 h-3.5 text-rose-500" />
-                        {isLo ? "ສິ່ງທ້າທາຍໜ້າງານ:" : "On-Site Challenge:"}
+                        {getForkliftText("ສິ່ງທ້າທາຍໜ້າງານ:", "On-Site Challenge:")}
                       </strong>
                       <p className="leading-relaxed">
                         {isLo ? item.problemLo : item.problemEn}
@@ -178,7 +177,7 @@ export function FieldStoriesShowcase({ isLo }: FieldStoriesProps) {
                     <div className="p-3.5 rounded-xl bg-blue-50/50 dark:bg-blue-950/20 border border-blue-100/50 dark:border-blue-900/30">
                       <strong className="text-blue-900 dark:text-blue-300 block mb-1 font-semibold flex items-center gap-1.5">
                         <Wrench className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
-                        {isLo ? "ການແກ້ໄຂຂອງ DK LAO:" : "DK LAO Execution:"}
+                        {getForkliftText("ການແກ້ໄຂຂອງ DK LAO:", "DK LAO Execution:")}
                       </strong>
                       <p className="leading-relaxed text-blue-950 dark:text-blue-200">
                         {isLo ? item.actionLo : item.actionEn}
@@ -207,30 +206,28 @@ export function FieldStoriesShowcase({ isLo }: FieldStoriesProps) {
             <div className="lg:col-span-2 space-y-4">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 text-xs font-bold border border-blue-500/30">
                 <Award className="w-4 h-4 text-blue-400" />
-                <span>{isLo ? "ຄຳໝັ້ນສັນຍາຈາກໃຈນາຍຊ່າງ DK LAO" : "ENGINEERING CRAFTSMANSHIP PLEDGE"}</span>
+                <span>{getForkliftText("ຄຳໝັ້ນສັນຍາຈາກໃຈນາຍຊ່າງ DK LAO", "ENGINEERING CRAFTSMANSHIP PLEDGE")}</span>
               </div>
               
               <blockquote className="text-lg sm:text-xl md:text-2xl font-semibold italic text-slate-100 leading-relaxed">
-                {isLo
-                  ? "“ທຸກໆຄັ້ງທີ່ພວກເຮົາຂັນນັອດ ຫຼື ກວດເຊັກລົດຍົກ, ພວກເຮົາຄິດສະເໝີວ່າ ຄວາມປອດໄພຂອງຄົນຂັບ ແລະ ຄວາມສຳເລັດຂອງທຸລະກິດລູກຄ້າແມ່ນຢູ່ໃນມືຂອງພວກເຮົາ. ພວກເຮົາບໍ່ເຄີຍປະນີປະນອມກັບຄຸນນະພາບ ແລະ ອາໄຫຼ່ແທ້.”"
-                  : "“Every bolt we torque and every mast we inspect carries the safety of the operator and the trust of our client. We never compromise on factory standards or genuine spare parts.”"}
+                {getForkliftText("“ທຸກໆຄັ້ງທີ່ພວກເຮົາຂັນນັອດ ຫຼື ກວດເຊັກລົດຍົກ, ພວກເຮົາຄິດສະເໝີວ່າ ຄວາມປອດໄພຂອງຄົນຂັບ ແລະ ຄວາມສຳເລັດຂອງທຸລະກິດລູກຄ້າແມ່ນຢູ່ໃນມືຂອງພວກເຮົາ. ພວກເຮົາບໍ່ເຄີຍປະນີປະນອມກັບຄຸນນະພາບ ແລະ ອາໄຫຼ່ແທ້.”", "“Every bolt we torque and every mast we inspect carries the safety of the operator and the trust of our client. We never compromise on factory standards or genuine spare parts.”")}
               </blockquote>
 
               <div className="flex items-center gap-3 pt-2 text-sm text-slate-400">
                 <span className="font-bold text-white">
-                  {isLo ? "ທີມວິສະວະກອນບໍລິການ DK LAO" : "DK LAO Service Engineering Team"}
+                  {getForkliftText("ທີມວິສະວະກອນບໍລິການ DK LAO", "DK LAO Service Engineering Team")}
                 </span>
                 <span>•</span>
-                <span>{isLo ? "ສູນສ້ອມແປງກາງ ຖະໜົນກຳແພງເມືອງ (T4 Hub)" : "Khamphengmeuang T4 Central Workshop"}</span>
+                <span>{getForkliftText("ສູນສ້ອມແປງກາງ ຖະໜົນກຳແພງເມືອງ (T4 Hub)", "Khamphengmeuang T4 Central Workshop")}</span>
               </div>
             </div>
 
             <div className="flex flex-col sm:flex-row lg:flex-col gap-3 justify-center">
               <Button
-                onClick={() => handleBookConsultation(isLo ? "ປຶກສາວິສະວະກອນໜ້າງານ (Field Story)" : "Consult Engineering Support")}
+                onClick={() => handleBookConsultation(getForkliftText("ປຶກສາວິສະວະກອນໜ້າງານ (Field Story)", "Consult Engineering Support"))}
                 className="bg-yellow-400 hover:bg-yellow-300 text-slate-950 font-bold py-6 px-8 text-base rounded-xl shadow-lg transition-all hover:scale-105"
               >
-                {isLo ? "ນັດໝາຍວິສະວະກອນລົງໜ້າງານ" : "Schedule On-Site Consultation"}
+                {getForkliftText("ນັດໝາຍວິສະວະກອນລົງໜ້າງານ", "Schedule On-Site Consultation")}
               </Button>
             </div>
           </div>

@@ -4,13 +4,12 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 import { STORE_CATEGORIES } from '@/data/categories';
-import { useTranslation } from "react-i18next";
+import { useCurrentLocale } from "@/i18n/useCurrentLocale";
 
 export function CategoryCircleGrid() {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const { i18n } = useTranslation();
-  const locale = i18n.language || "lo";
-  const isLao = locale === 'lo';
+  const locale = useCurrentLocale();
+  const isLao = locale.toLowerCase().startsWith("lo");
 
   const categories = STORE_CATEGORIES.map(cat => ({
     id: cat.id,

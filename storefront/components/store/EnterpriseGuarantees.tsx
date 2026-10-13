@@ -3,7 +3,7 @@
 import React from "react";
 import { ShieldCheck, Truck, FileText, Wrench, ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { useLocale } from "next-intl";
+import { useLocale } from "@/lib/locale";
 
 export function EnterpriseGuarantees() {
   const locale = useLocale();
@@ -17,7 +17,7 @@ export function EnterpriseGuarantees() {
       desc_lo: "ນຳເຂົ້າຈາກໂຮງງານຜູ້ຜະລິດໂດຍກົງ",
       title_en: "100% Genuine OEM Certified",
       desc_en: "Direct from factory manufacturers",
-      href: `/${locale}/services#spare-parts`,
+      href: "/services#spare-parts",
     },
     {
       icon: Truck,
@@ -26,7 +26,7 @@ export function EnterpriseGuarantees() {
       desc_lo: "ຈັດສົ່ງພາຍໃນມື້ດຽວໃນນະຄອນຫຼວງ",
       title_en: "Express Nationwide Dispatch",
       desc_en: "Same-day delivery in Vientiane capital",
-      href: `/${locale}/services#sale`,
+      href: "/services#sale",
     },
     {
       icon: FileText,
@@ -35,7 +35,7 @@ export function EnterpriseGuarantees() {
       desc_lo: "ຫັກອາກອນ ແລະ ເຂົ້າບັນຊີບໍລິສັດໄດ້ 100%",
       title_en: "Official Lao VAT Invoices",
       desc_en: "Full tax deduction compliance",
-      href: `/${locale}/services#management-ecosystem`,
+      href: "/services#management-ecosystem",
     },
     {
       icon: Wrench,
@@ -44,7 +44,7 @@ export function EnterpriseGuarantees() {
       desc_lo: "ຊ່າງຊຳນານງານພ້ອມລົງໄຊງານດ່ວນ",
       title_en: "24/7 Mobile Service PM",
       desc_en: "On-site maintenance & emergency support",
-      href: `/${locale}/services#service`,
+      href: "/services#service",
     },
   ];
 

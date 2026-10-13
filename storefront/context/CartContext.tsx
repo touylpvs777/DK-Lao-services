@@ -11,9 +11,12 @@ export interface CartItem {
   category?: string;
   unit_price: number;
   currency?: 'THB' | 'USD' | 'LAK';
+  lead_time?: string;
   quantity: number;
   image_url?: string;
   qty_on_hand: number;
+  crm_catalog_item?: boolean;
+  max_order_quantity?: number;
   bulk_pricing?: { min_qty: number; price: number }[];
 }
 
@@ -25,10 +28,10 @@ export interface ExchangeRates {
 }
 
 export const DEFAULT_EXCHANGE_RATES: ExchangeRates = {
-  THB: 650, // 1 THB = ~650 LAK (Commercial Reference Rate)
-  USD: 22000, // 1 USD = 22,000 LAK (Commercial Reference Rate)
-  lastUpdated: "ມື້ນີ້ (Real-time Online Feed)",
-  source: "BCEL & Commercial FX Market Reference"
+  THB: 650, // Approximate reference only; CRM confirms the final quote.
+  USD: 22000, // Approximate reference only; CRM confirms the final quote.
+  lastUpdated: "ອັດຕາອ້າງອີງ",
+  source: "Reference estimate; final amount confirmed by CRM"
 };
 
 export const USD_TO_LAK_RATE = DEFAULT_EXCHANGE_RATES.USD;
@@ -58,17 +61,19 @@ export function getProductPricingParameters(category?: string, unitPrice: number
  */
 export const calculateRetailForeignPrice = (
   factoryPrice: number,
-  currency: string = 'THB'
+  currency: string = 'THB',
+  applyMarkup = true,
 ): number => {
   if (currency === 'LAK') return Math.round(factoryPrice);
-  return Math.round(factoryPrice * FACTORY_MARKUP_RATE);
+  return Math.round(factoryPrice * (applyMarkup ? FACTORY_MARKUP_RATE : 1));
 };
 
 export const calculateLAKPrice = (
   price: number,
   currency: string = 'THB',
   category?: string,
-  rates: ExchangeRates = DEFAULT_EXCHANGE_RATES
+  rates: ExchangeRates = DEFAULT_EXCHANGE_RATES,
+  applyMarkup = true,
 ) => {
   if (currency === 'LAK') {
     // Already in Lao Kip
@@ -88,7 +93,7 @@ export const calculateLAKPrice = (
   }
 
   // Strictly +65% Factory Markup (1.65x)
-  return Math.round(baseLak * FACTORY_MARKUP_RATE);
+  return Math.round(baseLak * (applyMarkup ? FACTORY_MARKUP_RATE : 1));
 };
 
 export const getApplicablePrice = (item: CartItem) => {
@@ -139,7 +144,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   // Load cart, rates, and adminMode from LocalStorage on mount
   useEffect(() => {
     try {
-      const savedCart = localStorage.getItem("lud_shopping_cart");
+      const savedCart = localStorage.getItem("dk_crm_catalog_cart_v1");
       if (savedCart) {
         setItems(JSON.parse(savedCart));
       }
@@ -185,7 +190,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       const updated = {
         ...prev,
         ...newRates,
-        lastUpdated: "ອັບເດດລ່າສຸດ (Online Live Rate)",
+        lastUpdated: "ປັບອັດຕາອ້າງອີງດ້ວຍຕົນເອງ",
       };
       try {
         localStorage.setItem("lud_exchange_rates", JSON.stringify(updated));
@@ -198,7 +203,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!isInitialized) return;
     try {
-      localStorage.setItem("lud_shopping_cart", JSON.stringify(items));
+      localStorage.setItem("dk_crm_catalog_cart_v1", JSON.stringify(items));
     } catch (e) {
       console.error("Failed to save cart to localStorage", e);
     }
@@ -214,12 +219,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const closeCheckout = () => setIsCheckoutOpen(false);
 
   const addToCart = (product: InventoryItem, qty: number = 1) => {
+    const requestLimit = product.max_order_quantity ?? (product.qty_on_hand > 0 ? product.qty_on_hand : 99);
     setItems((prev) => {
       const existing = prev.find((item) => item.sku_id === product.sku_id);
       if (existing) {
         const newQty = Math.min(
           existing.quantity + qty,
-          product.qty_on_hand > 0 ? product.qty_on_hand : 99
+          requestLimit
         );
         return prev.map((item) =>
           item.sku_id === product.sku_id ? { ...item, quantity: newQty } : item
@@ -233,9 +239,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
           category: (product as any).category || "Industrial Parts",
           unit_price: Number(product.unit_price),
           currency: (product as any).currency || 'THB',
-          quantity: Math.min(qty, product.qty_on_hand > 0 ? product.qty_on_hand : 1),
+          lead_time: product.lead_time,
+          quantity: Math.min(qty, product.max_order_quantity ?? (product.qty_on_hand > 0 ? product.qty_on_hand : 1)),
           image_url: (product as any).image_url,
           qty_on_hand: product.qty_on_hand,
+          crm_catalog_item: product.crm_catalog_item,
+          max_order_quantity: product.max_order_quantity,
           bulk_pricing: (product as any).bulk_pricing,
         };
         return [...prev, newItem];
@@ -256,7 +265,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setItems((prev) =>
       prev.map((item) => {
         if (item.sku_id === sku_id) {
-          const maxAllowed = item.qty_on_hand > 0 ? item.qty_on_hand : 99;
+          const maxAllowed = item.max_order_quantity ?? (item.qty_on_hand > 0 ? item.qty_on_hand : 99);
           return { ...item, quantity: Math.min(quantity, maxAllowed) };
         }
         return item;
@@ -278,7 +287,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
   
   const totalLAK = items.reduce((sum, item) => {
     const applicablePrice = getApplicablePrice(item);
-    return sum + calculateLAKPrice(applicablePrice, item.currency, item.category, rates) * item.quantity;
+    return sum + calculateLAKPrice(
+      applicablePrice,
+      item.currency,
+      item.category,
+      rates,
+      !item.crm_catalog_item,
+    ) * item.quantity;
   }, 0);
 
   return (

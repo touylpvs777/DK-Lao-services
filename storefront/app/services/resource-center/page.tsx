@@ -4,8 +4,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FileText, Download, CheckCircle2, ChevronRight, BookOpen, Calculator, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useLocale } from "@/lib/locale";
 
-export default function ResourceCenterPage({ params: { locale } }: { params: { locale: string } }) {
+export default function ResourceCenterPage() {
+  const locale = useLocale();
   const isLo = locale === "lo";
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);

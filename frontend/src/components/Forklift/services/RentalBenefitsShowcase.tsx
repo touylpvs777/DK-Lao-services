@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
+import { useCurrentLocale } from "@/i18n/useCurrentLocale";
 import {
   Building2,
   TrendingUp,
@@ -21,11 +21,11 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/Forklift/ui/button";
 import { ImageLightboxModal } from "@/components/Forklift/ui/ImageLightboxModal";
+import { getForkliftText } from "@/i18n/forkliftLocale";
 
 export function RentalBenefitsShowcase() {
-  const { i18n } = useTranslation();
-  const locale = i18n.language || "lo";
-  const isLo = locale === "lo";
+  const locale = useCurrentLocale();
+  const isLo = locale.toLowerCase().startsWith("lo");
   const [activeTab, setActiveTab] = useState<"benefits" | "matrix">("benefits");
 
   const [lightbox, setLightbox] = useState<{
@@ -152,9 +152,7 @@ export function RentalBenefitsShowcase() {
           </h3>
 
           <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
-            {isLo
-              ? "ປ່ຽນພາລະການລົງທຶນ CAPEX ມາເປັນຄວາມຄ່ອງຕົວທາງການເງິນດ້ວຍສັນຍາເຊົ່າ B2B Fleet 0 LAK. ຟຣີຄ່າບຳລຸງຮັກສາ, ຟຣີອາໄຫຼ່ແທ້, ພ້ອມລົດສຳຮອງປ່ຽນແທນຕະຫຼອດ 24 ຊົ່ວໂມງ."
-              : "Eliminate hefty capital outlays and depreciation risks. Our strategic short and long-term rental programs offer total maintenance coverage, flexible terms, and zero plant downtime."}
+            {getForkliftText("ປ່ຽນພາລະການລົງທຶນ CAPEX ມາເປັນຄວາມຄ່ອງຕົວທາງການເງິນດ້ວຍສັນຍາເຊົ່າ B2B Fleet 0 LAK. ຟຣີຄ່າບຳລຸງຮັກສາ, ຟຣີອາໄຫຼ່ແທ້, ພ້ອມລົດສຳຮອງປ່ຽນແທນຕະຫຼອດ 24 ຊົ່ວໂມງ.", "Eliminate hefty capital outlays and depreciation risks. Our strategic short and long-term rental programs offer total maintenance coverage, flexible terms, and zero plant downtime.")}
           </p>
 
           {/* Tab Switcher */}
@@ -168,7 +166,7 @@ export function RentalBenefitsShowcase() {
                   : "text-slate-300 hover:text-white"
               }`}
             >
-              {isLo ? "5 ຈຸດເດັ່ນຂອງການເຊົ່າ (5 Core Benefits)" : "5 Core Rental Benefits"}
+              {getForkliftText("5 ຈຸດເດັ່ນຂອງການເຊົ່າ (5 Core Benefits)", "5 Core Rental Benefits")}
             </button>
             <button
               type="button"
@@ -179,7 +177,7 @@ export function RentalBenefitsShowcase() {
                   : "text-slate-300 hover:text-white"
               }`}
             >
-              {isLo ? "4 ມິຕິຄຸນຄ່າທາງທຸລະກິດ (4 Strategic Quadrants)" : "4 Value Matrix Quadrants"}
+              {getForkliftText("4 ມິຕິຄຸນຄ່າທາງທຸລະກິດ (4 Strategic Quadrants)", "4 Value Matrix Quadrants")}
             </button>
           </div>
         </div>
@@ -208,7 +206,7 @@ export function RentalBenefitsShowcase() {
                 />
                 <div className="absolute top-4 right-4 bg-slate-900/90 hover:bg-slate-900 text-white border border-white/20 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2 shadow-xl opacity-90 group-hover/img:opacity-100 group-hover/img:scale-105 transition-all">
                   <ZoomIn className="w-3.5 h-3.5 text-red-400" />
-                  <span>{isLo ? "🔍 ຊູມພາບ 2K" : "🔍 Zoom 2K"}</span>
+                  <span>{getForkliftText("🔍 ຊູມພາບ 2K", "🔍 Zoom 2K")}</span>
                 </div>
               </div>
             </div>
@@ -255,12 +253,10 @@ export function RentalBenefitsShowcase() {
                     0 CAPEX Lease
                   </div>
                   <h4 className="text-sm font-black text-white">
-                    {isLo ? "ຂໍໃບສະເໜີລາຄາເຊົ່າ Fleet ລາຍເດືອນ" : "Request Custom Fleet Lease Quotation"}
+                    {getForkliftText("ຂໍໃບສະເໜີລາຄາເຊົ່າ Fleet ລາຍເດືອນ", "Request Custom Fleet Lease Quotation")}
                   </h4>
                   <p className="text-xs text-slate-300 leading-relaxed">
-                    {isLo
-                      ? "ເລືອກໄດ້ທັງສັນຍາເຊົ່າໄລຍະສັ້ນ 1-6 ເດືອນ ແລະ ໄລຍະຍາວ 1-5 ປີ ພ້ອມລົດສຳຮອງປ່ຽນແທນຕະຫຼອດສັນຍາ."
-                      : "Tailored operational leases for 1-5 years or short-term seasonal peaks with full maintenance and standby replacements."}
+                    {getForkliftText("ເລືອກໄດ້ທັງສັນຍາເຊົ່າໄລຍະສັ້ນ 1-6 ເດືອນ ແລະ ໄລຍະຍາວ 1-5 ປີ ພ້ອມລົດສຳຮອງປ່ຽນແທນຕະຫຼອດສັນຍາ.", "Tailored operational leases for 1-5 years or short-term seasonal peaks with full maintenance and standby replacements.")}
                   </p>
                 </div>
 
@@ -269,7 +265,7 @@ export function RentalBenefitsShowcase() {
                     href="#booking-form"
                     className="btn-emerald py-2 px-3 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-md"
                   >
-                    <span>{isLo ? "ຂໍໃບສະເໜີລາຄາເຊົ່າ" : "Request RFQ"}</span>
+                    <span>{getForkliftText("ຂໍໃບສະເໜີລາຄາເຊົ່າ", "Request RFQ")}</span>
                     <ChevronRight className="w-3.5 h-3.5" />
                   </a>
                   <a
@@ -309,7 +305,7 @@ export function RentalBenefitsShowcase() {
                 />
                 <div className="absolute top-4 right-4 bg-slate-900/90 hover:bg-slate-900 text-white border border-white/20 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2 shadow-xl opacity-90 group-hover/img:opacity-100 group-hover/img:scale-105 transition-all">
                   <ZoomIn className="w-3.5 h-3.5 text-blue-400" />
-                  <span>{isLo ? "🔍 ຊູມພາບ 2K" : "🔍 Zoom 2K"}</span>
+                  <span>{getForkliftText("🔍 ຊູມພາບ 2K", "🔍 Zoom 2K")}</span>
                 </div>
               </div>
             </div>
@@ -353,16 +349,14 @@ export function RentalBenefitsShowcase() {
           <div className="flex items-center gap-3 text-slate-300 text-center sm:text-left">
             <RefreshCw className="w-5 h-5 text-blue-400 shrink-0" />
             <span>
-              {isLo
-                ? "ເຊື່ອມໂຍງຄົບວົງຈອນ 4S: ລູກຄ້າເຊົ່າທຸກຄັນໄດ້ຮັບສິດເຂົ້າກວດເຊັກ PM 12-24 ຈຸດຟຣີ ແລະ ປ່ຽນອາໄຫຼ່ແທ້ 100%."
-                : "Connected 4S Synergy: All rental units receive 100% free scheduled PM inspections and certified OEM replacement parts."}
+              {getForkliftText("ເຊື່ອມໂຍງຄົບວົງຈອນ 4S: ລູກຄ້າເຊົ່າທຸກຄັນໄດ້ຮັບສິດເຂົ້າກວດເຊັກ PM 12-24 ຈຸດຟຣີ ແລະ ປ່ຽນອາໄຫຼ່ແທ້ 100%.", "Connected 4S Synergy: All rental units receive 100% free scheduled PM inspections and certified OEM replacement parts.")}
             </span>
           </div>
           <a
             href="#service"
             className="text-blue-400 hover:text-blue-300 font-bold shrink-0 flex items-center gap-1"
           >
-            <span>{isLo ? "ເບິ່ງມາດຕະຖານ Service →" : "View Service Standards →"}</span>
+            <span>{getForkliftText("ເບິ່ງມາດຕະຖານ Service →", "View Service Standards →")}</span>
           </a>
         </div>
       </div>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
+import { useCurrentLocale } from "@/i18n/useCurrentLocale";
 import {
   Truck,
   ShieldCheck,
@@ -15,11 +15,11 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/Forklift/ui/button";
 import { ImageLightboxModal } from "@/components/Forklift/ui/ImageLightboxModal";
+import { getForkliftText } from "@/i18n/forkliftLocale";
 
 export function UsedForkliftsShowcase() {
-  const { i18n } = useTranslation();
-  const locale = i18n.language || "lo";
-  const isLo = locale === "lo";
+  const locale = useCurrentLocale();
+  const isLo = locale.toLowerCase().startsWith("lo");
 
   const [lightbox, setLightbox] = useState<{
     isOpen: boolean;
@@ -99,20 +99,18 @@ export function UsedForkliftsShowcase() {
             </h3>
 
             <p className="text-xs sm:text-sm text-slate-300 max-w-2xl mt-2 leading-relaxed">
-              {isLo
-                ? "ທາງເລືອກທີ່ຄຸ້ມຄ່າສຳລັບທຸລະກິດທີ່ຕ້ອງການຫຼຸດຕົ້ນທຶນ 40-60%. ລົດທຸກຄັນຜ່ານການກວດເຊັກ 12-24 ມາດຕະຖານໂຮງງານ ພ້ອມຮັບປະກັນ ແລະ ສູນບໍລິການ 4S ຮອງຮັບຕະຫຼອດອາຍຸການໃຊ້ງານ."
-                : "Cost-effective solution saving 40-60% capital outlay. Every unit passes rigorous 12-24 factory checkpoints, complete with operational warranty and full 4S service support."}
+              {getForkliftText("ທາງເລືອກທີ່ຄຸ້ມຄ່າສຳລັບທຸລະກິດທີ່ຕ້ອງການຫຼຸດຕົ້ນທຶນ 40-60%. ລົດທຸກຄັນຜ່ານການກວດເຊັກ 12-24 ມາດຕະຖານໂຮງງານ ພ້ອມຮັບປະກັນ ແລະ ສູນບໍລິການ 4S ຮອງຮັບຕະຫຼອດອາຍຸການໃຊ້ງານ.", "Cost-effective solution saving 40-60% capital outlay. Every unit passes rigorous 12-24 factory checkpoints, complete with operational warranty and full 4S service support.")}
             </p>
           </div>
 
           <div className="flex items-center gap-3 shrink-0">
             <div className="px-4 py-2.5 rounded-2xl bg-white/5 border border-white/10 text-center">
               <div className="text-xl sm:text-2xl font-black text-emerald-400 font-mono">40-60%</div>
-              <div className="text-[10px] text-slate-400 uppercase font-bold">{isLo ? "ປະຢັດເງິນລົງທຶນ" : "Capital Savings"}</div>
+              <div className="text-[10px] text-slate-400 uppercase font-bold">{getForkliftText("ປະຢັດເງິນລົງທຶນ", "Capital Savings")}</div>
             </div>
             <div className="px-4 py-2.5 rounded-2xl bg-white/5 border border-white/10 text-center">
               <div className="text-xl sm:text-2xl font-black text-yellow-400 font-mono">100%</div>
-              <div className="text-[10px] text-slate-400 uppercase font-bold">{isLo ? "ກວດເຊັກລະອຽດ" : "Inspection Passed"}</div>
+              <div className="text-[10px] text-slate-400 uppercase font-bold">{getForkliftText("ກວດເຊັກລະອຽດ", "Inspection Passed")}</div>
             </div>
           </div>
         </div>
@@ -141,7 +139,7 @@ export function UsedForkliftsShowcase() {
           </div>
           <div className="absolute top-4 right-4 bg-slate-900/90 hover:bg-slate-900 text-white border border-white/20 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2 shadow-xl opacity-90 group-hover/img:opacity-100 group-hover/img:scale-105 transition-all">
             <ZoomIn className="w-3.5 h-3.5 text-yellow-400" />
-            <span>{isLo ? "🔍 ຊູມພາບ 2K" : "🔍 Zoom 2K"}</span>
+            <span>{getForkliftText("🔍 ຊູມພາບ 2K", "🔍 Zoom 2K")}</span>
           </div>
         </div>
 
@@ -163,9 +161,7 @@ export function UsedForkliftsShowcase() {
           <div className="flex items-center gap-3 text-xs text-slate-300 text-center sm:text-left">
             <Warehouse className="w-5 h-5 text-yellow-400 shrink-0" />
             <span>
-              {isLo
-                ? "ເຊີນເຂົ້າມາຊົມ ແລະ ທົດລອງຂັບລົດຕົວຈິງໄດ້ທີ່ສາງ ດີເຄ ລາວ ຖະໜົນກຳແພງເມືອງ, ບ້ານໜອງໄຮ, ນະຄອນຫຼວງວຽງຈັນ."
-                : "Welcome to inspect and test-drive all in-stock units at DK LAO Warehouse Yard, Kamphaengmeuang Rd, Vientiane."}
+              {getForkliftText("ເຊີນເຂົ້າມາຊົມ ແລະ ທົດລອງຂັບລົດຕົວຈິງໄດ້ທີ່ສາງ ດີເຄ ລາວ ຖະໜົນກຳແພງເມືອງ, ບ້ານໜອງໄຮ, ນະຄອນຫຼວງວຽງຈັນ.", "Welcome to inspect and test-drive all in-stock units at DK LAO Warehouse Yard, Kamphaengmeuang Rd, Vientiane.")}
             </span>
           </div>
 
@@ -188,7 +184,7 @@ export function UsedForkliftsShowcase() {
                 if (el) el.scrollIntoView({ behavior: "smooth" });
               }}
             >
-              <span>{isLo ? "ນັດໝາຍເຂົ້າເບິ່ງລົດ" : "Book Yard Visit"}</span>
+              <span>{getForkliftText("ນັດໝາຍເຂົ້າເບິ່ງລົດ", "Book Yard Visit")}</span>
               <ChevronRight className="w-3.5 h-3.5 ml-1" />
             </Button>
           </div>

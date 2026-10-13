@@ -5,6 +5,7 @@ import { Button } from "@/components/Forklift/ui/button";
 import { useBookingContext } from "./BookingContext";
 import { TCOCalculator } from "./TCOCalculator";
 import { useInternalMode } from "@/components/internal/InternalModeContext";
+import { getForkliftText } from "@/i18n/forkliftLocale";
 
 export const ServiceSalePillar = ({ isLo }: { isLo: boolean }) => {
   const { handleBookConsultation } = useBookingContext();
@@ -56,15 +57,13 @@ export const ServiceSalePillar = ({ isLo }: { isLo: boolean }) => {
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 font-semibold mb-4"
           >
             <ShoppingCart className="w-5 h-5" />
-            <span>{isLo ? "1. SALE | ການຈັດຊື້ & ທີ່ປຶກສາວິສະວະກຳລົດຍົກ" : "1. SALES & FLEET PROCUREMENT ADVISORY"}</span>
+            <span>{getForkliftText("1. SALE | ການຈັດຊື້ & ທີ່ປຶກສາວິສະວະກຳລົດຍົກ", "1. SALES & FLEET PROCUREMENT ADVISORY")}</span>
           </motion.div>
           <h2 className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white mb-6">
-            {isLo ? "ສູນລວມລົດຟອກລີບຄຸນນະພາບມາດຕະຖານສາກົນ" : "Certified Industrial Forklift Solutions"}
+            {getForkliftText("ສູນລວມລົດຟອກລີບຄຸນນະພາບມາດຕະຖານສາກົນ", "Certified Industrial Forklift Solutions")}
           </h2>
           <p className="text-lg text-slate-600 dark:text-slate-300 max-w-3xl mx-auto">
-            {isLo 
-              ? "ພວກເຮົາບໍ່ພຽງແຕ່ຂາຍລົດ, ແຕ່ເຮົາໃຫ້ຄຳປຶກສາດ້ານວິສະວະກຳ (Engineering Consultation) ເລືອກລົດໃຫ້ກົງກັບນ້ຳໜັກຍົກ, ລັກສະນະພື້ນທີ່, ແລະ ໄລຍະຄືນທຶນ (TCO) ທີ່ຄຸ້ມຄ່າທີ່ສຸດ." 
-              : "We provide consultative engineering support to select the exact right equipment for your load requirements, operating surface, and total cost of ownership (TCO)."}
+            {getForkliftText("ພວກເຮົາບໍ່ພຽງແຕ່ຂາຍລົດ, ແຕ່ເຮົາໃຫ້ຄຳປຶກສາດ້ານວິສະວະກຳ (Engineering Consultation) ເລືອກລົດໃຫ້ກົງກັບນ້ຳໜັກຍົກ, ລັກສະນະພື້ນທີ່, ແລະ ໄລຍະຄືນທຶນ (TCO) ທີ່ຄຸ້ມຄ່າທີ່ສຸດ.", "We provide consultative engineering support to select the exact right equipment for your load requirements, operating surface, and total cost of ownership (TCO).")}
           </p>
         </div>
 
@@ -81,67 +80,63 @@ export const ServiceSalePillar = ({ isLo }: { isLo: boolean }) => {
           <div className="relative z-10">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/20 text-white text-xs font-bold mb-6 tracking-wide backdrop-blur-md">
               <ShieldCheck className="w-4 h-4 text-emerald-300" />
-              {isLo ? "ແພັກເກັດການດູແລຄົບວົງຈອນ (COMPREHENSIVE ENGINEERING CARE)" : "COMPREHENSIVE ENGINEERING CARE PACKAGE"}
+              {getForkliftText("ແພັກເກັດການດູແລຄົບວົງຈອນ (COMPREHENSIVE ENGINEERING CARE)", "COMPREHENSIVE ENGINEERING CARE PACKAGE")}
             </div>
             
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               <div className="col-span-1 lg:col-span-2">
                 <h3 className="text-2xl lg:text-4xl font-black mb-4 tracking-tight">
-                  {isLo ? "ຄຳໝັ້ນສັນຍາການດູແລລູກຄ້າອົງກອນ (B2B Fleet Commitment)" : "Exclusive B2B Enterprise Care Commitment"}
+                  {getForkliftText("ຄຳໝັ້ນສັນຍາການດູແລລູກຄ້າອົງກອນ (B2B Fleet Commitment)", "Exclusive B2B Enterprise Care Commitment")}
                 </h3>
                 <p className="text-blue-100 text-base lg:text-lg mb-6 max-w-2xl leading-relaxed">
-                  {isLo 
-                    ? "ຊື້ລົດຍົກກັບ DK LAO ທ່ານຈະໄດ້ຮັບການດູແລຄົບວົງຈອນຕັ້ງແຕ່ວັນທຳອິດ ຈົນຕະຫຼອດອາຍຸການໃຊ້ງານ ໂດຍທີມວິສະວະກອນປະຈຳສູນ Khamphengmeuang Hub." 
-                    : "Acquiring equipment with DK LAO guarantees end-to-end support throughout its entire lifecycle by certified factory engineers."}
+                  {getForkliftText("ຊື້ລົດຍົກກັບ DK LAO ທ່ານຈະໄດ້ຮັບການດູແລຄົບວົງຈອນຕັ້ງແຕ່ວັນທຳອິດ ຈົນຕະຫຼອດອາຍຸການໃຊ້ງານ ໂດຍທີມວິສະວະກອນປະຈຳສູນ Khamphengmeuang Hub.", "Acquiring equipment with DK LAO guarantees end-to-end support throughout its entire lifecycle by certified factory engineers.")}
                 </p>
                 <ul className="space-y-4 mb-4">
                   <li className="flex items-start gap-3 text-base lg:text-lg">
                     <CheckCircle2 className="w-6 h-6 text-emerald-300 shrink-0 mt-0.5" />
                     <span>
-                      <strong className="text-white">{isLo ? "ຮັບປະກັນສູນແທ້: " : "Full Factory Warranty: "}</strong>
-                      {isLo ? "ຮັບປະກັນຕົວລົດ ແລະ ແບັດເຕີຣີ Li-Ion 1-5 ປີເຕັມ (ຂຶ້ນກັບລຸ້ນລົດ)" : "1 to 5 years comprehensive chassis and Li-ion battery warranty."}
+                      <strong className="text-white">{getForkliftText("ຮັບປະກັນສູນແທ້: ", "Full Factory Warranty: ")}</strong>
+                      {getForkliftText("ຮັບປະກັນຕົວລົດ ແລະ ແບັດເຕີຣີ Li-Ion 1-5 ປີເຕັມ (ຂຶ້ນກັບລຸ້ນລົດ)", "1 to 5 years comprehensive chassis and Li-ion battery warranty.")}
                     </span>
                   </li>
                   <li className="flex items-start gap-3 text-base lg:text-lg">
                     <CheckCircle2 className="w-6 h-6 text-emerald-300 shrink-0 mt-0.5" />
                     <span>
-                      <strong className="text-white">{isLo ? "ຟຣີ ຊຸດບຳລຸງຮັກສາ PM: " : "Complimentary 2-Year PM: "}</strong>
-                      {isLo ? "ຟຣີ ບຳລຸງຮັກສາປ້ອງກັນ 2 ປີ ຫຼື 4,000 ຊົ່ວໂມງ ພ້ອມນ້ຳມັນ ແລະ ອາໄຫຼ່ແທ້ 100%" : "Free 2-year or 4,000h routine PM with 100% genuine filters and fluids."}
+                      <strong className="text-white">{getForkliftText("ຟຣີ ຊຸດບຳລຸງຮັກສາ PM: ", "Complimentary 2-Year PM: ")}</strong>
+                      {getForkliftText("ຟຣີ ບຳລຸງຮັກສາປ້ອງກັນ 2 ປີ ຫຼື 4,000 ຊົ່ວໂມງ ພ້ອມນ້ຳມັນ ແລະ ອາໄຫຼ່ແທ້ 100%", "Free 2-year or 4,000h routine PM with 100% genuine filters and fluids.")}
                     </span>
                   </li>
                   <li className="flex items-start gap-3 text-base lg:text-lg">
                     <CheckCircle2 className="w-6 h-6 text-emerald-300 shrink-0 mt-0.5" />
                     <span>
-                      <strong className="text-white">{isLo ? "ໂຄງການ Trade-In: " : "Fair Trade-In Program: "}</strong>
-                      {isLo ? "ຮັບປະເມີນລາຄາລົດເກົ່າທຸກຍີ່ຫໍ້ ເພື່ອປ່ຽນເປັນລົດລຸ້ນໃໝ່ ໃຫ້ມູນຄ່າທີ່ຍຸຕິທຳ" : "Fair valuation trade-in program for legacy equipment of any brand."}
+                      <strong className="text-white">{getForkliftText("ໂຄງການ Trade-In: ", "Fair Trade-In Program: ")}</strong>
+                      {getForkliftText("ຮັບປະເມີນລາຄາລົດເກົ່າທຸກຍີ່ຫໍ້ ເພື່ອປ່ຽນເປັນລົດລຸ້ນໃໝ່ ໃຫ້ມູນຄ່າທີ່ຍຸຕິທຳ", "Fair valuation trade-in program for legacy equipment of any brand.")}
                     </span>
                   </li>
                   <li className="flex items-start gap-3 text-base lg:text-lg">
                     <CheckCircle2 className="w-6 h-6 text-emerald-300 shrink-0 mt-0.5" />
                     <span>
-                      <strong className="text-white">{isLo ? "ຝຶກອົບຮົມຄົນຂັບໜ້າງານ: " : "Certified Operator Training: "}</strong>
-                      {isLo ? "ຟຣີ ຫຼັກສູດການຂັບຂີ່ປອດໄພ ແລະ ການກວດເຊັກປະຈຳວັນ ພ້ອມອອກໃບຢັ້ງຢືນ" : "Free on-site safe driving & daily inspection certification for your drivers."}
+                      <strong className="text-white">{getForkliftText("ຝຶກອົບຮົມຄົນຂັບໜ້າງານ: ", "Certified Operator Training: ")}</strong>
+                      {getForkliftText("ຟຣີ ຫຼັກສູດການຂັບຂີ່ປອດໄພ ແລະ ການກວດເຊັກປະຈຳວັນ ພ້ອມອອກໃບຢັ້ງຢືນ", "Free on-site safe driving & daily inspection certification for your drivers.")}
                     </span>
                   </li>
                 </ul>
               </div>
               <div className="flex flex-col justify-center gap-4 bg-white/10 p-6 rounded-2xl backdrop-blur-md border border-white/20">
                 <h4 className="font-bold text-xl mb-1 text-center text-yellow-300">
-                  {isLo ? "ການຈັດສົ່ງ & ທົດສອບລະບົບ" : "Nationwide Delivery"}
+                  {getForkliftText("ການຈັດສົ່ງ & ທົດສອບລະບົບ", "Nationwide Delivery")}
                 </h4>
                 <div className="flex items-start gap-3 text-sm text-blue-50 leading-relaxed">
                   <MapPin className="w-5 h-5 text-yellow-300 shrink-0 mt-0.5" />
                   <span>
-                    {isLo 
-                      ? "ຈັດສົ່ງ ແລະ ທົດສອບລະບົບໜ້າງານ (On-Site Commissioning) ທົ່ວ 18 ແຂວງ ພ້ອມນາຍຊ່າງໄປແນະນຳວິທີໃຊ້ງານຕົວຈິງ." 
-                      : "Nationwide on-site commissioning and driver orientation across all 18 Lao provinces."}
+                    {getForkliftText("ຈັດສົ່ງ ແລະ ທົດສອບລະບົບໜ້າງານ (On-Site Commissioning) ທົ່ວ 18 ແຂວງ ພ້ອມນາຍຊ່າງໄປແນະນຳວິທີໃຊ້ງານຕົວຈິງ.", "Nationwide on-site commissioning and driver orientation across all 18 Lao provinces.")}
                   </span>
                 </div>
                 <Button 
-                  onClick={() => handleBookConsultation(isLo ? "ປຶກສາວິສະວະກອນເລືອກຊື້ລົດຍົກ (Sale Advisory)" : "Consult Forklift Selection Specialist")}
+                  onClick={() => handleBookConsultation(getForkliftText("ປຶກສາວິສະວະກອນເລືອກຊື້ລົດຍົກ (Sale Advisory)", "Consult Forklift Selection Specialist"))}
                   className="w-full mt-4 bg-yellow-400 hover:bg-yellow-300 text-blue-950 font-bold py-6 text-base lg:text-lg rounded-xl shadow-lg transition-all hover:scale-[1.02]"
                 >
-                  {isLo ? "ນັດໝາຍປຶກສາວິສະວະກອນເລືອກລົດ" : "Schedule Equipment Consultation"}
+                  {getForkliftText("ນັດໝາຍປຶກສາວິສະວະກອນເລືອກລົດ", "Schedule Equipment Consultation")}
                 </Button>
               </div>
             </div>
@@ -153,20 +148,20 @@ export const ServiceSalePillar = ({ isLo }: { isLo: boolean }) => {
           <div className="flex items-center gap-3 mb-6">
             <Lightbulb className="w-8 h-8 text-amber-500" />
             <h3 className="text-2xl font-bold text-slate-900 dark:text-white">
-              {isLo ? "ຄຳແນະນຳຈາກວິສະວະກອນ: ວິທີເລືອກລົດຍົກໃຫ້ກົງກັບໜ້າງານ" : "Engineering Advisory: Choosing the Right Forklift"}
+              {getForkliftText("ຄຳແນະນຳຈາກວິສະວະກອນ: ວິທີເລືອກລົດຍົກໃຫ້ກົງກັບໜ້າງານ", "Engineering Advisory: Choosing the Right Forklift")}
             </h3>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-slate-700 dark:text-slate-300">
             <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm">
               <h4 className="font-bold text-lg mb-2 text-blue-600 dark:text-blue-400">EV Lithium-ion (ອນາຄົດແຫ່ງໂລຈິສຕິກ)</h4>
               <p className="text-sm leading-relaxed">
-                {isLo ? "ຖ້າສາງຂອງທ່ານເປັນລະບົບປິດ (Indoor) ຫຼື ກ່ຽວຂ້ອງກັບອາຫານ, ຢາ (F&B, Pharma). ການລົງທຶນກັບ EV ຈະຄຸ້ມຄ່າກວ່າໃນໄລຍະຍາວ ເພາະຫຼຸດຄ່າພະລັງງານໄດ້ເຖິງ 70% ເມື່ອທຽບກັບນ້ຳມັນ ແລະ ບໍ່ມີມົນລະພິດ. (TCO ຕ່ຳທີ່ສຸດໃນໄລຍະ 5 ປີ)." : "Ideal for F&B/Pharma indoor ops. Reduces energy costs by 70%. Lowest TCO over 5 years."}
+                {getForkliftText("ຖ້າສາງຂອງທ່ານເປັນລະບົບປິດ (Indoor) ຫຼື ກ່ຽວຂ້ອງກັບອາຫານ, ຢາ (F&B, Pharma). ການລົງທຶນກັບ EV ຈະຄຸ້ມຄ່າກວ່າໃນໄລຍະຍາວ ເພາະຫຼຸດຄ່າພະລັງງານໄດ້ເຖິງ 70% ເມື່ອທຽບກັບນ້ຳມັນ ແລະ ບໍ່ມີມົນລະພິດ. (TCO ຕ່ຳທີ່ສຸດໃນໄລຍະ 5 ປີ).", "Ideal for F&B/Pharma indoor ops. Reduces energy costs by 70%. Lowest TCO over 5 years.")}
               </p>
             </div>
             <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm">
               <h4 className="font-bold text-lg mb-2 text-amber-600 dark:text-amber-400">Diesel/IC (ຈອມພະລັງງານໜັກ)</h4>
               <p className="text-sm leading-relaxed">
-                {isLo ? "ຖ້າໜ້າງານເປັນດິນແດງ, ທາງຊັນ, ຫຼື ຕ້ອງຍົກສິນຄ້ານ້ຳໜັກ 5-10 ໂຕນຂຶ້ນໄປ ຕໍ່ເນື່ອງທັງວັນທັງຄືນ. ເຄື່ອງຈັກກາຊວນຕອບໂຈດທີ່ສຸດ ເພາະເຕີມນ້ຳມັນແລ້ວລຸຍວຽກຕໍ່ໄດ້ທັນທີ ບໍ່ຕ້ອງລໍຖ້າສາກໄຟ." : "Best for outdoor, uneven terrain, and heavy-duty 5-10T loads. No charging downtime."}
+                {getForkliftText("ຖ້າໜ້າງານເປັນດິນແດງ, ທາງຊັນ, ຫຼື ຕ້ອງຍົກສິນຄ້ານ້ຳໜັກ 5-10 ໂຕນຂຶ້ນໄປ ຕໍ່ເນື່ອງທັງວັນທັງຄືນ. ເຄື່ອງຈັກກາຊວນຕອບໂຈດທີ່ສຸດ ເພາະເຕີມນ້ຳມັນແລ້ວລຸຍວຽກຕໍ່ໄດ້ທັນທີ ບໍ່ຕ້ອງລໍຖ້າສາກໄຟ.", "Best for outdoor, uneven terrain, and heavy-duty 5-10T loads. No charging downtime.")}
               </p>
             </div>
           </div>

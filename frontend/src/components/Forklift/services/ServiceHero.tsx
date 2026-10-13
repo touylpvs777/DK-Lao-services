@@ -19,6 +19,7 @@ import {
   Users,
   HeartHandshake,
 } from "lucide-react";
+import { getForkliftText } from "@/i18n/forkliftLocale";
 
 export const ServiceHero = ({ isLo }: { isLo: boolean }) => {
   const scrollToSection = (id: string) => {
@@ -47,7 +48,7 @@ export const ServiceHero = ({ isLo }: { isLo: boolean }) => {
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-300 text-xs font-bold uppercase tracking-wider mb-6 shadow-sm"
           >
             <Users className="w-4 h-4 text-blue-400" />
-            <span>{isLo ? "ທີມງານຄົນລາວ ມາດຕະຖານສາກົນ • ສ້າງຕັ້ງ 2010" : "Lao Engineering Craftsmanship • Est. 2010"}</span>
+            <span>{getForkliftText("ທີມງານຄົນລາວ ມາດຕະຖານສາກົນ • ສ້າງຕັ້ງ 2010", "Lao Engineering Craftsmanship • Est. 2010")}</span>
           </motion.div>
 
           {/* Main Title */}
@@ -81,9 +82,7 @@ export const ServiceHero = ({ isLo }: { isLo: boolean }) => {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-xl sm:text-2xl font-bold text-blue-300 mb-6 tracking-wide"
           >
-            {isLo
-              ? "ຍົກ ຍ້າຍ ຂະຫຍາຍທຸລະກິດຂອງທ່ານ • Lifting – Moving – Growing Your Business"
-              : "Lifting – Moving – Growing Your Business • ຍົກ ຍ້າຍ ຂະຫຍາຍທຸລະກິດຂອງທ່ານ"}
+            {getForkliftText("ຍົກ ຍ້າຍ ຂະຫຍາຍທຸລະກິດຂອງທ່ານ • Lifting – Moving – Growing Your Business", "Lifting – Moving – Growing Your Business • ຍົກ ຍ້າຍ ຂະຫຍາຍທຸລະກິດຂອງທ່ານ")}
           </motion.p>
 
           {/* Genuine Human Description */}
@@ -93,9 +92,7 @@ export const ServiceHero = ({ isLo }: { isLo: boolean }) => {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="max-w-3xl mx-auto text-base sm:text-lg text-slate-300 leading-relaxed font-normal mb-8"
           >
-            {isLo
-              ? "ຕະຫຼອດ 16 ປີແຫ່ງການລົງມືເຮັດວຽກຕົວຈິງ, ດີເຄ ລາວ ເຕີບໃຫຍ່ຂຶ້ນຍ້ອນຄວາມໄວ້ວາງໃຈຈາກລູກຄ້າ. ພວກເຮົາເຂົ້າໃຈດີວ່າ ເມື່ອກົນຈັກໃນສາງຢຸດສະງັກ ໝາຍເຖິງຕົ້ນທຶນ ແລະ ເວລາຂອງທ່ານ. ທີມວິສະວະກອນ ແລະ ນາຍຊ່າງຄົນລາວຂອງພວກເຮົາຈຶ່ງພ້ອມຢືນຄຽງຂ້າງ, ຮັບຟັງ, ແລະ ລົງແກ້ໄຂບັນຫາໜ້າງານດ້ວຍຄວາມຮັບຜິດຊອບສູງສຸດ."
-              : "Across 16 years of hands-on industrial field work, DK LAO has grown through genuine trust. We understand that every minute of warehouse downtime costs real revenue. That's why our certified team of engineers and master technicians stands ready to assist you on-site with unmatched technical integrity."}
+            {getForkliftText("ຕະຫຼອດ 16 ປີແຫ່ງການລົງມືເຮັດວຽກຕົວຈິງ, ດີເຄ ລາວ ເຕີບໃຫຍ່ຂຶ້ນຍ້ອນຄວາມໄວ້ວາງໃຈຈາກລູກຄ້າ. ພວກເຮົາເຂົ້າໃຈດີວ່າ ເມື່ອກົນຈັກໃນສາງຢຸດສະງັກ ໝາຍເຖິງຕົ້ນທຶນ ແລະ ເວລາຂອງທ່ານ. ທີມວິສະວະກອນ ແລະ ນາຍຊ່າງຄົນລາວຂອງພວກເຮົາຈຶ່ງພ້ອມຢືນຄຽງຂ້າງ, ຮັບຟັງ, ແລະ ລົງແກ້ໄຂບັນຫາໜ້າງານດ້ວຍຄວາມຮັບຜິດຊອບສູງສຸດ.", "Across 16 years of hands-on industrial field work, DK LAO has grown through genuine trust. We understand that every minute of warehouse downtime costs real revenue. That's why our certified team of engineers and master technicians stands ready to assist you on-site with unmatched technical integrity.")}
           </motion.p>
 
           {/* Real Team Showcase Card */}
@@ -115,10 +112,8 @@ export const ServiceHero = ({ isLo }: { isLo: boolean }) => {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent"></div>
                 <div className="absolute bottom-3 left-3 right-3 text-xs text-white bg-slate-900/80 backdrop-blur-md px-3 py-2 rounded-xl border border-white/10">
-                  <strong>{isLo ? "ພາບທີມງານຊ່າງຕົວຈິງ:" : "Our Real Team on Site:"}</strong>{" "}
-                  {isLo
-                    ? "ສູນສ້ອມແປງກາງ ແລະ ທີມງານ DKwick Mobile Service ຖະໜົນກຳແພງເມືອງ ນະຄອນຫຼວງວຽງຈັນ"
-                    : "Central Workshop & DKwick Mobile Field Response Team on Khamphengmeuang Road, Vientiane"}
+                  <strong>{getForkliftText("ພາບທີມງານຊ່າງຕົວຈິງ:", "Our Real Team on Site:")}</strong>{" "}
+                  {getForkliftText("ສູນສ້ອມແປງກາງ ແລະ ທີມງານ DKwick Mobile Service ຖະໜົນກຳແພງເມືອງ ນະຄອນຫຼວງວຽງຈັນ", "Central Workshop & DKwick Mobile Field Response Team on Khamphengmeuang Road, Vientiane")}
                 </div>
               </div>
 
@@ -126,22 +121,18 @@ export const ServiceHero = ({ isLo }: { isLo: boolean }) => {
                 <div className="space-y-2">
                   <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-bold">
                     <HeartHandshake className="w-3.5 h-3.5" />
-                    <span>{isLo ? "ຄຳໝັ້ນສັນຍາຈາກໃຈນາຍຊ່າງ" : "Technicians' Commitment"}</span>
+                    <span>{getForkliftText("ຄຳໝັ້ນສັນຍາຈາກໃຈນາຍຊ່າງ", "Technicians' Commitment")}</span>
                   </div>
                   <h3 className="text-xl font-bold text-white leading-snug">
-                    {isLo
-                      ? "“ພວກເຮົາເບິ່ງແຍງລົດທຸກຄັນ ຄືກັນກັບລົດຂອງພວກເຮົາເອງ”"
-                      : "“We care for every client's forklift as if it were our very own”"}
+                    {getForkliftText("“ພວກເຮົາເບິ່ງແຍງລົດທຸກຄັນ ຄືກັນກັບລົດຂອງພວກເຮົາເອງ”", "“We care for every client's forklift as if it were our very own”")}
                   </h3>
                   <p className="text-xs text-slate-300 leading-relaxed">
-                    {isLo
-                      ? "ບໍ່ມີລະບົບຕອບຮັບອັດຕະໂນມັດທີ່ສັບສົນ. ເມື່ອທ່ານໂທຫາ ດີເຄ ລາວ, ທ່ານຈະໄດ້ລົມກັບນາຍຊ່າງ ແລະ ວິສະວະກອນຕົວຈິງ ທີ່ພ້ອມແນະນຳ ແລະ ຊ່ວຍເຫຼືອຢ່າງກົງໄປກົງມາ."
-                      : "No complicated automated robot menus. When you call DK LAO, you speak directly with experienced technicians who understand your machinery and solve problems honestly."}
+                    {getForkliftText("ບໍ່ມີລະບົບຕອບຮັບອັດຕະໂນມັດທີ່ສັບສົນ. ເມື່ອທ່ານໂທຫາ ດີເຄ ລາວ, ທ່ານຈະໄດ້ລົມກັບນາຍຊ່າງ ແລະ ວິສະວະກອນຕົວຈິງ ທີ່ພ້ອມແນະນຳ ແລະ ຊ່ວຍເຫຼືອຢ່າງກົງໄປກົງມາ.", "No complicated automated robot menus. When you call DK LAO, you speak directly with experienced technicians who understand your machinery and solve problems honestly.")}
                   </p>
                 </div>
 
                 <div className="pt-3 border-t border-white/10 flex items-center justify-between text-xs text-slate-400">
-                  <span>{isLo ? "ສາຍດ່ວນວິສະວະກອນ:" : "Direct Engineer Hotline:"}</span>
+                  <span>{getForkliftText("ສາຍດ່ວນວິສະວະກອນ:", "Direct Engineer Hotline:")}</span>
                   <a
                     href="https://wa.me/8562058929299"
                     target="_blank"
@@ -167,8 +158,8 @@ export const ServiceHero = ({ isLo }: { isLo: boolean }) => {
                 <ShieldCheck className="w-5 h-5" />
               </div>
               <div>
-                <div className="text-xs font-black text-white">{isLo ? "0 ກີບ CAPEX" : "0 LAK CAPEX"}</div>
-                <div className="text-[10px] text-slate-300">{isLo ? "ບໍ່ຕ້ອງລົງທຶນກ້ອນໃຫຍ່" : "Preserve Cashflow"}</div>
+                <div className="text-xs font-black text-white">{getForkliftText("0 ກີບ CAPEX", "0 LAK CAPEX")}</div>
+                <div className="text-[10px] text-slate-300">{getForkliftText("ບໍ່ຕ້ອງລົງທຶນກ້ອນໃຫຍ່", "Preserve Cashflow")}</div>
               </div>
             </div>
 
@@ -177,8 +168,8 @@ export const ServiceHero = ({ isLo }: { isLo: boolean }) => {
                 <Clock className="w-5 h-5" />
               </div>
               <div>
-                <div className="text-xs font-black text-white">{isLo ? "ລົງໄຊທ໌ 2 - 4 ຊມ" : "2 - 4h Dispatch"}</div>
-                <div className="text-[10px] text-slate-300">{isLo ? "ຊ່າງມາຮອດໜ້າໂຮງງານ" : "Rapid On-Site Team"}</div>
+                <div className="text-xs font-black text-white">{getForkliftText("ລົງໄຊທ໌ 2 - 4 ຊມ", "2 - 4h Dispatch")}</div>
+                <div className="text-[10px] text-slate-300">{getForkliftText("ຊ່າງມາຮອດໜ້າໂຮງງານ", "Rapid On-Site Team")}</div>
               </div>
             </div>
 
@@ -187,8 +178,8 @@ export const ServiceHero = ({ isLo }: { isLo: boolean }) => {
                 <Repeat className="w-5 h-5" />
               </div>
               <div>
-                <div className="text-xs font-black text-white">{isLo ? "Zero Downtime" : "Zero Downtime"}</div>
-                <div className="text-[10px] text-slate-300">{isLo ? "ມີລົດສຳຮອງປ່ຽນແທນ" : "Standby Replacement"}</div>
+                <div className="text-xs font-black text-white">{getForkliftText("Zero Downtime", "Zero Downtime")}</div>
+                <div className="text-[10px] text-slate-300">{getForkliftText("ມີລົດສຳຮອງປ່ຽນແທນ", "Standby Replacement")}</div>
               </div>
             </div>
 
@@ -197,8 +188,8 @@ export const ServiceHero = ({ isLo }: { isLo: boolean }) => {
                 <Boxes className="w-5 h-5" />
               </div>
               <div>
-                <div className="text-xs font-black text-white">{isLo ? "16,000+ ລາຍການ" : "16,000+ Items"}</div>
-                <div className="text-[10px] text-slate-300">{isLo ? "ອາໄຫຼ່ແທ້ OEM ພ້ອມສົ່ງ" : "Genuine OEM Stock"}</div>
+                <div className="text-xs font-black text-white">{getForkliftText("16,000+ ລາຍການ", "16,000+ Items")}</div>
+                <div className="text-[10px] text-slate-300">{getForkliftText("ອາໄຫຼ່ແທ້ OEM ພ້ອມສົ່ງ", "Genuine OEM Stock")}</div>
               </div>
             </div>
           </motion.div>
@@ -215,7 +206,7 @@ export const ServiceHero = ({ isLo }: { isLo: boolean }) => {
               className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-black px-8 py-4 rounded-full shadow-xl shadow-blue-500/30 flex items-center gap-2 transition-all hover:scale-105 active:scale-95 text-base"
             >
               <Calendar className="w-5 h-5" />
-              <span>{isLo ? "ປຶກສາວິສະວະກອນ / ຂໍໃບສະເໜີລາຄາ" : "Consult Engineers / Request Quote"}</span>
+              <span>{getForkliftText("ປຶກສາວິສະວະກອນ / ຂໍໃບສະເໜີລາຄາ", "Consult Engineers / Request Quote")}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
 
@@ -224,14 +215,12 @@ export const ServiceHero = ({ isLo }: { isLo: boolean }) => {
               className="bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold px-7 py-4 rounded-full backdrop-blur-md transition-all flex items-center gap-2 hover:scale-105 active:scale-95 text-sm"
             >
               <Layers className="w-5 h-5 text-blue-300" />
-              <span>{isLo ? "ສຳຫຼວດທັງ 5 ເສົາຄ້ຳ 4S" : "Explore 5 Pillars"}</span>
+              <span>{getForkliftText("ສຳຫຼວດທັງ 5 ເສົາຄ້ຳ 4S", "Explore 5 Pillars")}</span>
             </button>
 
             <a
               href={
-                isLo
-                  ? "https://wa.me/8562058929299?text=ສະບາຍດີ%20DK%20LAO%204S%20Forklift%20Hub%20ຕ້ອງການສອບຖາມຂໍ້ມູນການບໍລິການ"
-                  : "https://wa.me/8562058929299?text=Hello%20DK%20LAO%204S%20Forklift%20Hub%20Inquiry"
+                getForkliftText("https://wa.me/8562058929299?text=ສະບາຍດີ%20DK%20LAO%204S%20Forklift%20Hub%20ຕ້ອງການສອບຖາມຂໍ້ມູນການບໍລິການ", "https://wa.me/8562058929299?text=Hello%20DK%20LAO%204S%20Forklift%20Hub%20Inquiry")
               }
               target="_blank"
               rel="noopener noreferrer"

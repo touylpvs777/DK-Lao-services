@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Award, ShieldCheck, CheckCircle2, Clock, Users, Wrench } from "lucide-react";
+import { getForkliftText } from "@/i18n/forkliftLocale";
 
 export const ServiceCredibilityShowcase = ({ isLo }: { isLo: boolean }) => {
   const metrics = [
@@ -8,29 +9,29 @@ export const ServiceCredibilityShowcase = ({ isLo }: { isLo: boolean }) => {
       id: "years",
       icon: Award,
       value: "10+",
-      label: isLo ? "ປີແຫ່ງປະສົບການ" : "Years of Experience",
-      desc: isLo ? "ຊ່ຽວຊານດ້ານອຸດສາຫະກຳ" : "Industry Expertise"
+      label: getForkliftText("ປີແຫ່ງປະສົບການ", "Years of Experience"),
+      desc: getForkliftText("ຊ່ຽວຊານດ້ານອຸດສາຫະກຳ", "Industry Expertise")
     },
     {
       id: "units",
       icon: Wrench,
       value: "500+",
-      label: isLo ? "ເຄື່ອງຈັກທີ່ດູແລ" : "Machines Maintained",
-      desc: isLo ? "ທົ່ວປະເທດລາວ" : "Across Lao PDR"
+      label: getForkliftText("ເຄື່ອງຈັກທີ່ດູແລ", "Machines Maintained"),
+      desc: getForkliftText("ທົ່ວປະເທດລາວ", "Across Lao PDR")
     },
     {
       id: "parts",
       icon: ShieldCheck,
       value: "100%",
-      label: isLo ? "ອາໄຫຼ່ແທ້" : "Genuine Parts",
-      desc: isLo ? "ຮັບປະກັນຄຸນນະພາບ" : "Quality Guaranteed"
+      label: getForkliftText("ອາໄຫຼ່ແທ້", "Genuine Parts"),
+      desc: getForkliftText("ຮັບປະກັນຄຸນນະພາບ", "Quality Guaranteed")
     },
     {
       id: "uptime",
       icon: Clock,
       value: "24/7",
-      label: isLo ? "ບໍລິການສຸກເສີນ" : "Emergency Support",
-      desc: isLo ? "ພ້ອມແກ້ໄຂບັນຫາສະເໝີ" : "Always Ready"
+      label: getForkliftText("ບໍລິການສຸກເສີນ", "Emergency Support"),
+      desc: getForkliftText("ພ້ອມແກ້ໄຂບັນຫາສະເໝີ", "Always Ready")
     }
   ];
 
@@ -38,12 +39,12 @@ export const ServiceCredibilityShowcase = ({ isLo }: { isLo: boolean }) => {
     {
       id: "iso9001",
       name: "ISO 9001:2015",
-      desc: isLo ? "ລະບົບຄຸ້ມຄອງຄຸນນະພາບມາດຕະຖານສາກົນ" : "Quality Management System"
+      desc: getForkliftText("ລະບົບຄຸ້ມຄອງຄຸນນະພາບມາດຕະຖານສາກົນ", "Quality Management System")
     },
     {
       id: "iso45001",
       name: "ISO 45001:2018",
-      desc: isLo ? "ມາດຕະຖານຄວາມປອດໄພ ແລະ ອາຊີວະອະນາໄມ" : "Occupational Health & Safety"
+      desc: getForkliftText("ມາດຕະຖານຄວາມປອດໄພ ແລະ ອາຊີວະອະນາໄມ", "Occupational Health & Safety")
     }
   ];
 
@@ -55,15 +56,13 @@ export const ServiceCredibilityShowcase = ({ isLo }: { isLo: boolean }) => {
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-semibold mb-4">
             <ShieldCheck className="w-5 h-5" />
-            <span>{isLo ? "ຄວາມໜ້າເຊື່ອຖືລະດັບອົງກອນ" : "ENTERPRISE CREDIBILITY"}</span>
+            <span>{getForkliftText("ຄວາມໜ້າເຊື່ອຖືລະດັບອົງກອນ", "ENTERPRISE CREDIBILITY")}</span>
           </div>
           <h2 className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white mb-6">
-            {isLo ? "ມາດຕະຖານທີ່ທຸລະກິດຊັ້ນນຳໄວ້ວາງໃຈ" : "Standards Trusted by Industry Leaders"}
+            {getForkliftText("ມາດຕະຖານທີ່ທຸລະກິດຊັ້ນນຳໄວ້ວາງໃຈ", "Standards Trusted by Industry Leaders")}
           </h2>
           <p className="text-lg text-slate-600 dark:text-slate-400 max-w-3xl mx-auto">
-            {isLo 
-              ? "ພວກເຮົາຢຶດໝັ້ນໃນຄຸນນະພາບ, ຄວາມປອດໄພ ແລະ ການບໍລິການທີ່ເປັນເລີດ ເພື່ອໃຫ້ທຸລະກິດຂອງທ່ານດຳເນີນໄປຢ່າງບໍ່ສະດຸດ" 
-              : "We are committed to quality, safety, and operational excellence to keep your business running smoothly."}
+            {getForkliftText("ພວກເຮົາຢຶດໝັ້ນໃນຄຸນນະພາບ, ຄວາມປອດໄພ ແລະ ການບໍລິການທີ່ເປັນເລີດ ເພື່ອໃຫ້ທຸລະກິດຂອງທ່ານດຳເນີນໄປຢ່າງບໍ່ສະດຸດ", "We are committed to quality, safety, and operational excellence to keep your business running smoothly.")}
           </p>
         </div>
 
@@ -106,12 +105,10 @@ export const ServiceCredibilityShowcase = ({ isLo }: { isLo: boolean }) => {
           <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-10">
             <div className="max-w-xl">
               <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
-                {isLo ? "ຮັບຮອງມາດຕະຖານສາກົນ ISO" : "ISO International Certifications"}
+                {getForkliftText("ຮັບຮອງມາດຕະຖານສາກົນ ISO", "ISO International Certifications")}
               </h3>
               <p className="text-slate-400 text-lg">
-                {isLo 
-                  ? "ຮັບປະກັນຄຸນນະພາບການບໍລິການ ແລະ ມາດຕະຖານຄວາມປອດໄພລະດັບສູງສຸດ ສຳລັບທຸກໂຄງການອຸດສາຫະກຳ" 
-                  : "Ensuring the highest standards of service quality and occupational safety for all industrial projects."}
+                {getForkliftText("ຮັບປະກັນຄຸນນະພາບການບໍລິການ ແລະ ມາດຕະຖານຄວາມປອດໄພລະດັບສູງສຸດ ສຳລັບທຸກໂຄງການອຸດສາຫະກຳ", "Ensuring the highest standards of service quality and occupational safety for all industrial projects.")}
               </p>
             </div>
 

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
+import { useCurrentLocale } from "@/i18n/useCurrentLocale";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Layers,
@@ -20,11 +20,11 @@ import {
   ZoomIn,
 } from "lucide-react";
 import { ImageLightboxModal } from "@/components/Forklift/ui/ImageLightboxModal";
+import { getForkliftText } from "@/i18n/forkliftLocale";
 
 export function WarehouseAutomationShowcase() {
-  const { i18n } = useTranslation();
-  const locale = i18n.language || "lo";
-  const isLo = locale === "lo";
+  const locale = useCurrentLocale();
+  const isLo = locale.toLowerCase().startsWith("lo");
   const [activeTab, setActiveTab] = useState<"ecosystem" | "portfolio" | "automation" | "solutions3d">("ecosystem");
   const [selectedEcosystemNode, setSelectedEcosystemNode] = useState<number>(0);
 
@@ -444,9 +444,7 @@ export function WarehouseAutomationShowcase() {
             )}
           </h2>
           <p className="text-slate-300 text-base md:text-lg leading-relaxed max-w-3xl mx-auto">
-            {isLo
-              ? "ດີເຄ ລາວ ສົ່ງມອບໂຊລູຊັນ One-Stop ມາດຕະຖານສາກົນ: ຕັ້ງແຕ່ລະບົບຊັ້ນວາງ, ກອງລົດຍົກ, ເຄື່ອງຂັດພື້ນ Nilfisk, ລົດກະເຊົ້າ JLG ຈົນເຖິງຫຸ່ນຍົນອັດຕະໂນມັດ AGV/AMR ແລະ ຊອບແວ WMS ອັດສະລິຍະ."
-              : "DK LAO delivers world-class one-stop solutions: from high-density racking, forklift fleets, Nilfisk floor scrubbers, and JLG access platforms to AGV/AMR mobile robots and smart WMS software."}
+            {getForkliftText("ດີເຄ ລາວ ສົ່ງມອບໂຊລູຊັນ One-Stop ມາດຕະຖານສາກົນ: ຕັ້ງແຕ່ລະບົບຊັ້ນວາງ, ກອງລົດຍົກ, ເຄື່ອງຂັດພື້ນ Nilfisk, ລົດກະເຊົ້າ JLG ຈົນເຖິງຫຸ່ນຍົນອັດຕະໂນມັດ AGV/AMR ແລະ ຊອບແວ WMS ອັດສະລິຍະ.", "DK LAO delivers world-class one-stop solutions: from high-density racking, forklift fleets, Nilfisk floor scrubbers, and JLG access platforms to AGV/AMR mobile robots and smart WMS software.")}
           </p>
         </div>
 
@@ -461,7 +459,7 @@ export function WarehouseAutomationShowcase() {
             }`}
           >
             <Layers className="w-5 h-5" />
-            <span>{isLo ? "1. ຜັງລະບົບສາງຄົບວົງຈອນ (Warehouse Ecosystem)" : "1. Warehouse Ecosystem Diagram"}</span>
+            <span>{getForkliftText("1. ຜັງລະບົບສາງຄົບວົງຈອນ (Warehouse Ecosystem)", "1. Warehouse Ecosystem Diagram")}</span>
           </button>
 
           <button
@@ -473,7 +471,7 @@ export function WarehouseAutomationShowcase() {
             }`}
           >
             <Truck className="w-5 h-5" />
-            <span>{isLo ? "2. ໝວດໝູ່ຜະລິດຕະພັນຄົບເຊັດ (MHE Portfolio)" : "2. Full Products & Solutions"}</span>
+            <span>{getForkliftText("2. ໝວດໝູ່ຜະລິດຕະພັນຄົບເຊັດ (MHE Portfolio)", "2. Full Products & Solutions")}</span>
           </button>
 
           <button
@@ -485,7 +483,7 @@ export function WarehouseAutomationShowcase() {
             }`}
           >
             <Cpu className="w-5 h-5" />
-            <span>{isLo ? "3. ລະບົບອັດຕະໂນມັດ & ດິຈິຕອລ (Automation 4.0)" : "3. Automation & Digital 4.0"}</span>
+            <span>{getForkliftText("3. ລະບົບອັດຕະໂນມັດ & ດິຈິຕອລ (Automation 4.0)", "3. Automation & Digital 4.0")}</span>
           </button>
 
           <button
@@ -497,7 +495,7 @@ export function WarehouseAutomationShowcase() {
             }`}
           >
             <Warehouse className="w-5 h-5" />
-            <span>{isLo ? "4. ໂຊລູຊັນສາງ 3D ຄົບ 11 ໝວດ (3D Solutions)" : "4. 3D Warehouse & Handling"}</span>
+            <span>{getForkliftText("4. ໂຊລູຊັນສາງ 3D ຄົບ 11 ໝວດ (3D Solutions)", "4. 3D Warehouse & Handling")}</span>
           </button>
         </div>
 
@@ -535,12 +533,12 @@ export function WarehouseAutomationShowcase() {
                   />
                   <div className="absolute top-4 right-4 bg-slate-900/90 hover:bg-slate-900 text-white border border-white/20 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2 shadow-xl opacity-90 group-hover/img:opacity-100 group-hover/img:scale-105 transition-all">
                     <ZoomIn className="w-3.5 h-3.5 text-blue-400" />
-                    <span>{isLo ? "🔍 ຊູມພາບ 2K" : "🔍 Zoom 2K"}</span>
+                    <span>{getForkliftText("🔍 ຊູມພາບ 2K", "🔍 Zoom 2K")}</span>
                   </div>
                 </div>
                 <div className="mt-4 flex flex-wrap items-center justify-between gap-4 px-2 text-xs text-slate-400">
                   <span className="font-semibold text-white">
-                    {isLo ? "ແຜນຜັງສະແດງການເຊື່ອມໂຍງ 10 ໂຊລູຊັນໃນສາງສິນຄ້າທັນສະໄໝ ຂອງ ດີເຄ ລາວ" : "DK LAO 10-Point Integrated Modern Warehouse Ecosystem Blueprint"}
+                    {getForkliftText("ແຜນຜັງສະແດງການເຊື່ອມໂຍງ 10 ໂຊລູຊັນໃນສາງສິນຄ້າທັນສະໄໝ ຂອງ ດີເຄ ລາວ", "DK LAO 10-Point Integrated Modern Warehouse Ecosystem Blueprint")}
                   </span>
                   <div className="flex items-center gap-3">
                     <span className="text-blue-400 font-bold">www.dklao.com</span>
@@ -555,10 +553,10 @@ export function WarehouseAutomationShowcase() {
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="text-xl md:text-2xl font-black text-white flex items-center gap-3">
                     <span className="w-2.5 h-6 rounded-full bg-blue-500" />
-                    {isLo ? "ລາຍລະອຽດ 10 ໂຊລູຊັນຫຼັກໃນລະບົບສາງ (10 Core Nodes)" : "10 Core Warehouse Solution Nodes"}
+                    {getForkliftText("ລາຍລະອຽດ 10 ໂຊລູຊັນຫຼັກໃນລະບົບສາງ (10 Core Nodes)", "10 Core Warehouse Solution Nodes")}
                   </h3>
                   <span className="text-xs text-slate-400">
-                    {isLo ? "ຄລິກເພື່ອເບິ່ງລາຍລະອຽດ" : "Click to inspect details"}
+                    {getForkliftText("ຄລິກເພື່ອເບິ່ງລາຍລະອຽດ", "Click to inspect details")}
                   </span>
                 </div>
 
@@ -594,7 +592,7 @@ export function WarehouseAutomationShowcase() {
                           </p>
                         </div>
                         <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-[11px] font-bold text-blue-400">
-                          <span>{isLo ? "ອ່ານເພີ່ມ" : "Learn More"}</span>
+                          <span>{getForkliftText("ອ່ານເພີ່ມ", "Learn More")}</span>
                           <ChevronRight className="w-3.5 h-3.5" />
                         </div>
                       </button>
@@ -638,12 +636,12 @@ export function WarehouseAutomationShowcase() {
                     />
                     <div className="absolute top-3 right-3 bg-slate-900/90 hover:bg-slate-900 text-white border border-white/20 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2 shadow-xl opacity-90 group-hover/img:opacity-100 group-hover/img:scale-105 transition-all">
                       <ZoomIn className="w-3.5 h-3.5 text-blue-400" />
-                      <span>{isLo ? "🔍 ຊູມ 2K" : "🔍 Zoom 2K"}</span>
+                      <span>{getForkliftText("🔍 ຊູມ 2K", "🔍 Zoom 2K")}</span>
                     </div>
                   </div>
                   <div className="p-3 text-center">
                     <span className="text-xs font-bold text-slate-300">
-                      {isLo ? "ລົດຍົກດີເຊວ Mitsubishi, ໄຟຟ້າ Jungheinrich ແລະ ລົດກະເຊົ້າ JLG" : "Mitsubishi Diesel, Jungheinrich Electric, and JLG Aerial Platforms"}
+                      {getForkliftText("ລົດຍົກດີເຊວ Mitsubishi, ໄຟຟ້າ Jungheinrich ແລະ ລົດກະເຊົ້າ JLG", "Mitsubishi Diesel, Jungheinrich Electric, and JLG Aerial Platforms")}
                     </span>
                   </div>
                 </div>
@@ -669,12 +667,12 @@ export function WarehouseAutomationShowcase() {
                     />
                     <div className="absolute top-3 right-3 bg-slate-900/90 hover:bg-slate-900 text-white border border-white/20 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2 shadow-xl opacity-90 group-hover/img:opacity-100 group-hover/img:scale-105 transition-all">
                       <ZoomIn className="w-3.5 h-3.5 text-blue-400" />
-                      <span>{isLo ? "🔍 ຊູມ 2K" : "🔍 Zoom 2K"}</span>
+                      <span>{getForkliftText("🔍 ຊູມ 2K", "🔍 Zoom 2K")}</span>
                     </div>
                   </div>
                   <div className="p-3 text-center">
                     <span className="text-xs font-bold text-slate-300">
-                      {isLo ? "ຜັງໂຄງສ້າງສິນຄ້າ ແລະ ລະບົບພະລັງງານ Lithium-Ion ຄົບວົງຈອນ" : "Full Structured Portfolio & Industrial Energy Systems"}
+                      {getForkliftText("ຜັງໂຄງສ້າງສິນຄ້າ ແລະ ລະບົບພະລັງງານ Lithium-Ion ຄົບວົງຈອນ", "Full Structured Portfolio & Industrial Energy Systems")}
                     </span>
                   </div>
                 </div>
@@ -744,13 +742,11 @@ export function WarehouseAutomationShowcase() {
                   />
                   <div className="absolute top-4 right-4 bg-slate-900/90 hover:bg-slate-900 text-white border border-white/20 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2 shadow-xl opacity-90 group-hover/img:opacity-100 group-hover/img:scale-105 transition-all">
                     <ZoomIn className="w-3.5 h-3.5 text-blue-400" />
-                    <span>{isLo ? "🔍 ຊູມພາບ 2K" : "🔍 Zoom 2K"}</span>
+                    <span>{getForkliftText("🔍 ຊູມພາບ 2K", "🔍 Zoom 2K")}</span>
                   </div>
                 </div>
                 <div className="mt-3 text-center text-xs text-slate-400 font-medium">
-                  {isLo
-                    ? "ລະບົບຫຸ່ນຍົນ AGV/AMR, ເຄຣນຈັດເກັບສູງ AS/RS, ສາຍພານລຳລຽງ, ຊັ້ນວາງສິນຄ້າ ແລະ ຊອບແວດິຈິຕອລ WMS / FMS"
-                    : "Automated Systems (AGV/AMR), AS/RS Stacker Cranes, Conveyors, Racks & Digital Software Suite (WMS/FMS)"}
+                  {getForkliftText("ລະບົບຫຸ່ນຍົນ AGV/AMR, ເຄຣນຈັດເກັບສູງ AS/RS, ສາຍພານລຳລຽງ, ຊັ້ນວາງສິນຄ້າ ແລະ ຊອບແວດິຈິຕອລ WMS / FMS", "Automated Systems (AGV/AMR), AS/RS Stacker Cranes, Conveyors, Racks & Digital Software Suite (WMS/FMS)")}
                 </div>
               </div>
 
@@ -789,7 +785,7 @@ export function WarehouseAutomationShowcase() {
                           href="#booking-form"
                           className="block w-full py-3 px-4 rounded-xl text-center text-xs font-bold bg-white/10 hover:bg-blue-600 text-white transition-colors"
                         >
-                          {isLo ? "ຂໍຄຳປຶກສາລະບົບນີ້ →" : "Request System Proposal →"}
+                          {getForkliftText("ຂໍຄຳປຶກສາລະບົບນີ້ →", "Request System Proposal →")}
                         </a>
                       </div>
                     </div>
@@ -831,14 +827,14 @@ export function WarehouseAutomationShowcase() {
                   />
                   <div className="absolute top-4 right-4 bg-slate-900/90 hover:bg-slate-900 text-white border border-white/20 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2 shadow-xl opacity-90 group-hover/img:opacity-100 group-hover/img:scale-105 transition-all">
                     <ZoomIn className="w-3.5 h-3.5 text-emerald-400" />
-                    <span>{isLo ? "🔍 ຊູມພາບ 2K" : "🔍 Zoom 2K"}</span>
+                    <span>{getForkliftText("🔍 ຊູມພາບ 2K", "🔍 Zoom 2K")}</span>
                   </div>
                 </div>
                 <div className="p-4 bg-slate-900/90 backdrop-blur-md border-t border-white/10 mt-4 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
                   <div className="flex items-center gap-2 text-slate-300 font-bold">
                     <span className="text-emerald-400 font-mono">DK LAO WAREHOUSE 3D INFRASTRUCTURE</span>
                     <span className="text-slate-600">•</span>
-                    <span>{isLo ? "11 ໝວດໝູ່ໂຊລູຊັນສາງສິນຄ້າຄົບວົງຈອນ" : "11 Complete Warehouse Facility Solutions"}</span>
+                    <span>{getForkliftText("11 ໝວດໝູ່ໂຊລູຊັນສາງສິນຄ້າຄົບວົງຈອນ", "11 Complete Warehouse Facility Solutions")}</span>
                   </div>
                   <div className="flex items-center gap-2 text-[11px] font-bold text-amber-400">
                     <ShieldCheck className="w-4 h-4 text-emerald-400" />
@@ -891,14 +887,10 @@ export function WarehouseAutomationShowcase() {
         <div className="mt-16 p-8 md:p-12 rounded-3xl bg-gradient-to-r from-blue-900/40 via-indigo-950/60 to-slate-900 border border-blue-500/30 text-center relative overflow-hidden shadow-2xl">
           <div className="max-w-3xl mx-auto space-y-4 relative z-10">
             <h3 className="text-2xl md:text-3xl font-black text-white">
-              {isLo
-                ? "ຕ້ອງການອອກແບບສາງສິນຄ້າ ຫຼື ປັບປຸງກອງລົດຍົກໂຮງງານຂອງທ່ານ?"
-                : "Need Warehouse Engineering or Modern Material Handling Upgrades?"}
+              {getForkliftText("ຕ້ອງການອອກແບບສາງສິນຄ້າ ຫຼື ປັບປຸງກອງລົດຍົກໂຮງງານຂອງທ່ານ?", "Need Warehouse Engineering or Modern Material Handling Upgrades?")}
             </h3>
             <p className="text-sm md:text-base text-slate-300">
-              {isLo
-                ? "ທີມງານວິສະວະກອນ DK LAO ພ້ອມລົງສຳຫຼວດໄຊທ໌ງານຕົວຈິງ, ວາງຜັງ Layout 3D, ແລະ ຄຳນວນ ROI ຄວາມຄຸ້ມຄ່າໃຫ້ຟຣີ."
-                : "DK LAO warehouse engineering team is ready for site surveys, 3D CAD layout planning, and free ROI feasibility studies."}
+              {getForkliftText("ທີມງານວິສະວະກອນ DK LAO ພ້ອມລົງສຳຫຼວດໄຊທ໌ງານຕົວຈິງ, ວາງຜັງ Layout 3D, ແລະ ຄຳນວນ ROI ຄວາມຄຸ້ມຄ່າໃຫ້ຟຣີ.", "DK LAO warehouse engineering team is ready for site surveys, 3D CAD layout planning, and free ROI feasibility studies.")}
             </p>
 
             <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
@@ -906,7 +898,7 @@ export function WarehouseAutomationShowcase() {
                 href="#booking-form"
                 className="px-8 py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-sm shadow-xl shadow-blue-600/30 transition-all scale-105"
               >
-                {isLo ? "ນັດໝາຍວິສະວະກອນສາງສິນຄ້າ (Book Consultation)" : "Book Engineering Consultation"}
+                {getForkliftText("ນັດໝາຍວິສະວະກອນສາງສິນຄ້າ (Book Consultation)", "Book Engineering Consultation")}
               </a>
 
               <a

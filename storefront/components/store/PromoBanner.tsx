@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
-import { X, Sparkles, ShieldCheck, ArrowRight, PhoneCall } from "lucide-react";
+import { X, Sparkles, ShieldCheck, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useLocale } from "next-intl";
+import { useLocale } from "@/lib/locale";
+import Link from "next/link";
 
 export function PromoBanner() {
   const [isVisible, setIsVisible] = useState(true);
@@ -37,31 +38,25 @@ export function PromoBanner() {
                 </span>
                 <span className="font-extrabold text-white">
                   {isLao
-                    ? "ສູນລົດຟອກລີບ ແລະ ອາໄຫຼ່ແທ້ OEM 16,000+ ລາຍການ (Mitsubishi • Jungheinrich • Nilfisk • JLG)"
-                    : "Forklift 4S Hub & 16,000+ OEM Parts (Mitsubishi • Jungheinrich • Nilfisk • JLG)"}
+                    ? "ລາຍການອາໄຫຼ່ ແລະ ລາຄາອ້າງອີງຈາກ CRM"
+                    : "CRM-published spare parts and reference prices"}
                 </span>
                 <span className="text-emerald-400 hidden lg:inline font-semibold">
-                  &bull; {isLao ? "ຮັບ Volume Discount ພິເສດສຳລັບໃບສັ່ງຊື້ອົງກອນ B2B PO" : "Special Volume Discounts for Corporate B2B POs"}
+                  &bull; {isLao ? "ຢືນຢັນລາຄາ ແລະ ສະຕັອກກ່ອນຮັບ Order" : "CRM confirms price and stock before accepting an order"}
                 </span>
               </div>
             </div>
 
             {/* Right Action & Close Button */}
             <div className="flex items-center gap-3">
-              <a
-                href={
-                  isLao
-                    ? "https://wa.me/8562058929299?text=ສະບາຍດີ%20ຕ້ອງການສອບຖາມໃບສະເໜີລາຄາ%20B2B%20PO%20ສຳລັບອົງກອນ"
-                    : "https://wa.me/8562058929299?text=Hello%2C%20I%20would%20like%20to%20request%20a%20Corporate%20B2B%20PO%20quotation"
-                }
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                href="/store#product-catalog"
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all shadow-md shadow-emerald-900/40"
               >
                 <Sparkles className="w-3.5 h-3.5" />
-                <span>{isLao ? "ຂໍໃບສະເໜີລາຄາ B2B" : "Request B2B Quote"}</span>
+                <span>{isLao ? "ເປີດລາຍການ CRM" : "Open CRM catalog"}</span>
                 <ArrowRight className="w-3.5 h-3.5" />
-              </a>
+              </Link>
 
               <button
                 type="button"

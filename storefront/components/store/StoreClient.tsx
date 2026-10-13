@@ -26,11 +26,12 @@ import { Truck, Settings, ShoppingBag, ArrowUpDown, Wrench, Sparkles, ArrowRight
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import { Button } from "@/components/ui/button";
-import { useLocale } from "next-intl";
+import { useLocale } from "@/lib/locale";
 
 interface StoreClientProps {
   initialItems: InventoryItem[];
   rentalItems?: InventoryItem[];
+  catalogConnected: boolean;
 }
 
 // Fuse.js options — fuzzy search across 4 fields with Lao + English support
@@ -81,7 +82,7 @@ const POPULAR_MODELS_DATA = [
   { id: "tcm_fl", labelLo: "TCM FD Forklift", labelEn: "TCM FD Forklift", query: "TCM FD" },
 ];
 
-export function StoreClient({ initialItems, rentalItems = [] }: StoreClientProps) {
+export function StoreClient({ initialItems, rentalItems = [], catalogConnected }: StoreClientProps) {
   const { totalItems, openCart } = useCart();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -286,6 +287,13 @@ export function StoreClient({ initialItems, rentalItems = [] }: StoreClientProps
 
   return (
     <div id="product-catalog" className="space-y-6">
+      {!catalogConnected && (
+        <div role="status" className="rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-200">
+          {isLao
+            ? "ລະບົບຮ້ານຍັງຕໍ່ກັບ CRM ບໍ່ສຳເລັດ. ລາຍການ ແລະ ສະຕັອກຈະບໍ່ສະແດງຈົນກວ່າການເຊື່ອມຕໍ່ພ້ອມ."
+            : "The store cannot reach CRM. Catalog items and availability will appear when the integration is configured."}
+        </div>
+      )}
       {/* Floating Mobile Cart Trigger */}
       <div className="fixed bottom-6 right-6 z-40 lg:hidden">
         <Button
@@ -344,7 +352,7 @@ export function StoreClient({ initialItems, rentalItems = [] }: StoreClientProps
           </button>
 
           <Link
-            href={`/${locale}/services#management-ecosystem`}
+            href="/services#management-ecosystem"
             className="flex-1 sm:flex-initial px-3.5 py-2.5 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 text-[#005BAC] dark:text-blue-400 font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-sm"
           >
             <Sparkles className="w-3.5 h-3.5 text-blue-500" />
@@ -393,7 +401,7 @@ export function StoreClient({ initialItems, rentalItems = [] }: StoreClientProps
             </div>
           </div>
           <Link
-            href={`/${locale}/services#rental`}
+            href="/services#rental"
             className="w-full md:w-auto shrink-0 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-black flex items-center justify-center gap-2 transition-all shadow-lg shadow-blue-600/30"
           >
             <span>{isLao ? "ເບິ່ງແພັກເກດເຊົ່າ & ໂຄງສ້າງບໍລິຫານ" : "View Fleet Packages & SLA"}</span>

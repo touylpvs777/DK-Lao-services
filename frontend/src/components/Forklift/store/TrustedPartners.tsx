@@ -1,13 +1,12 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { ShieldCheck } from "lucide-react";
-import { useTranslation } from "react-i18next";
+import { useCurrentLocale } from "@/i18n/useCurrentLocale";
 import { ENTERPRISE_CUSTOMERS } from "@/data/customers";
 
 export function TrustedPartners() {
-  const { i18n } = useTranslation();
-  const locale = i18n.language || "lo";
-  const isLao = locale === "lo";
+  const locale = useCurrentLocale();
+  const isLao = locale.toLowerCase().startsWith("lo");
 
   return (
     <section className="py-14 relative overflow-hidden bg-slate-50/70 dark:bg-slate-950/60 border-y border-slate-200/80 dark:border-white/10 my-8">

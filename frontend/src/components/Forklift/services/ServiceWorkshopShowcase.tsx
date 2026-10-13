@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
+import { useCurrentLocale } from "@/i18n/useCurrentLocale";
 import {
   Wrench,
   ShieldCheck,
@@ -18,11 +18,11 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/Forklift/ui/button";
 import { ImageLightboxModal } from "@/components/Forklift/ui/ImageLightboxModal";
+import { getForkliftText } from "@/i18n/forkliftLocale";
 
 export function ServiceWorkshopShowcase() {
-  const { i18n } = useTranslation();
-  const locale = i18n.language || "lo";
-  const isLo = locale === "lo";
+  const locale = useCurrentLocale();
+  const isLo = locale.toLowerCase().startsWith("lo");
 
   const WORKSHOP_PILLARS = [
     {
@@ -94,9 +94,7 @@ export function ServiceWorkshopShowcase() {
           </h3>
 
           <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
-            {isLo
-              ? "ສູນບໍລິການ ແລະ ອູ່ສ້ອມແປງລົດຍົກມາດຕະຖານສາກົນແຫ່ງດຽວໃນ ສປປ ລາວ ພ້ອມທີມງານວິສະວະກອນຊ່ຽວຊານ, ຊ່ອງຈອດກວດເຊັກລະດັບອຸດສາຫະກຳ, ແລະ ເຄື່ອງມືພິເສດຄວບຄຸມຄ່າແຮງຂັນ Torque 100%."
-              : "Premier enterprise forklift workshop in Lao PDR equipped with dedicated service bays, certified technicians, hydraulic engine hoists, and ISO-calibrated shadow board instrumentation."}
+            {getForkliftText("ສູນບໍລິການ ແລະ ອູ່ສ້ອມແປງລົດຍົກມາດຕະຖານສາກົນແຫ່ງດຽວໃນ ສປປ ລາວ ພ້ອມທີມງານວິສະວະກອນຊ່ຽວຊານ, ຊ່ອງຈອດກວດເຊັກລະດັບອຸດສາຫະກຳ, ແລະ ເຄື່ອງມືພິເສດຄວບຄຸມຄ່າແຮງຂັນ Torque 100%.", "Premier enterprise forklift workshop in Lao PDR equipped with dedicated service bays, certified technicians, hydraulic engine hoists, and ISO-calibrated shadow board instrumentation.")}
           </p>
         </div>
 
@@ -139,12 +137,10 @@ export function ServiceWorkshopShowcase() {
                 Enterprise Support
               </div>
               <h4 className="text-sm font-black text-white">
-                {isLo ? "ນັດໝາຍຢ້ຽມຊົມສູນບໍລິການ ຫຼື ສົ່ງລົດເຂົ້າອູ່" : "Schedule Facility Visit & Mobile Service"}
+                {getForkliftText("ນັດໝາຍຢ້ຽມຊົມສູນບໍລິການ ຫຼື ສົ່ງລົດເຂົ້າອູ່", "Schedule Facility Visit & Mobile Service")}
               </h4>
               <p className="text-xs text-slate-300 leading-relaxed">
-                {isLo
-                  ? "ຍິນດີຕ້ອນຮັບລູກຄ້າອົງກອນ ແລະ ໂຮງງານໃຫຍ່ ເຂົ້າກວດສອບຄວາມພ້ອມຂອງອູ່ສ້ອມແປງ ແລະ ສະຕ໋ອກອາໄຫຼ່."
-                  : "We welcome corporate audits & plant delegations to inspect our workshop bays, diagnostic tools, and parts depot."}
+                {getForkliftText("ຍິນດີຕ້ອນຮັບລູກຄ້າອົງກອນ ແລະ ໂຮງງານໃຫຍ່ ເຂົ້າກວດສອບຄວາມພ້ອມຂອງອູ່ສ້ອມແປງ ແລະ ສະຕ໋ອກອາໄຫຼ່.", "We welcome corporate audits & plant delegations to inspect our workshop bays, diagnostic tools, and parts depot.")}
               </p>
             </div>
 
@@ -160,7 +156,7 @@ export function ServiceWorkshopShowcase() {
                 href="#booking-form"
                 className="py-2 px-3 rounded-xl border border-white/20 hover:bg-white/10 text-white font-bold text-xs flex items-center gap-1 transition-all"
               >
-                <span>{isLo ? "ນັດໝາຍເຂົ້າສູນ" : "Book Workshop"}</span>
+                <span>{getForkliftText("ນັດໝາຍເຂົ້າສູນ", "Book Workshop")}</span>
                 <ChevronRight className="w-3 h-3" />
               </a>
             </div>
@@ -172,9 +168,7 @@ export function ServiceWorkshopShowcase() {
           <div className="flex items-center gap-3 text-slate-300 text-center sm:text-left">
             <ShieldCheck className="w-5 h-5 text-emerald-400 shrink-0" />
             <span>
-              {isLo
-                ? "ຮັບປະກັນລົດສຳຮອງປ່ຽນແທນ (Zero-Downtime Standby Unit) ພາຍໃນ 24 ຊົ່ວໂມງ ຫາກການສ້ອມແປງໃຊ້ເວລາເກີນກຳນົດ."
-                : "Guaranteed Zero-Downtime standby replacement forklift delivered to your site within 24 hours if overhaul exceeds SLA."}
+              {getForkliftText("ຮັບປະກັນລົດສຳຮອງປ່ຽນແທນ (Zero-Downtime Standby Unit) ພາຍໃນ 24 ຊົ່ວໂມງ ຫາກການສ້ອມແປງໃຊ້ເວລາເກີນກຳນົດ.", "Guaranteed Zero-Downtime standby replacement forklift delivered to your site within 24 hours if overhaul exceeds SLA.")}
             </span>
           </div>
           <a

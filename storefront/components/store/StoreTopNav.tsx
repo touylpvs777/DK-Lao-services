@@ -2,7 +2,7 @@
 
 import React, { useRef } from 'react';
 import { STORE_CATEGORIES } from '@/data/categories';
-import { useLocale } from 'next-intl';
+import { useLocale } from '@/lib/locale';
 import { Layers, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface StoreTopNavProps {

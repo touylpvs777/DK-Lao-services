@@ -1,12 +1,11 @@
 import React from "react";
 import { ShieldCheck, Truck, FileText, Wrench, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import { useCurrentLocale } from "@/i18n/useCurrentLocale";
 
 export function EnterpriseGuarantees() {
-  const { i18n } = useTranslation();
-  const locale = i18n.language || "lo";
-  const isLao = locale === "lo";
+  const locale = useCurrentLocale();
+  const isLao = locale.toLowerCase().startsWith("lo");
 
   const guarantees = [
     {

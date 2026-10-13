@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useLocale } from "next-intl";
+import { useLocale } from "@/lib/locale";
 import {
   Boxes,
   ShieldAlert,
@@ -309,7 +309,7 @@ export function MultiBrandPartsShowcase() {
             </div>
             <div className="pt-2 flex justify-center">
               <Link
-                href={`/${locale}/store?pre_category=heavy-mining-machinery`}
+                href="/store?pre_category=heavy-mining-machinery"
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition-all shadow-lg shadow-amber-500/20"
               >
                 <ShoppingBag className="w-4 h-4 text-slate-950" />
@@ -335,7 +335,7 @@ export function MultiBrandPartsShowcase() {
 
           <div className="flex flex-wrap items-center gap-3 shrink-0">
             <Link
-              href={`/${locale}/store?pre_category=spare-parts-consumables`}
+              href="/store?pre_category=spare-parts-consumables"
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-slate-950 font-bold text-xs hover:bg-slate-100 transition-all shadow-md"
             >
               <ShoppingBag className="w-4 h-4 text-blue-600" />

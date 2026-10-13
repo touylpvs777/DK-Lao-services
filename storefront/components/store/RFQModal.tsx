@@ -5,6 +5,7 @@ import { InventoryItem } from "@/data/catalog";
 import { Button } from "@/components/ui/button";
 import { X, Send, Building, Mail, Phone, FileText } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLocale } from "@/lib/locale";
 
 interface RFQModalProps {
   item: InventoryItem;
@@ -13,6 +14,7 @@ interface RFQModalProps {
 }
 
 export function RFQModal({ item, isOpen, onClose }: RFQModalProps) {
+  const isLao = useLocale() === "lo";
   const [formData, setFormData] = useState({
     companyName: "",
     taxId: "",
@@ -43,10 +45,30 @@ export function RFQModal({ item, isOpen, onClose }: RFQModalProps) {
       
       // WhatsApp Integration for RFQ
       const waNumber = "8562058929299";
-      const message = `*REQUEST FOR QUOTATION (RFQ)*
+      const urgencyLabel = isLao
+        ? formData.urgency.startsWith("Urgent")
+          ? "ດ່ວນທີ່ສຸດ (ພາຍໃນ 3 ມື້)"
+          : formData.urgency.startsWith("Planning")
+            ? "ວາງແຜນລ່ວງໜ້າ (ເດືອນໜ້າ)"
+            : "ປົກກະຕິ (7-14 ມື້)"
+        : formData.urgency;
+      const message = isLao
+        ? `*ຄຳຂໍໃບສະເໜີລາຄາ (RFQ)*
+------------------------
+*ສິນຄ້າ*: ${item.sku_code} - ${item.part_name_lo || item.part_name}
+*ຈຳນວນ*: ${formData.quantity}
+*ຄວາມຮີບດ່ວນ*: ${urgencyLabel}
+*ບໍລິສັດ*: ${formData.companyName}
+*ເລກປະຈຳຕົວພາສີ*: ${formData.taxId || 'ບໍ່ລະບຸ'}
+*ຜູ້ຕິດຕໍ່*: ${formData.contactName}
+*ເບີໂທ*: ${formData.phone}
+*ອີເມວ*: ${formData.email}
+*ໝາຍເຫດ*: ${formData.notes || 'ບໍ່ມີ'}
+`
+        : `*REQUEST FOR QUOTATION (RFQ)*
 ------------------------
 *Item*: ${item.sku_code} - ${item.part_name}
-*Quantity Needed*: ${formData.quantity}
+*Quantity needed*: ${formData.quantity}
 *Urgency*: ${formData.urgency}
 *Company*: ${formData.companyName}
 *Tax ID*: ${formData.taxId || 'N/A'}
@@ -89,10 +111,10 @@ export function RFQModal({ item, isOpen, onClose }: RFQModalProps) {
 
           <h2 className="text-xl font-black text-slate-900 dark:text-white flex items-center gap-2">
             <FileText className="w-5 h-5 text-[#005BAC]" />
-            ຂໍໃບສະເໜີລາຄາ (Request for Quotation)
+            {isLao ? "ຂໍໃບສະເໜີລາຄາ" : "Request for quotation"}
           </h2>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 mb-5">
-            ສຳລັບ {item.part_name_lo || item.part_name} ({item.sku_code})
+            {isLao ? "ສຳລັບ" : "For"} {isLao ? (item.part_name_lo || item.part_name) : item.part_name} ({item.sku_code})
           </p>
 
           {isSuccess ? (
@@ -100,16 +122,16 @@ export function RFQModal({ item, isOpen, onClose }: RFQModalProps) {
               <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 text-[#005BAC] dark:text-blue-400 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Send className="w-8 h-8" />
               </div>
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white">ສົ່ງຄຳຂໍສຳເລັດ!</h3>
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white">{isLao ? "ສົ່ງຄຳຂໍສຳເລັດ!" : "Request submitted!"}</h3>
               <p className="text-sm text-slate-500 dark:text-slate-400">
-                ກຳລັງເປີດໜ້າຈໍ WhatsApp ເພື່ອສົ່ງຂໍ້ມູນຫາຝ່າຍຂາຍ...
+                {isLao ? "ກຳລັງເປີດ WhatsApp ເພື່ອສົ່ງຂໍ້ມູນໃຫ້ທີມຂາຍ..." : "Opening WhatsApp to send your request to sales..."}
               </p>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300">ຊື່ບໍລິສັດ (Company)</label>
+                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300">{isLao ? "ຊື່ບໍລິສັດ" : "Company name"}</label>
                   <div className="relative">
                     <Building className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                     <input
@@ -118,25 +140,25 @@ export function RFQModal({ item, isOpen, onClose }: RFQModalProps) {
                       value={formData.companyName}
                       onChange={handleChange}
                       className="w-full pl-9 pr-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl text-sm focus:ring-2 focus:ring-[#005BAC] outline-none transition-all dark:text-white"
-                      placeholder="ບໍລິສັດ ພັດທະນາ ຈຳກັດ"
+                      placeholder={isLao ? "ບໍລິສັດ ພັດທະນາ ຈຳກັດ" : "Company name"}
                     />
                   </div>
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300">ເລກປະຈຳຕົວຜູ້ເສຍອາກອນ (Tax ID)</label>
+                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300">{isLao ? "ເລກປະຈຳຕົວຜູ້ເສຍອາກອນ" : "Tax ID"}</label>
                   <input
                     name="taxId"
                     value={formData.taxId}
                     onChange={handleChange}
                     className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl text-sm focus:ring-2 focus:ring-[#005BAC] outline-none transition-all dark:text-white"
-                    placeholder="ສຳລັບອອກໃບກຳກັບພາສີ"
+                    placeholder={isLao ? "ສຳລັບອອກໃບກຳກັບພາສີ" : "For tax invoice"}
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300">ຈຳນວນທີ່ຕ້ອງການ (Qty)</label>
+                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300">{isLao ? "ຈຳນວນທີ່ຕ້ອງການ" : "Quantity"}</label>
                   <input
                     required
                     type="number"
@@ -150,34 +172,34 @@ export function RFQModal({ item, isOpen, onClose }: RFQModalProps) {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-700 dark:text-slate-300">ຄວາມຮີບດ່ວນ (Urgency)</label>
+                <label className="text-xs font-bold text-slate-700 dark:text-slate-300">{isLao ? "ຄວາມຮີບດ່ວນ" : "Urgency"}</label>
                 <select
                   name="urgency"
                   value={formData.urgency}
                   onChange={(e) => setFormData(prev => ({ ...prev, urgency: e.target.value }))}
                   className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl text-sm focus:ring-2 focus:ring-[#005BAC] outline-none transition-all dark:text-slate-200"
                 >
-                  <option value="Urgent (Within 3 days)">ດ່ວນທີ່ສຸດ (Urgent - ພາຍໃນ 3 ມື້)</option>
-                  <option value="Normal (7-14 days)">ປົກກະຕິ (Normal - 7-14 ມື້)</option>
-                  <option value="Planning (Next Month)">ວາງແຜນລ່ວງໜ້າ (Planning - ເດືອນໜ້າ)</option>
+                  <option value="Urgent (Within 3 days)">{isLao ? "ດ່ວນທີ່ສຸດ (ພາຍໃນ 3 ມື້)" : "Urgent (within 3 days)"}</option>
+                  <option value="Normal (7-14 days)">{isLao ? "ປົກກະຕິ (7-14 ມື້)" : "Normal (7-14 days)"}</option>
+                  <option value="Planning (Next Month)">{isLao ? "ວາງແຜນລ່ວງໜ້າ (ເດືອນໜ້າ)" : "Planning (next month)"}</option>
                 </select>
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-700 dark:text-slate-300">ຊື່ຜູ້ຕິດຕໍ່ (Contact Name)</label>
+                <label className="text-xs font-bold text-slate-700 dark:text-slate-300">{isLao ? "ຊື່ຜູ້ຕິດຕໍ່" : "Contact name"}</label>
                 <input
                   required
                   name="contactName"
                   value={formData.contactName}
                   onChange={handleChange}
                   className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl text-sm focus:ring-2 focus:ring-[#005BAC] outline-none transition-all dark:text-white"
-                  placeholder="ທ. ສົມຊາຍ"
+                  placeholder={isLao ? "ທ. ສົມຊາຍ" : "Contact name"}
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300">ເບີໂທ (Phone)</label>
+                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300">{isLao ? "ເບີໂທ" : "Phone"}</label>
                   <div className="relative">
                     <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                     <input
@@ -191,7 +213,7 @@ export function RFQModal({ item, isOpen, onClose }: RFQModalProps) {
                   </div>
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300">ອີເມວ (Email)</label>
+                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300">{isLao ? "ອີເມວ" : "Email"}</label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                     <input
@@ -208,14 +230,14 @@ export function RFQModal({ item, isOpen, onClose }: RFQModalProps) {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-700 dark:text-slate-300">ລາຍລະອຽດເພີ່ມເຕີມ (Notes)</label>
+                <label className="text-xs font-bold text-slate-700 dark:text-slate-300">{isLao ? "ລາຍລະອຽດເພີ່ມເຕີມ" : "Additional notes"}</label>
                 <textarea
                   name="notes"
                   value={formData.notes}
                   onChange={handleChange}
                   rows={3}
                   className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl text-sm focus:ring-2 focus:ring-[#005BAC] outline-none transition-all dark:text-white resize-none"
-                  placeholder="ສະຖານທີ່ຈັດສົ່ງ, ເງື່ອນໄຂການຊຳລະ, ຯລຯ"
+                  placeholder={isLao ? "ສະຖານທີ່ຈັດສົ່ງ, ເງື່ອນໄຂການຊຳລະ..." : "Delivery location, payment terms, etc."}
                 />
               </div>
 
@@ -229,7 +251,7 @@ export function RFQModal({ item, isOpen, onClose }: RFQModalProps) {
                     <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                   ) : (
                     <>
-                      <Send className="w-5 h-5" /> ຂໍໃບສະເໜີລາຄາ (Submit RFQ)
+                      <Send className="w-5 h-5" /> {isLao ? "ຂໍໃບສະເໜີລາຄາ" : "Submit RFQ"}
                     </>
                   )}
                 </Button>

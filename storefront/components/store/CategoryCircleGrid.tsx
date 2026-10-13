@@ -6,7 +6,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 import { STORE_CATEGORIES } from '@/data/categories';
-import { useLocale } from 'next-intl';
+import { useLocale } from '@/lib/locale';
 
 export function CategoryCircleGrid() {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -17,7 +17,7 @@ export function CategoryCircleGrid() {
     id: cat.id,
     name: isLao ? (cat.name_lo || cat.name) : cat.name,
     image: cat.image,
-    link: `/${locale}/store?category=${encodeURIComponent(cat.name)}`
+    link: `/store?category=${encodeURIComponent(cat.name)}`
   }));
 
   const scroll = (direction: 'left' | 'right') => {
@@ -35,7 +35,7 @@ export function CategoryCircleGrid() {
         <h3 className="text-xl md:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
           {isLao ? "ໝວດໝູ່ສິນຄ້າ ແລະ ອຸປະກອນອຸດສາຫະກຳ" : "Industrial Equipment & Machinery Categories"}
         </h3>
-        <Link href={`/${locale}/store`} className="text-sm font-bold text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 hidden md:flex items-center gap-1 transition-colors">
+        <Link href="/store" className="text-sm font-bold text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 hidden md:flex items-center gap-1 transition-colors">
           {isLao ? "ເບິ່ງສິນຄ້າທັງໝົດ" : "View All Catalog"} <span>&rarr;</span>
         </Link>
       </div>

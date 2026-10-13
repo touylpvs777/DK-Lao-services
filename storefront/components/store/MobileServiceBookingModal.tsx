@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Wrench, CheckCircle2, ShieldCheck, MapPin, Calendar, Smartphone, ArrowRight, Sparkles, Clock, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useLocale } from "@/lib/locale";
 
 interface MobileServiceBookingModalProps {
   isOpen: boolean;
@@ -17,21 +18,29 @@ const CHECKLIST_24_POINTS = [
   { group: "4. ລະບົບຄວາມປອດໄພ & ໄຟສັນຍານ", items: ["ໄຟໜ້າ, ໄຟຫຼັງ, ໄຟລ້ຽວ, ໄຟກະພິບ", "ສຽງແກ & ສຽງຖອຍຫຼັງ", "ສາຍຮັດນິລະໄພ & ສະວິດເກົ້າອີ້", "ລະບົບຕັດໄຟສຸກເສີນ Emergency Cut-off"] }
 ];
 
+const CHECKLIST_24_POINTS_EN = [
+  { group: "1. Engine and drivetrain", items: ["Engine oil level and viscosity", "Coolant system and radiator", "Drive belts and pulleys", "Wiring, alternator, and starter"] },
+  { group: "2. Hydraulics and lifting", items: ["Hydraulic oil level and cylinder seals", "Hydraulic hoses and leak-free fittings", "Lift chains and mast bearings", "Control valve"] },
+  { group: "3. Brakes and running gear", items: ["Brake pad thickness and master cylinder", "Brake fluid and flexible brake hoses", "Wheel hubs and rear axle bearings", "Solid tire tread and cracks"] },
+  { group: "4. Safety and warning lights", items: ["Headlights, tail lights, turn signals, and beacons", "Horn and reverse alarm", "Seat belt and seat switch", "Emergency power cut-off"] },
+];
+
 const PROVINCES = [
-  "ນະຄອນຫຼວງວຽງຈັນ (Vientiane Capital)",
-  "ແຂວງວຽງຈັນ (Vientiane Province)",
-  "ສະຫວັນນະເຂດ (Savannakhet)",
-  "ຈຳປາສັກ (Champasak / Pakse)",
-  "ຄຳມ່ວນ (Khammouane / Thakhek)",
-  "ຫຼວງພະບາງ (Luang Prabang)",
-  "ບໍລິຄຳໄຊ (Bolikhamxay)",
-  "ໄຊຍະບູລີ (Xayaburi)",
-  "ອື່ນໆ (Other Province)"
+  { lo: "ນະຄອນຫຼວງວຽງຈັນ", en: "Vientiane Capital" },
+  { lo: "ແຂວງວຽງຈັນ", en: "Vientiane Province" },
+  { lo: "ສະຫວັນນະເຂດ", en: "Savannakhet" },
+  { lo: "ຈຳປາສັກ", en: "Champasak / Pakse" },
+  { lo: "ຄຳມ່ວນ", en: "Khammouane / Thakhek" },
+  { lo: "ຫຼວງພະບາງ", en: "Luang Prabang" },
+  { lo: "ບໍລິຄຳໄຊ", en: "Bolikhamxay" },
+  { lo: "ໄຊຍະບູລີ", en: "Xayaburi" },
+  { lo: "ອື່ນໆ", en: "Other province" }
 ];
 
 export function MobileServiceBookingModal({ isOpen, onClose }: MobileServiceBookingModalProps) {
+  const isLao = useLocale() === "lo";
   const [vehicleType, setVehicleType] = useState<string>("forklift_diesel");
-  const [province, setProvince] = useState<string>(PROVINCES[0]);
+  const [province, setProvince] = useState<string>(PROVINCES[0].lo);
   const [factoryName, setFactoryName] = useState<string>("");
   const [contactPhone, setContactPhone] = useState<string>("");
   const [urgency, setUrgency] = useState<"standard_pm" | "emergency_breakdown">("standard_pm");
@@ -41,20 +50,17 @@ export function MobileServiceBookingModal({ isOpen, onClose }: MobileServiceBook
     e.preventDefault();
 
     const vehicleLabel =
-      vehicleType === "forklift_diesel" ? "ລົດຍົກດີເຊວ (Diesel Forklift)" :
-      vehicleType === "forklift_electric" ? "ລົດຍົກໄຟຟ້າ (Electric Forklift / Reach Truck)" :
-      vehicleType === "light_ev" ? "ລົດເບົາ / ລົດໄຟຟ້າ EV (Pickup / EV)" : "ເຄື່ອງຈັກໜັກ (Heavy Machinery)";
+      vehicleType === "forklift_diesel" ? (isLao ? "ລົດຍົກດີເຊວ" : "Diesel forklift") :
+      vehicleType === "forklift_electric" ? (isLao ? "ລົດຍົກໄຟຟ້າ / Reach Truck" : "Electric forklift / reach truck") :
+      vehicleType === "light_ev" ? (isLao ? "ລົດກະບະ / ລົດໄຟຟ້າ EV" : "Pickup / electric vehicle") : (isLao ? "ເຄື່ອງຈັກໜັກ" : "Heavy machinery");
 
-    const urgencyLabel = urgency === "emergency_breakdown" ? "🚨 ສຸກເສີນ ລົດເສຍຢຸດແລ່ນ (Emergency Breakdown)" : "🛠️ ກວດເຊັກ PM 24 ຈຸດຕາມໄລຍະ (Scheduled PM)";
+    const urgencyLabel = urgency === "emergency_breakdown"
+      ? (isLao ? "🚨 ສຸກເສີນ ລົດເສຍຢຸດແລ່ນ" : "🚨 Emergency breakdown")
+      : (isLao ? "🛠️ ກວດເຊັກ PM 24 ຈຸດຕາມກຳນົດ" : "🛠️ Scheduled 24-point PM");
 
-    const message =
-      `ສະບາຍດີ DK Lao / LUD! ຂ້ອຍຕ້ອງການນັດໝາຍທີມຊ່າງ Mobile Service ກວດເຊັກເຖິງສະຖານທີ່:\n\n` +
-      `📌 ປະເພດການຮຽກຮ້ອງ: ${urgencyLabel}\n` +
-      `🚜 ປະເພດລົດ: ${vehicleLabel}\n` +
-      `🏢 ຊື່ໂຮງງານ/ບໍລິສັດ: ${factoryName || "ບໍ່ໄດ້ລະບຸ"}\n` +
-      `📍 ສະຖານທີ່/ແຂວງ: ${province}\n` +
-      `📞 ເບີໂທຕິດຕໍ່: ${contactPhone || "ກະລຸນາຕິດຕໍ່ກັບຜ່ານເບີນີ້"}\n` +
-      `📝 ລາຍລະອຽດອາການ/ຄວາມຕ້ອງການ: ${notes || "ກວດເຊັກທົ່ວໄປ 24 ຈຸດ"}`;
+    const message = isLao
+      ? `ສະບາຍດີ DK Lao / LUD! ຂ້ອຍຕ້ອງການນັດໝາຍທີມຊ່າງ Mobile Service ໄປກວດເຊັກທີ່ໂຮງງານ:\n\n📌 ປະເພດການຮຽກຮ້ອງ: ${urgencyLabel}\n🚜 ປະເພດລົດ: ${vehicleLabel}\n🏢 ຊື່ໂຮງງານ/ບໍລິສັດ: ${factoryName || "ບໍ່ໄດ້ລະບຸ"}\n📍 ສະຖານທີ່/ແຂວງ: ${province}\n📞 ເບີໂທຕິດຕໍ່: ${contactPhone || "ກະລຸນາຕິດຕໍ່ກັບຜ່ານເບີນີ້"}\n📝 ລາຍລະອຽດ: ${notes || "ກວດເຊັກທົ່ວໄປ 24 ຈຸດ"}`
+      : `Hello DK Lao / LUD, I would like to book an on-site mobile service visit.\n\n📌 Request type: ${urgencyLabel}\n🚜 Vehicle: ${vehicleLabel}\n🏢 Factory/company: ${factoryName || "Not provided"}\n📍 Location/province: ${PROVINCES.find((item) => item.lo === province)?.en || province}\n📞 Contact phone: ${contactPhone || "Please call me at this number"}\n📝 Details: ${notes || "General 24-point inspection"}`;
 
     window.open(`https://wa.me/8562058929299?text=${encodeURIComponent(message)}`, "_blank");
     onClose();
@@ -88,13 +94,13 @@ export function MobileServiceBookingModal({ isOpen, onClose }: MobileServiceBook
                 </div>
                 <div>
                   <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
-                    <span>ບໍລິການກວດເຊັກ 24 ຈຸດ & ຊ່າງ Mobile Service ເຖິງໂຮງງານ</span>
+                    <span>{isLao ? "ບໍລິການກວດເຊັກ 24 ຈຸດ & ຊ່າງເຄື່ອນທີ່ເຖິງໂຮງງານ" : "24-point inspection and on-site mobile service"}</span>
                     <span className="text-[10px] uppercase tracking-wider bg-amber-500 text-white font-bold px-2 py-0.5 rounded-full">
-                      On-Site Service
+                      {isLao ? "ບໍລິການໜ້າງານ" : "On-site service"}
                     </span>
                   </h3>
                   <p className="text-xs text-slate-500 dark:text-slate-400">
-                    ທີມວິສະວະກອນພ້ອມລົດເຄື່ອນທີ່ ບໍລິການກວດເຊັກ, ປ່ຽນອາໄຫຼ່ ແລະ PM ທົ່ວປະເທດລາວ
+                    {isLao ? "ທີມວິສະວະກອນພ້ອມລົດເຄື່ອນທີ່ ບໍລິການກວດເຊັກ, ປ່ຽນອາໄຫຼ່ ແລະ PM ທົ່ວປະເທດລາວ" : "Our mobile engineering team provides inspections, parts replacement, and preventive maintenance across Laos."}
                   </p>
                 </div>
               </div>
@@ -114,10 +120,10 @@ export function MobileServiceBookingModal({ isOpen, onClose }: MobileServiceBook
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-black uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-1.5">
                     <ShieldCheck className="w-4 h-4 text-emerald-500" />
-                    <span>ລາຍການກວດເຊັກມາດຕະຖານໂຮງງານ 24 ຈຸດ (24-Point OEM Checklist)</span>
+                    <span>{isLao ? "ລາຍການກວດເຊັກ OEM 24 ຈຸດ" : "24-point OEM inspection checklist"}</span>
                   </span>
                   <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded-full">
-                    ຟຣີໃບລາຍງານສຸຂະພາບລົດ (Health Report)
+                    {isLao ? "ຟຣີໃບລາຍງານສະພາບລົດ" : "Free vehicle health report"}
                   </span>
                 </div>
 
@@ -125,13 +131,13 @@ export function MobileServiceBookingModal({ isOpen, onClose }: MobileServiceBook
                   {CHECKLIST_24_POINTS.map((group, idx) => (
                     <div key={idx} className="p-3 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-100 dark:border-white/5 space-y-1.5">
                       <div className="text-[11px] font-bold text-amber-600 dark:text-amber-400">
-                        {group.group}
+                        {isLao ? group.group : CHECKLIST_24_POINTS_EN[idx].group}
                       </div>
                       <ul className="space-y-0.5">
                         {group.items.map((item, i) => (
                           <li key={i} className="text-[10px] text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
                             <CheckCircle2 className="w-3 h-3 text-emerald-500 shrink-0" />
-                            <span>{item}</span>
+                            <span>{isLao ? item : CHECKLIST_24_POINTS_EN[idx].items[i]}</span>
                           </li>
                         ))}
                       </ul>
@@ -146,7 +152,7 @@ export function MobileServiceBookingModal({ isOpen, onClose }: MobileServiceBook
                   {/* Urgency Type */}
                   <div>
                     <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                      ປະເພດການຮຽກຮ້ອງ:
+                      {isLao ? "ປະເພດການຮຽກຮ້ອງ:" : "Request type:"}
                     </label>
                     <div className="grid grid-cols-2 gap-2">
                       <button
@@ -158,7 +164,7 @@ export function MobileServiceBookingModal({ isOpen, onClose }: MobileServiceBook
                             : "bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-white/5"
                         }`}
                       >
-                        🛠️ ກວດເຊັກ PM ຕາມຮອບ
+                        {isLao ? "🛠️ ກວດເຊັກ PM ຕາມຮອບ" : "🛠️ Scheduled PM inspection"}
                       </button>
                       <button
                         type="button"
@@ -169,7 +175,7 @@ export function MobileServiceBookingModal({ isOpen, onClose }: MobileServiceBook
                             : "bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-white/5"
                         }`}
                       >
-                        🚨 ສຸກເສີນ ລົດເສຍ
+                        {isLao ? "🚨 ສຸກເສີນ ລົດເສຍ" : "🚨 Emergency breakdown"}
                       </button>
                     </div>
                   </div>
@@ -177,17 +183,17 @@ export function MobileServiceBookingModal({ isOpen, onClose }: MobileServiceBook
                   {/* Vehicle Type */}
                   <div>
                     <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                      ປະເພດລົດ / ເຄື່ອງຈັກ:
+                      {isLao ? "ປະເພດລົດ / ເຄື່ອງຈັກ:" : "Vehicle / equipment type:"}
                     </label>
                     <select
                       value={vehicleType}
                       onChange={(e) => setVehicleType(e.target.value)}
                       className="w-full h-10 px-3 rounded-xl bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-white/10 text-xs font-semibold text-slate-900 dark:text-white focus:outline-none focus:border-amber-500"
                     >
-                      <option value="forklift_diesel">ລົດຍົກດີເຊວ (Diesel Forklift 1.5 - 5.0T)</option>
-                      <option value="forklift_electric">ລົດຍົກໄຟຟ້າ / Reach Truck (Battery Forklift)</option>
-                      <option value="light_ev">ລົດກະບະ / ລົດໄຟຟ້າ EV (Pickup / SUV / EV)</option>
-                      <option value="heavy_machinery">ເຄື່ອງຈັກໜັກ / ລົດຕັກ / ລົດຂຸດ (Heavy Equipment)</option>
+                      <option value="forklift_diesel">{isLao ? "ລົດຍົກດີເຊວ (1.5 - 5.0 ໂຕນ)" : "Diesel forklift (1.5 - 5.0 ton)"}</option>
+                      <option value="forklift_electric">{isLao ? "ລົດຍົກໄຟຟ້າ / Reach Truck" : "Electric forklift / reach truck"}</option>
+                      <option value="light_ev">{isLao ? "ລົດກະບະ / ລົດໄຟຟ້າ EV" : "Pickup / electric vehicle"}</option>
+                      <option value="heavy_machinery">{isLao ? "ເຄື່ອງຈັກໜັກ / ລົດຕັກ / ລົດຂຸດ" : "Heavy machinery / loader / excavator"}</option>
                     </select>
                   </div>
                 </div>
@@ -196,13 +202,13 @@ export function MobileServiceBookingModal({ isOpen, onClose }: MobileServiceBook
                   {/* Factory / Company Name */}
                   <div>
                     <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                      ຊື່ໂຮງງານ / ບໍລິສັດ:
+                      {isLao ? "ຊື່ໂຮງງານ / ບໍລິສັດ:" : "Factory / company name:"}
                     </label>
                     <input
                       type="text"
                       value={factoryName}
                       onChange={(e) => setFactoryName(e.target.value)}
-                      placeholder="ຕົວຢ່າງ: ໂຮງງານ ເບຍລາວ, ບໍ່ແຮ່ພູເບ້ຍ..."
+                      placeholder={isLao ? "ຕົວຢ່າງ: ໂຮງງານເບຍລາວ, ບໍ່ແຮ່ພູເບ້ຍ..." : "e.g. Lao Brewery, Phu Bia Mining"}
                       className="w-full h-10 px-3.5 rounded-xl bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-white/10 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-amber-500"
                     />
                   </div>
@@ -210,7 +216,7 @@ export function MobileServiceBookingModal({ isOpen, onClose }: MobileServiceBook
                   {/* Province */}
                   <div>
                     <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                      ສະຖານທີ່ / ແຂວງ:
+                      {isLao ? "ສະຖານທີ່ / ແຂວງ:" : "Location / province:"}
                     </label>
                     <select
                       value={province}
@@ -218,7 +224,7 @@ export function MobileServiceBookingModal({ isOpen, onClose }: MobileServiceBook
                       className="w-full h-10 px-3 rounded-xl bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-white/10 text-xs font-semibold text-slate-900 dark:text-white focus:outline-none focus:border-amber-500"
                     >
                       {PROVINCES.map((p) => (
-                        <option key={p} value={p}>{p}</option>
+                        <option key={p.lo} value={p.lo}>{isLao ? p.lo : p.en}</option>
                       ))}
                     </select>
                   </div>
@@ -227,13 +233,13 @@ export function MobileServiceBookingModal({ isOpen, onClose }: MobileServiceBook
                 {/* Notes */}
                 <div>
                   <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                    ອາການຜິດປົກກະຕິ ຫຼື ອາໄຫຼ່ທີ່ຕ້ອງການໃຫ້ກຽມມານຳ:
+                    {isLao ? "ອາການຜິດປົກກະຕິ ຫຼື ອາໄຫຼ່ທີ່ຕ້ອງການໃຫ້ກຽມມານຳ:" : "Issues or parts to prepare:"}
                   </label>
                   <textarea
                     rows={2}
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
-                    placeholder="ຕົວຢ່າງ: ລົດຍົກສະຕາດຕິດຍາກ, ປ້ຳໄຮໂດຣລິກມີສຽງດັງ, ຕ້ອງການໃຫ້ກຽມປ່ຽນຢາງຕັນ 2.5 ໂຕນ..."
+                    placeholder={isLao ? "ຕົວຢ່າງ: ລົດຍົກສະຕາດຕິດຍາກ, ປ້ຳໄຮໂດຣລິກມີສຽງດັງ..." : "e.g. Hard starting, noisy hydraulic pump, prepare 2.5-ton solid tires"}
                     className="w-full p-3 rounded-xl bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-white/10 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-amber-500"
                   />
                 </div>
@@ -243,7 +249,7 @@ export function MobileServiceBookingModal({ isOpen, onClose }: MobileServiceBook
               <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-white/10">
                 <div className="text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
                   <Clock className="w-4 h-4 text-amber-500 shrink-0" />
-                  <span>ຕອບກັບ ແລະ ຈອງຄິວຊ່າງທັນທີ ພາຍໃນ 15 ນາທີ</span>
+                  <span>{isLao ? "ຕອບກັບ ແລະ ຈັດຄິວຊ່າງພາຍໃນ 15 ນາທີ" : "We respond and schedule a technician within 15 minutes"}</span>
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -253,13 +259,13 @@ export function MobileServiceBookingModal({ isOpen, onClose }: MobileServiceBook
                     onClick={onClose}
                     className="rounded-xl h-10 text-xs font-bold"
                   >
-                    ຍົກເລີກ
+                    {isLao ? "ຍົກເລີກ" : "Cancel"}
                   </Button>
                   <Button
                     type="submit"
                     className="rounded-xl h-10 text-xs font-bold bg-amber-600 hover:bg-amber-500 text-white shadow-lg shadow-amber-500/25 flex items-center gap-2"
                   >
-                    <span>ນັດໝາຍຊ່າງຜ່ານ WhatsApp</span>
+                    <span>{isLao ? "ນັດໝາຍຊ່າງຜ່ານ WhatsApp" : "Book a technician via WhatsApp"}</span>
                     <ArrowRight className="w-4 h-4" />
                   </Button>
                 </div>

@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, CheckCircle2, HelpCircle, ArrowRight, Truck, Info, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useLocale } from "@/lib/locale";
 
 interface TyreFinderModalProps {
   isOpen: boolean;
@@ -15,7 +16,9 @@ interface ForkliftSizeProfile {
   id: string;
   tonnage: string;
   tonnageLabel: string;
+  tonnageLabelEn: string;
   description: string;
+  descriptionEn: string;
   popularBrands: string[];
   frontSize: string;
   rearSize: string;
@@ -29,7 +32,9 @@ const FORKLIFT_PROFILES: ForkliftSizeProfile[] = [
     id: "1.5t",
     tonnage: "1.5T - 1.8T",
     tonnageLabel: "1.5 - 1.8 ໂຕນ (ລົດຍົກຂະໜາດນ້ອຍ)",
+    tonnageLabelEn: "1.5 - 1.8 ton (compact forklift)",
     description: "ເໝາະສຳລັບໂຮງງານຂະໜາດກາງ, ສາງກະຈາຍສິນຄ້າ ແລະ ຕູ້ຄອນເທນເນີ",
+    descriptionEn: "Suitable for medium factories, distribution warehouses, and container handling.",
     popularBrands: ["Toyota 7/8FD15", "Komatsu FD15", "TCM FD15", "Heli CPCD15"],
     frontSize: "6.50-10",
     rearSize: "5.00-8",
@@ -41,7 +46,9 @@ const FORKLIFT_PROFILES: ForkliftSizeProfile[] = [
     id: "2.5t",
     tonnage: "2.0T - 2.5T",
     tonnageLabel: "2.0 - 2.5 ໂຕນ (ລຸ້ນຍອດນິຍົມທີ່ສຸດໃນລາວ 🔥)",
+    tonnageLabelEn: "2.0 - 2.5 ton (most popular in Laos 🔥)",
     description: "ລຸ້ນມາດຕະຖານທີ່ໃຊ້ຫຼາຍທີ່ສຸດໃນສາງສິນຄ້າ ແລະ ໂຮງງານທົ່ວໄປ",
+    descriptionEn: "The standard capacity widely used in warehouses and general factories.",
     popularBrands: ["Toyota 8FD25", "Komatsu FD25-16/17", "TCM FD25T3", "Heli CPCD25", "Hangcha CPCD25"],
     frontSize: "28x9-15 (8.15-15) ຫຼື 7.00-12",
     rearSize: "6.50-10",
@@ -53,7 +60,9 @@ const FORKLIFT_PROFILES: ForkliftSizeProfile[] = [
     id: "3.0t",
     tonnage: "3.0T - 3.5T",
     tonnageLabel: "3.0 - 3.5 ໂຕນ (ລຸ້ນໃຊ້ງານໜັກ Heavy Duty)",
+    tonnageLabelEn: "3.0 - 3.5 ton (heavy duty)",
     description: "ສຳລັບຍົກສິນຄ້າໜັກ, ໂຮງງານເຫຼັກ, ໄຊດ໌ກໍ່ສ້າງ ແລະ ໂຮງເລື່ອຍໄມ້",
+    descriptionEn: "For heavy loads, steel plants, construction sites, and sawmills.",
     popularBrands: ["Toyota 8FD30", "Komatsu FD30-16/17", "TCM FD30T3", "Mitsubishi FD30N", "Heli CPCD30/35"],
     frontSize: "28x9-15 (8.15-15)",
     rearSize: "6.50-10",
@@ -65,7 +74,9 @@ const FORKLIFT_PROFILES: ForkliftSizeProfile[] = [
     id: "5.0t",
     tonnage: "4.0T - 5.0T",
     tonnageLabel: "4.0 - 5.0 ໂຕນ (ລົດຍົກຂະໜາດໃຫຍ່ Super Heavy)",
+    tonnageLabelEn: "4.0 - 5.0 ton (large, super-heavy forklift)",
     description: "ສຳລັບວຽກບໍ່ແຮ່, ຍົກຕູ້ຄອນເທນເນີ, ໂຮງງານຊີມັງ ແລະ ທ່າບົກ",
+    descriptionEn: "For mining, container handling, cement plants, and dry ports.",
     popularBrands: ["Toyota 8FD50", "Komatsu FD50", "TCM FD50", "Heli CPCD50"],
     frontSize: "300-15 (8.25-15)",
     rearSize: "7.00-12",
@@ -77,7 +88,9 @@ const FORKLIFT_PROFILES: ForkliftSizeProfile[] = [
     id: "reach_truck",
     tonnage: "Reach Truck / EV",
     tonnageLabel: "ລົດຍົກໄຟຟ້າຂາຢັ່ງ / ລົດລາກປາເລັດໄຟຟ້າ (PU Wheels)",
+    tonnageLabelEn: "Electric reach truck / pallet truck (PU wheels)",
     description: "ລົດຍົກໃນສາງແຄບ, ສາງຫ້ອງເຢັນ ໃຊ້ລໍ້ໂພລີຢູຣີເທນ (Polyurethane Wheels)",
+    descriptionEn: "For narrow-aisle and cold-storage warehouses using polyurethane wheels.",
     popularBrands: ["Toyota 7FBRE", "Jungheinrich", "BT Reflex", "Crown", "Nichiyu"],
     frontSize: "Load Wheel PU (ລໍ້ໜ້າ 285x100 / 254x102)",
     rearSize: "Drive Wheel PU (ລໍ້ຂັບ 343x140)",
@@ -88,6 +101,7 @@ const FORKLIFT_PROFILES: ForkliftSizeProfile[] = [
 ];
 
 export function TyreFinderModal({ isOpen, onClose, onSelectTyreCriteria }: TyreFinderModalProps) {
+  const isLao = useLocale() === "lo";
   const [selectedProfileId, setSelectedProfileId] = useState<string>("2.5t");
   const [selectedPosition, setSelectedPosition] = useState<"both" | "front" | "rear">("both");
   const [tyreColor, setTyreColor] = useState<"black" | "white_non_marking">("black");
@@ -143,13 +157,13 @@ export function TyreFinderModal({ isOpen, onClose, onSelectTyreCriteria }: TyreF
                 </div>
                 <div>
                   <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
-                    <span>ຕົວຊ່ວຍເລືອກຂະໜາດຢາງຕັນ (Solid Tyre Finder)</span>
+                    <span>{isLao ? "ຕົວຊ່ວຍເລືອກຂະໜາດຢາງຕັນ" : "Solid tire finder"}</span>
                     <span className="text-[10px] uppercase tracking-wider bg-[#005BAC] text-white font-bold px-2 py-0.5 rounded-full">
                       Smart Guide
                     </span>
                   </h3>
                   <p className="text-xs text-slate-500 dark:text-slate-400">
-                    ເລືອກຂະໜາດໂຕນຂອງລົດຍົກ ລະບົບຈະຄິດໄລ່ຂະໜາດຢາງທີ່ຖືກຕ້ອງໃຫ້ອັດຕະໂນມັດ 100%
+                    {isLao ? "ເລືອກຂະໜາດໂຕນລົດຍົກ ເພື່ອຊອກຫາຂະໜາດຢາງທີ່ເໝາະສົມ" : "Select forklift capacity to find compatible tire sizes."}
                   </p>
                 </div>
               </div>
@@ -168,7 +182,7 @@ export function TyreFinderModal({ isOpen, onClose, onSelectTyreCriteria }: TyreF
               <div>
                 <label className="block text-xs font-black uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-3 flex items-center gap-1.5">
                   <span className="w-5 h-5 rounded-full bg-[#005BAC] text-white flex items-center justify-center text-[10px] font-black">1</span>
-                  <span>ເລືອກຂະໜາດໂຕນຂອງລົດຍົກ (Forklift Capacity):</span>
+                  <span>{isLao ? "ເລືອກຂະໜາດໂຕນຂອງລົດຍົກ:" : "Select forklift capacity:"}</span>
                 </label>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -187,17 +201,17 @@ export function TyreFinderModal({ isOpen, onClose, onSelectTyreCriteria }: TyreF
                         <div className="flex items-start justify-between gap-2">
                           <div className="flex items-center gap-2">
                             <span className="text-xl">{profile.icon}</span>
-                            <span className="font-bold text-sm">{profile.tonnageLabel}</span>
+                            <span className="font-bold text-sm">{isLao ? profile.tonnageLabel : profile.tonnageLabelEn}</span>
                           </div>
                           {isSelected && (
                             <CheckCircle2 className="w-4 h-4 text-[#005BAC] shrink-0 mt-0.5" />
                           )}
                         </div>
                         <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">
-                          {profile.description}
+                          {isLao ? profile.description : profile.descriptionEn}
                         </p>
                         <div className="mt-2 text-[10px] text-[#005BAC] dark:text-blue-400 font-semibold">
-                          ລຸ້ນຍອດນິຍົມ: {profile.popularBrands.slice(0, 3).join(", ")}
+                          {isLao ? "ລຸ້ນຍອດນິຍົມ:" : "Popular models:"} {profile.popularBrands.slice(0, 3).join(", ")}
                         </div>
                       </button>
                     );
@@ -211,27 +225,27 @@ export function TyreFinderModal({ isOpen, onClose, onSelectTyreCriteria }: TyreF
                   <div className="flex items-center gap-2">
                     <Sparkles className="w-4 h-4 text-blue-400" />
                     <span className="text-xs font-bold uppercase tracking-wider text-blue-400">
-                      ຂະໜາດຢາງທີ່ຖືກຕ້ອງສຳລັບລົດ {currentProfile.tonnage}:
+                      {isLao ? `ຂະໜາດຢາງສຳລັບລົດ ${currentProfile.tonnage}:` : `Tire sizes for ${currentProfile.tonnage} forklift:`}
                     </span>
                   </div>
                   <span className="text-[11px] bg-blue-500/20 text-blue-300 border border-blue-500/30 px-2.5 py-0.5 rounded-full font-bold">
-                    ມາດຕະຖານໂຮງງານ OEM
+                    {isLao ? "ມາດຕະຖານ OEM" : "OEM standard"}
                   </span>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {/* Front Tyre */}
                   <div className="p-3.5 rounded-xl bg-white/5 border border-white/10 space-y-1">
-                    <div className="text-[11px] text-slate-400 font-bold uppercase">ລໍ້ໜ້າ (Front Drive Wheels):</div>
+                    <div className="text-[11px] text-slate-400 font-bold uppercase">{isLao ? "ລໍ້ໜ້າ:" : "Front drive wheels:"}</div>
                     <div className="text-base font-black text-blue-400">{currentProfile.frontSize}</div>
-                    <div className="text-[10px] text-slate-400">ຂະໜາດກະທະລໍ້: {currentProfile.rimFront}</div>
+                    <div className="text-[10px] text-slate-400">{isLao ? "ຂະໜາດກະທະລໍ້:" : "Rim size:"} {currentProfile.rimFront}</div>
                   </div>
 
                   {/* Rear Tyre */}
                   <div className="p-3.5 rounded-xl bg-white/5 border border-white/10 space-y-1">
-                    <div className="text-[11px] text-slate-400 font-bold uppercase">ລໍ້ຫຼັງ (Rear Steer Wheels):</div>
+                    <div className="text-[11px] text-slate-400 font-bold uppercase">{isLao ? "ລໍ້ຫຼັງ:" : "Rear steer wheels:"}</div>
                     <div className="text-base font-black text-sky-400">{currentProfile.rearSize}</div>
-                    <div className="text-[10px] text-slate-400">ຂະໜາດກະທະລໍ້: {currentProfile.rimRear}</div>
+                    <div className="text-[10px] text-slate-400">{isLao ? "ຂະໜາດກະທະລໍ້:" : "Rim size:"} {currentProfile.rimRear}</div>
                   </div>
                 </div>
 
@@ -240,13 +254,13 @@ export function TyreFinderModal({ isOpen, onClose, onSelectTyreCriteria }: TyreF
                   {/* Position selector */}
                   <div>
                     <label className="text-[11px] font-bold text-slate-300 block mb-2">
-                      ຕ້ອງການຊື້ສະເພາະລໍ້ໃດ?
+                      {isLao ? "ຕ້ອງການຊື້ສະເພາະລໍ້ໃດ?" : "Which tires do you need?"}
                     </label>
                     <div className="flex gap-1.5">
                       {[
-                        { id: "both", label: "ຄົບ 4 ລໍ້ (Full Set)" },
-                        { id: "front", label: "ສະເພາະລໍ້ໜ້າ" },
-                        { id: "rear", label: "ສະເພາະລໍ້ຫຼັງ" }
+                        { id: "both", label: isLao ? "ຄົບ 4 ລໍ້" : "Full set" },
+                        { id: "front", label: isLao ? "ລໍ້ໜ້າເທົ່ານັ້ນ" : "Front only" },
+                        { id: "rear", label: isLao ? "ລໍ້ຫຼັງເທົ່ານັ້ນ" : "Rear only" }
                       ].map((pos) => (
                         <button
                           key={pos.id}
@@ -266,12 +280,12 @@ export function TyreFinderModal({ isOpen, onClose, onSelectTyreCriteria }: TyreF
                   {/* Tyre Color/Type selector */}
                   <div>
                     <label className="text-[11px] font-bold text-slate-300 block mb-2">
-                      ປະເພດຢາງ & ສະພາບພື້ນ:
+                      {isLao ? "ປະເພດຢາງ ແລະ ສະພາບພື້ນ:" : "Tire type and floor conditions:"}
                     </label>
                     <div className="flex gap-1.5">
                       {[
-                        { id: "black", label: "⚫ ສີດຳ (ໂຮງງານທົ່ວໄປ)" },
-                        { id: "white_non_marking", label: "⚪ ສີຂາວ (Non-Marking)" }
+                        { id: "black", label: isLao ? "⚫ ສີດຳ (ທົ່ວໄປ)" : "⚫ Black (standard)" },
+                        { id: "white_non_marking", label: isLao ? "⚪ ສີຂາວ (ບໍ່ມີຮອຍ)" : "⚪ White (non-marking)" }
                       ].map((col) => (
                         <button
                           key={col.id}
@@ -295,7 +309,7 @@ export function TyreFinderModal({ isOpen, onClose, onSelectTyreCriteria }: TyreF
             <div className="flex items-center justify-between px-6 py-4 border-t border-slate-100 dark:border-white/10 bg-slate-50 dark:bg-slate-900/50">
               <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
                 <Info className="w-4 h-4 text-[#005BAC] shrink-0" />
-                <span>ຮັບປະກັນຢາງຕັນ 3 ຊັ້ນ ແທ້ 100% ບໍ່ຢ້ານຕະປູຊອດ</span>
+                <span>{isLao ? "ຢາງຕັນ 3 ຊັ້ນແທ້ 100% ທົນທານຕໍ່ການເຈາະ" : "100% genuine 3-layer solid tires, puncture resistant"}</span>
               </div>
 
               <div className="flex items-center gap-3">
@@ -304,13 +318,13 @@ export function TyreFinderModal({ isOpen, onClose, onSelectTyreCriteria }: TyreF
                   onClick={onClose}
                   className="rounded-xl h-10 text-xs font-bold"
                 >
-                  ຍົກເລີກ
+                  {isLao ? "ຍົກເລີກ" : "Cancel"}
                 </Button>
                 <Button
                   onClick={handleApplyFilter}
                   className="rounded-xl h-10 text-xs font-bold bg-[#E1251B] hover:bg-red-700 text-white shadow-lg shadow-red-500/25 flex items-center gap-2"
                 >
-                  <span>ເບິ່ງຢາງທີ່ກົງກັບລົດຂອງຂ້ອຍ</span>
+                  <span>{isLao ? "ເບິ່ງຢາງທີ່ກົງກັບລົດ" : "Find matching tires"}</span>
                   <ArrowRight className="w-4 h-4" />
                 </Button>
               </div>

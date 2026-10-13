@@ -4,6 +4,7 @@ from app.models.movement_history import MovementHistory
 from app.models.brand import Brand
 from app.models.category import ProductCategory
 from app.models.customer import Customer
+from app.models.customer_portal_account import CustomerPortalAccount
 from app.models.deposit import Deposit
 from app.models.forklift import Forklift
 from app.models.forklift_document import ForkliftDocument
@@ -67,7 +68,7 @@ from app.models.setting import Setting
 from app.models.user import User
 
 __all__ = [
-    "Role", "User", "Customer", "Lead", "LeadNote", "ActivityLog", "RevokedToken", "Notification",
+    "Role", "User", "Customer", "CustomerPortalAccount", "Lead", "LeadNote", "ActivityLog", "RevokedToken", "Notification",
     "NotificationPreference", "Setting",
     "SchedulerLock",
     "AssetMovement", "MovementHistory",

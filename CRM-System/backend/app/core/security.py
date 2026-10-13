@@ -24,6 +24,25 @@ def create_access_token(subject: str | int, expires_delta: Optional[timedelta] =
     return jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
 
 
+def create_customer_portal_token(
+    subject: str | int,
+    token_version: int,
+    expires_delta: Optional[timedelta] = None,
+) -> str:
+    """Issue a token that is accepted only by customer-portal endpoints."""
+    expire = datetime.now(UTC) + (
+        expires_delta or timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    )
+    payload = {
+        "sub": str(subject),
+        "exp": expire,
+        "type": "customer_portal",
+        "jti": str(uuid.uuid4()),
+        "ver": token_version,
+    }
+    return jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
+
+
 def create_refresh_token(subject: str | int) -> str:
     expire = datetime.now(UTC) + timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS)
     payload = {"sub": str(subject), "exp": expire, "type": "refresh"}

@@ -5,11 +5,11 @@ import { motion } from "framer-motion";
 import { InventoryItem, INITIAL_CATALOG } from "@/data/catalog";
 import { ShoppingCart, Package, Check, Eye, Zap, FileText, Download, Clock, MessageCircle, Sliders, Sparkles, ArrowRight, ShieldAlert, ShieldCheck, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useCart, calculateLAKPrice, calculateRetailForeignPrice, FACTORY_MARKUP_PERCENT, FACTORY_MARKUP_RATE } from "@/context/CartContext";
+import { useCart, calculateLAKPrice, calculateRetailForeignPrice } from "@/context/CartContext";
 import Image from "next/image";
 import Link from "next/link";
 import { RFQModal } from "./RFQModal";
-import { useLocale } from "next-intl";
+import { useLocale } from "@/lib/locale";
 
 const SPEC_TRANSLATIONS_LO: Record<string, string> = {
   "Height": "ຄວາມສູງ (Height)",
@@ -101,7 +101,7 @@ function getGalleryImageLabel(url: string, isLao: boolean): string {
 
 // Helpers for Realistic Dynamic Lead Time Display (Matching Enterprise Logistics)
 function getLeadTimeBadge(leadTimeStr: string | undefined, isLao: boolean) {
-  if (!leadTimeStr) return isLao ? "ນຳເຂົ້າ 30-45 ວັນ (ຮອບໂຮງງານ)" : "Pre-Order (30-45 Days)";
+  if (!leadTimeStr) return isLao ? "ສອບຖາມເວລາຈັດສົ່ງ" : "Ask for lead time";
   const lt = leadTimeStr.toLowerCase();
   
   // Real In-Stock at Vientiane Logistics Hub
@@ -229,7 +229,10 @@ export function ProductCard({ item, viewMode = 'grid' }: ProductCardProps) {
 
   const factoryPrice = Number(item.unit_price) || 0;
   const itemCurrency = (item as any).currency || 'THB';
-  const retailForeignPrice = calculateRetailForeignPrice(factoryPrice, itemCurrency);
+  const isCrmCatalogItem = Boolean(item.crm_catalog_item);
+  const isAdminPriceItem = isAdminMode && !isCrmCatalogItem;
+  const availableToOrder = item.available_to_order ?? item.qty_on_hand > 0;
+  const retailForeignPrice = calculateRetailForeignPrice(factoryPrice, itemCurrency, !isCrmCatalogItem);
 
   // Real DB Discount Logic vs Mock
   let isSale = false;
@@ -240,20 +243,12 @@ export function ProductCard({ item, viewMode = 'grid' }: ProductCardProps) {
     isSale = true;
     originalPriceNative = Number(item.original_price);
     discountPercent = Math.round(((originalPriceNative - factoryPrice) / originalPriceNative) * 100);
-  } else {
-    // Fallback to deterministic mock if no real discount in DB
-    const discountSeed = item.sku_id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    isSale = !isRental && (discountSeed % 5 === 0);
-    discountPercent = isSale ? (discountSeed % 3 === 0 ? 30 : (discountSeed % 2 === 0 ? 20 : 15)) : 0;
-    originalPriceNative = isSale ? factoryPrice / (1 - discountPercent / 100) : factoryPrice;
   }
 
-  const discountSeed = item.sku_id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-  const isBogo = !isRental && !isSale && (discountSeed % 7 === 0);
-  const stockCount = (discountSeed % 150) + 12; // Simulated WMS Stock (12 - 161)
-  const isLowStock = stockCount < 20;
+  const isBogo = false;
+  const isLowStock = !availableToOrder;
   
-  const originalPriceLAK = calculateLAKPrice(originalPriceNative, itemCurrency, item.category, exchangeRates);
+  const originalPriceLAK = calculateLAKPrice(originalPriceNative, itemCurrency, item.category, exchangeRates, !isCrmCatalogItem);
   
   const relatedProducts = item.related_skus 
     ? INITIAL_CATALOG.filter(prod => item.related_skus?.includes(prod.sku_id))
@@ -271,7 +266,7 @@ export function ProductCard({ item, viewMode = 'grid' }: ProductCardProps) {
     openCheckout();
   };
 
-  const priceLAK = calculateLAKPrice(factoryPrice, itemCurrency, item.category, exchangeRates);
+  const priceLAK = calculateLAKPrice(factoryPrice, itemCurrency, item.category, exchangeRates, !isCrmCatalogItem);
 
   return (
     <>
@@ -287,6 +282,7 @@ export function ProductCard({ item, viewMode = 'grid' }: ProductCardProps) {
               src={item.image_url}
               alt={displayName}
               fill
+              unoptimized={isCrmCatalogItem}
               className="object-contain p-3 transition-transform duration-500 group-hover:scale-105"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               loading="lazy"
@@ -307,7 +303,7 @@ export function ProductCard({ item, viewMode = 'grid' }: ProductCardProps) {
                   <Clock className="w-3 h-3" /> {getLeadTimeBadge(item.lead_time, isLao)}
                 </span>
                 <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md shadow-md flex items-center gap-1 border backdrop-blur-md ${isLowStock ? 'bg-amber-50/90 dark:bg-amber-950/80 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-800' : 'bg-emerald-50/90 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800'}`}>
-                  <Package className="w-3 h-3" /> {isLao ? `ສາງ VTE: ${stockCount} ພ້ອມສົ່ງ` : `VTE Hub: ${stockCount} In Stock`}
+                  <Package className="w-3 h-3" /> {availableToOrder ? (isLao ? "ມີສິນຄ້າ (ຢືນຢັນໃນ CRM)" : "Available (CRM confirmation required)") : (isLao ? "ສອບຖາມສະຕັອກ" : "Check availability")}
                 </span>
                 {isSale && (
                   <span className="bg-[#E1251B] text-white text-[11px] font-black px-2.5 py-1 rounded-md shadow-lg shadow-red-500/30 animate-pulse">
@@ -382,7 +378,7 @@ export function ProductCard({ item, viewMode = 'grid' }: ProductCardProps) {
               <div className="flex flex-col gap-1">
                 {/* 1. Currency Reference / Internal Cost Intelligence */}
                 <div className="flex items-center gap-1.5 flex-wrap">
-                  {isAdminMode ? (
+                  {isAdminPriceItem ? (
                     <>
                       <span className="text-[11px] font-bold text-amber-600 dark:text-amber-400">
                         {itemCurrency === 'USD' ? 'ຕົ້ນທຶນ ($):' : 'ຕົ້ນທຶນ (฿):'}
@@ -425,7 +421,7 @@ export function ProductCard({ item, viewMode = 'grid' }: ProductCardProps) {
                   )}
                 </div>
 
-                {/* 3. Live Online Rate Footnote */}
+                {/* Reference conversion only; the CRM confirms final pricing. */}
                 <div className="text-[10px] text-slate-400 flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                   <span>
@@ -437,8 +433,8 @@ export function ProductCard({ item, viewMode = 'grid' }: ProductCardProps) {
               </div>
             </div>
 
-            <div className={`grid ${isRental ? 'grid-cols-1' : 'grid-cols-2'} gap-2 ${viewMode === 'list' ? 'w-64' : 'w-full'}`}>
-              {!isRental && (
+            <div className={`grid ${isRental || !availableToOrder ? 'grid-cols-1' : 'grid-cols-2'} gap-2 ${viewMode === 'list' ? 'w-64' : 'w-full'}`}>
+              {!isRental && availableToOrder && (
                 <Button
                   onClick={handleAddToCart}
                   className={`h-11 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all duration-300 active:scale-95 group/btn ${
@@ -465,7 +461,7 @@ export function ProductCard({ item, viewMode = 'grid' }: ProductCardProps) {
                 }`}
               >
                 <FileText className="w-4 h-4" />
-                <span>{isRental ? (isLao ? 'ຈອງ/ຕິດຕໍ່' : 'Book / Inquire') : (isLao ? 'ຂໍລາຄາ' : 'Get Quote')}</span>
+                <span>{isRental ? (isLao ? 'ຈອງ/ຕິດຕໍ່' : 'Book / Inquire') : (availableToOrder ? (isLao ? 'ຂໍລາຄາ' : 'Get Quote') : (isLao ? 'ສອບຖາມສະຕັອກ/ລາຄາ' : 'Check stock / request quote'))}</span>
               </Button>
             </div>
 
@@ -491,7 +487,7 @@ export function ProductCard({ item, viewMode = 'grid' }: ProductCardProps) {
                 {isRental ? (isLao ? "ການບໍລິຫານ:" : "Management:") : (isLao ? "ທາງເລືອກ B2B:" : "B2B Option:")}
               </span>
               <Link
-                href={isRental ? `/${locale}/services#rental` : `/${locale}/services#management-ecosystem`}
+                href={isRental ? "/services#rental" : "/services#management-ecosystem"}
                 className="text-[#005BAC] dark:text-blue-400 hover:underline font-bold flex items-center gap-0.5"
               >
                 <span>{isRental ? (isLao ? "ແພັກເກດ 0 CAPEX" : "0 CAPEX Lease") : (isLao ? "ບໍລິຫານ 360°" : "360° Care")}</span>
@@ -626,7 +622,7 @@ export function ProductCard({ item, viewMode = 'grid' }: ProductCardProps) {
 
                 {/* Reference for Customers vs Internal Cost Intelligence for Admin */}
                 {itemCurrency !== 'LAK' ? (
-                  isAdminMode ? (
+                   isAdminPriceItem ? (
                     /* 🔐 Admin & Internal Staff Intelligence Panel */
                     <div className="mt-2.5 p-3 rounded-xl bg-amber-50/80 dark:bg-amber-950/30 border border-amber-300/80 dark:border-amber-700/50 flex flex-col gap-1.5 shadow-sm">
                       <div className="flex items-center justify-between text-[11px] font-bold text-amber-800 dark:text-amber-300 border-b border-amber-200 dark:border-amber-800/50 pb-1">
@@ -653,7 +649,7 @@ export function ProductCard({ item, viewMode = 'grid' }: ProductCardProps) {
                       <div className="flex items-center justify-between text-[11px] text-emerald-600 dark:text-emerald-400 pt-1 border-t border-amber-200/50 dark:border-white/5">
                         <span className="flex items-center gap-1">
                           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                          {isLao ? "ອັດຕາແລກປ່ຽນອອນໄລນ໌ປັດຈຸບັນ:" : "Live Online Rate:"}
+                          {isLao ? "ອັດຕາອ້າງອີງ:" : "Reference rate:"}
                         </span>
                         <span className="font-bold">
                           {itemCurrency === 'USD'
@@ -798,7 +794,7 @@ export function ProductCard({ item, viewMode = 'grid' }: ProductCardProps) {
                     </div>
                     <div className="space-y-1.5">
                       {item.bulk_pricing.map((tier, idx) => {
-                        const tierPriceLAK = calculateLAKPrice(tier.price, itemCurrency, item.category, exchangeRates);
+                        const tierPriceLAK = calculateLAKPrice(tier.price, itemCurrency, item.category, exchangeRates, !isCrmCatalogItem);
                         const currSymbol = itemCurrency === 'USD' ? '$' : (itemCurrency === 'LAK' ? '₭' : '฿');
                         return (
                           <div key={idx} className="flex justify-between items-center text-sm">
@@ -821,7 +817,7 @@ export function ProductCard({ item, viewMode = 'grid' }: ProductCardProps) {
 
               {/* Quantity and Actions */}
               <div className="flex flex-col gap-3 mt-auto">
-                {!isRental && (
+                {!isRental && availableToOrder && (
                   <div className="flex items-center gap-3">
                     <div className="flex items-center bg-slate-100 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-white/10">
                       <button 
@@ -841,7 +837,7 @@ export function ProductCard({ item, viewMode = 'grid' }: ProductCardProps) {
                 )}
 
                 <div className={`flex gap-2 ${isRental ? 'flex-col sm:flex-row' : ''}`}>
-                  {!isRental && (
+                  {!isRental && availableToOrder && (
                     <div className="flex gap-2 w-full mt-2">
                       <Button
                         onClick={() => {
@@ -873,6 +869,17 @@ export function ProductCard({ item, viewMode = 'grid' }: ProductCardProps) {
                       className="w-full mt-2 bg-[#005BAC] hover:bg-[#00478a] text-white rounded-xl font-bold h-12 text-base shadow-lg shadow-blue-600/25"
                     >
                       <FileText className="w-5 h-5 mr-2" /> {isLao ? "ຈອງລົດ / ສອບຖາມ (Book / Inquire)" : "Book / Inquire Equipment"}
+                    </Button>
+                  )}
+                  {!isRental && !availableToOrder && (
+                    <Button
+                      onClick={() => {
+                        setShowQuickView(false);
+                        setShowRfq(true);
+                      }}
+                      className="w-full mt-2 bg-[#005BAC] hover:bg-[#00478a] text-white rounded-xl font-bold h-12 text-base shadow-lg shadow-blue-600/25"
+                    >
+                      <FileText className="w-5 h-5 mr-2" /> {isLao ? "ສອບຖາມສະຕັອກ ແລະ ຂໍລາຄາ" : "Check stock and request a quote"}
                     </Button>
                   )}
                 </div>
@@ -925,7 +932,7 @@ export function ProductCard({ item, viewMode = 'grid' }: ProductCardProps) {
 
             <div className="flex items-center gap-2 w-full sm:w-auto shrink-0">
               <Link
-                href={`/${locale}/services#management-ecosystem`}
+                href="/services#management-ecosystem"
                 className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold text-center flex items-center justify-center gap-1.5 transition-all shadow-md shadow-blue-600/30"
               >
                 <span>{isLao ? "ສຳຫຼວດລະບົບ 360°" : "Explore 360°"}</span>

@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import { X, Sparkles, ShieldCheck, ArrowRight, PhoneCall } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useTranslation } from "react-i18next";
+import { useCurrentLocale } from "@/i18n/useCurrentLocale";
 
 export function PromoBanner() {
   const [isVisible, setIsVisible] = useState(true);
-  const { i18n } = useTranslation();
-  const locale = i18n.language || "lo";
-  const isLao = locale === "lo";
+  const locale = useCurrentLocale();
+  const isLao = locale.toLowerCase().startsWith("lo");
 
   if (!isVisible) return null;
 

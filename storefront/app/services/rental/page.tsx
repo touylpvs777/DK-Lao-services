@@ -36,7 +36,7 @@ export default function ForkliftRentalPage() {
                   ຂໍໃບສະເໜີລາຄາ
                 </Button>
               </a>
-              <Link href="/lo/store">
+              <Link href="/store">
                 <Button variant="outline" className="border-white/20 hover:bg-white/10 text-white px-8 py-6 rounded-full text-lg">
                   ເບິ່ງລາຍການອາໄຫຼ່
                 </Button>

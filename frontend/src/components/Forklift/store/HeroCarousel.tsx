@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight, ArrowRight, ShieldCheck, Truck, Zap, PhoneCall, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import { useCurrentLocale } from "@/i18n/useCurrentLocale";
 
 interface HeroSlide {
   id: number;
@@ -21,9 +21,8 @@ interface HeroSlide {
 }
 
 export function HeroCarousel() {
-  const { i18n } = useTranslation();
-  const locale = i18n.language || "lo";
-  const isLao = locale === "lo";
+  const locale = useCurrentLocale();
+  const isLao = locale.toLowerCase().startsWith("lo");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
 

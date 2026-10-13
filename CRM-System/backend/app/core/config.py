@@ -64,6 +64,8 @@ class Settings(BaseSettings):
     ]
 
     SERVICE_API_KEY: str = os.getenv("SERVICE_API_KEY", "")
+    # Shared only by the storefront server action and CRM public inquiry intake.
+    STOREFRONT_INTEGRATION_TOKEN: str = ""
 
 
 settings = Settings()

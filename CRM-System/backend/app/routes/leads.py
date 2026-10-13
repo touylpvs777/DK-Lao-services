@@ -1,11 +1,15 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+import json
+import secrets
+
+from fastapi import APIRouter, Depends, Header, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.permissions import PermissionName, require_permission
+from app.core.config import settings
 from app.database.session import get_db
 from app.dependencies import get_current_user
 from app.models.activity_log import ActionType, EntityType
-from app.models.lead import LeadSource, LeadStatus
+from app.models.lead import Lead, LeadSource, LeadStatus
 from app.models.user import User
 from app.schemas.lead import (
     LeadCreate,
@@ -15,6 +19,7 @@ from app.schemas.lead import (
     LeadOut,
     LeadUpdate,
 )
+from app.schemas.public_inquiry import PublicInquiryCreate, PublicInquiryOut, PublicInquiryType
 from app.services.activity_log_service import ActivityLogService
 from app.services.lead_service import LeadService
 
@@ -57,6 +62,54 @@ async def create_lead(
         details={"title": lead.title, "status": lead.status.value},
     )
     return lead
+
+
+@router.post(
+    "/website-inquiries",
+    response_model=PublicInquiryOut,
+    status_code=status.HTTP_201_CREATED,
+    summary="Receive a storefront service or parts inquiry",
+)
+async def create_website_inquiry(
+    data: PublicInquiryCreate,
+    db: AsyncSession = Depends(get_db),
+    storefront_token: str | None = Header(default=None, alias="X-Storefront-Token"),
+):
+    """Store customer-submitted requests as CRM leads for staff follow-up.
+
+    The public storefront cannot create a confirmed sales order or work order;
+    staff must validate stock, pricing, customer identity, and payment first.
+    """
+    if not settings.STOREFRONT_INTEGRATION_TOKEN:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Storefront inquiry integration is not configured",
+        )
+    if not storefront_token or not secrets.compare_digest(
+        storefront_token, settings.STOREFRONT_INTEGRATION_TOKEN
+    ):
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid storefront token")
+
+    details = data.model_dump(mode="json")
+    lead_type = "Store order inquiry" if data.inquiry_type == PublicInquiryType.STORE_ORDER else "Service inquiry"
+    company_or_name = data.company_name or data.customer_name
+    title = f"Website {lead_type}: {company_or_name}"[:255]
+    description = (
+        "Submitted through the public storefront. This is an inquiry only; "
+        "prices, stock, and payment have not been verified.\n\n"
+        + json.dumps(details, ensure_ascii=False)
+    )
+    lead = Lead(
+        title=title,
+        description=description,
+        source=LeadSource.WEBSITE.value,
+        status=LeadStatus.NEW,
+        created_by=None,
+    )
+    db.add(lead)
+    await db.commit()
+    await db.refresh(lead)
+    return PublicInquiryOut(reference_number=f"WEB-{lead.id:06d}")
 
 
 @router.get("/{lead_id}", response_model=LeadDetail)

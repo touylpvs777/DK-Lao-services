@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
+import { useCurrentLocale } from "@/i18n/useCurrentLocale";
 import {
   Warehouse,
   Boxes,
@@ -21,11 +21,11 @@ import {
 import { Link } from "react-router-dom";
 import { Button } from "@/components/Forklift/ui/button";
 import { ImageLightboxModal } from "@/components/Forklift/ui/ImageLightboxModal";
+import { getForkliftText } from "@/i18n/forkliftLocale";
 
 export function RackingAndStorageShowcase() {
-  const { i18n } = useTranslation();
-  const locale = i18n.language || "lo";
-  const isLo = locale === "lo";
+  const locale = useCurrentLocale();
+  const isLo = locale.toLowerCase().startsWith("lo");
   const [activeTab, setActiveTab] = useState<"center3d" | "rackingTypes" | "automated">("center3d");
 
   const [lightbox, setLightbox] = useState<{
@@ -187,9 +187,7 @@ export function RackingAndStorageShowcase() {
           </h3>
 
           <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
-            {isLo
-              ? "ດີເຄ ລາວ ສະໜອງລະບົບຊັ້ນວາງອຸດສາຫະກຳຄົບວົງຈອນ: ຕັ້ງແຕ່ຊັ້ນວາງມາດຕະຖານ Single Bay, Cantilever, Mezzanine ຊັ້ນລອຍ ຈົນເຖິງລະບົບສາງອັດຕະໂນມັດ Radio Shuttle, AS/RS, ແລະ ຕູ້ລິບ Jungheinrich PRK."
-              : "DK LAO delivers enterprise-grade industrial racking and automated storage: from selective Single Bay racks, Cantilever, and structural Mezzanines to Radio Pallet Shuttles, AS/RS mini-loads, and Jungheinrich PRK vertical lift modules."}
+            {getForkliftText("ດີເຄ ລາວ ສະໜອງລະບົບຊັ້ນວາງອຸດສາຫະກຳຄົບວົງຈອນ: ຕັ້ງແຕ່ຊັ້ນວາງມາດຕະຖານ Single Bay, Cantilever, Mezzanine ຊັ້ນລອຍ ຈົນເຖິງລະບົບສາງອັດຕະໂນມັດ Radio Shuttle, AS/RS, ແລະ ຕູ້ລິບ Jungheinrich PRK.", "DK LAO delivers enterprise-grade industrial racking and automated storage: from selective Single Bay racks, Cantilever, and structural Mezzanines to Radio Pallet Shuttles, AS/RS mini-loads, and Jungheinrich PRK vertical lift modules.")}
           </p>
 
           {/* 3 Tab Switcher */}
@@ -203,7 +201,7 @@ export function RackingAndStorageShowcase() {
                   : "text-slate-300 hover:text-white"
               }`}
             >
-              {isLo ? "1. ພາບລວມສາງ 3D (Logistics Center)" : "1. 3D Logistics Center"}
+              {getForkliftText("1. ພາບລວມສາງ 3D (Logistics Center)", "1. 3D Logistics Center")}
             </button>
             <button
               type="button"
@@ -214,7 +212,7 @@ export function RackingAndStorageShowcase() {
                   : "text-slate-300 hover:text-white"
               }`}
             >
-              {isLo ? "2. 6 ຮູບແບບຊັ້ນວາງ (Racking Types)" : "2. 6 Specialized Racks"}
+              {getForkliftText("2. 6 ຮູບແບບຊັ້ນວາງ (Racking Types)", "2. 6 Specialized Racks")}
             </button>
             <button
               type="button"
@@ -225,7 +223,7 @@ export function RackingAndStorageShowcase() {
                   : "text-slate-300 hover:text-white"
               }`}
             >
-              {isLo ? "3. 5 ລະບົບສາງອັດສະລິຍະ (Automated AS/RS)" : "3. Automated AS/RS & Shuttle"}
+              {getForkliftText("3. 5 ລະບົບສາງອັດສະລິຍະ (Automated AS/RS)", "3. Automated AS/RS & Shuttle")}
             </button>
           </div>
         </div>
@@ -253,14 +251,14 @@ export function RackingAndStorageShowcase() {
                 />
                 <div className="absolute top-4 right-4 bg-slate-900/90 hover:bg-slate-900 text-white border border-white/20 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2 shadow-xl opacity-90 group-hover/img:opacity-100 group-hover/img:scale-105 transition-all">
                   <ZoomIn className="w-3.5 h-3.5 text-amber-400" />
-                  <span>{isLo ? "🔍 ຊູມພາບ 2K" : "🔍 Zoom 2K"}</span>
+                  <span>{getForkliftText("🔍 ຊູມພາບ 2K", "🔍 Zoom 2K")}</span>
                 </div>
               </div>
               <div className="p-4 bg-slate-900/95 backdrop-blur-md border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
                 <div className="flex items-center gap-2 text-slate-300 font-bold">
                   <span className="text-amber-400 font-mono">HIGH-DENSITY 3D RACKING INFRASTRUCTURE</span>
                   <span className="text-slate-600">•</span>
-                  <span>{isLo ? "ລະບົບຊັ້ນວາງມາດຕະຖານສາກົນ ສຳລັບສາງອຸດສາຫະກຳ" : "International Standard Industrial Racking Systems"}</span>
+                  <span>{getForkliftText("ລະບົບຊັ້ນວາງມາດຕະຖານສາກົນ ສຳລັບສາງອຸດສາຫະກຳ", "International Standard Industrial Racking Systems")}</span>
                 </div>
                 <div className="flex items-center gap-2 text-[11px] font-bold text-emerald-400">
                   <ShieldCheck className="w-4 h-4" />
@@ -272,16 +270,16 @@ export function RackingAndStorageShowcase() {
             {/* Quick 3 Highlights */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="p-4 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm space-y-1">
-                <div className="text-amber-400 font-black text-sm">{isLo ? "ເພີ່ມຄວາມຈຸສາງ 40-80%" : "40-80% Capacity Boost"}</div>
-                <p className="text-xs text-slate-300">{isLo ? "ອອກແບບຊັ້ນວາງແນວດິ່ງສູງ 6m – 40m ນຳໃຊ້ພື້ນທີ່ສາງຄຸ້ມຄ່າສູງສຸດ." : "Vertical storage engineering up to 40m utilizing 100% of cubic warehouse volume."}</p>
+                <div className="text-amber-400 font-black text-sm">{getForkliftText("ເພີ່ມຄວາມຈຸສາງ 40-80%", "40-80% Capacity Boost")}</div>
+                <p className="text-xs text-slate-300">{getForkliftText("ອອກແບບຊັ້ນວາງແນວດິ່ງສູງ 6m – 40m ນຳໃຊ້ພື້ນທີ່ສາງຄຸ້ມຄ່າສູງສຸດ.", "Vertical storage engineering up to 40m utilizing 100% of cubic warehouse volume.")}</p>
               </div>
               <div className="p-4 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm space-y-1">
-                <div className="text-blue-400 font-black text-sm">{isLo ? "ປອດໄພຕາມມາດຕະຖານສາກົນ" : "Certified Safety Standards"}</div>
-                <p className="text-xs text-slate-300">{isLo ? "ເຫຼັກກ້າ High-Tensile Steel ພ້ອມແຜງກັນກະແທກ ແລະ ທົດສອບ Load Test 100%." : "High-tensile certified steel with column crash protectors and factory load certification."}</p>
+                <div className="text-blue-400 font-black text-sm">{getForkliftText("ປອດໄພຕາມມາດຕະຖານສາກົນ", "Certified Safety Standards")}</div>
+                <p className="text-xs text-slate-300">{getForkliftText("ເຫຼັກກ້າ High-Tensile Steel ພ້ອມແຜງກັນກະແທກ ແລະ ທົດສອບ Load Test 100%.", "High-tensile certified steel with column crash protectors and factory load certification.")}</p>
               </div>
               <div className="p-4 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm space-y-1">
-                <div className="text-emerald-400 font-black text-sm">{isLo ? "Turnkey Design & 3D CAD" : "Turnkey 3D CAD Planning"}</div>
-                <p className="text-xs text-slate-300">{isLo ? "ທີມວິສະວະກອນ DK LAO ສຳຫຼວດໄຊທ໌ງານຕົວຈິງ ແລະ ອອກແບບແຜນຜັງ 3D ຟຣີ." : "Free on-site laser survey, 3D CAD modeling, and ROI throughput optimization."}</p>
+                <div className="text-emerald-400 font-black text-sm">{getForkliftText("Turnkey Design & 3D CAD", "Turnkey 3D CAD Planning")}</div>
+                <p className="text-xs text-slate-300">{getForkliftText("ທີມວິສະວະກອນ DK LAO ສຳຫຼວດໄຊທ໌ງານຕົວຈິງ ແລະ ອອກແບບແຜນຜັງ 3D ຟຣີ.", "Free on-site laser survey, 3D CAD modeling, and ROI throughput optimization.")}</p>
               </div>
             </div>
           </div>
@@ -310,7 +308,7 @@ export function RackingAndStorageShowcase() {
                 />
                 <div className="absolute top-4 right-4 bg-slate-900/90 hover:bg-slate-900 text-white border border-white/20 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2 shadow-xl opacity-90 group-hover/img:opacity-100 group-hover/img:scale-105 transition-all">
                   <ZoomIn className="w-3.5 h-3.5 text-amber-400" />
-                  <span>{isLo ? "🔍 ຊູມພາບ 2K" : "🔍 Zoom 2K"}</span>
+                  <span>{getForkliftText("🔍 ຊູມພາບ 2K", "🔍 Zoom 2K")}</span>
                 </div>
               </div>
             </div>
@@ -371,7 +369,7 @@ export function RackingAndStorageShowcase() {
                 />
                 <div className="absolute top-4 right-4 bg-slate-900/90 hover:bg-slate-900 text-white border border-white/20 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2 shadow-xl opacity-90 group-hover/img:opacity-100 group-hover/img:scale-105 transition-all">
                   <ZoomIn className="w-3.5 h-3.5 text-amber-400" />
-                  <span>{isLo ? "🔍 ຊູມພາບ 2K" : "🔍 Zoom 2K"}</span>
+                  <span>{getForkliftText("🔍 ຊູມພາບ 2K", "🔍 Zoom 2K")}</span>
                 </div>
               </div>
             </div>
@@ -416,12 +414,10 @@ export function RackingAndStorageShowcase() {
         <div className="p-6 rounded-2xl bg-gradient-to-r from-amber-950/60 via-slate-900 to-blue-950/60 border border-amber-500/40 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="space-y-1 text-center md:text-left">
             <h4 className="text-base sm:text-lg font-black text-white">
-              {isLo ? "ຕ້ອງການສຳຫຼວດໄຊທ໌ງານ ແລະ ອອກແບບຊັ້ນວາງສາງສິນຄ້າຟຣີ?" : "Request Free On-Site Racking Survey & 3D CAD Design?"}
+              {getForkliftText("ຕ້ອງການສຳຫຼວດໄຊທ໌ງານ ແລະ ອອກແບບຊັ້ນວາງສາງສິນຄ້າຟຣີ?", "Request Free On-Site Racking Survey & 3D CAD Design?")}
             </h4>
             <p className="text-xs text-slate-300">
-              {isLo
-                ? "ວິສະວະກອນ DK LAO ພ້ອມລົງພື້ນທີ່ວັດແທກຕົວຈິງ ແລະ ສະເໜີແຜນຜັງຊັ້ນວາງທີ່ເພີ່ມຄວາມຈຸສູງສຸດ."
-                : "DK LAO racking engineers provide free site measurements, structural load calculations, and tailored 3D CAD layouts."}
+              {getForkliftText("ວິສະວະກອນ DK LAO ພ້ອມລົງພື້ນທີ່ວັດແທກຕົວຈິງ ແລະ ສະເໜີແຜນຜັງຊັ້ນວາງທີ່ເພີ່ມຄວາມຈຸສູງສຸດ.", "DK LAO racking engineers provide free site measurements, structural load calculations, and tailored 3D CAD layouts.")}
             </p>
           </div>
 
@@ -431,7 +427,7 @@ export function RackingAndStorageShowcase() {
               className="py-2.5 px-4 rounded-xl border border-white/20 hover:bg-white/10 text-white font-bold text-xs flex items-center gap-1.5 transition-all"
             >
               <ShoppingBag className="w-3.5 h-3.5 text-amber-400" />
-              <span>{isLo ? "ເລືອກຊື້ຊັ້ນວາງໃນ Store 🛒" : "Browse Racking in Store 🛒"}</span>
+              <span>{getForkliftText("ເລືອກຊື້ຊັ້ນວາງໃນ Store 🛒", "Browse Racking in Store 🛒")}</span>
             </Link>
             <a
               href="tel:+8562058929299"
@@ -444,7 +440,7 @@ export function RackingAndStorageShowcase() {
               href="#booking-form"
               className="py-2.5 px-4 rounded-xl border border-white/20 hover:bg-white/10 text-white font-bold text-xs flex items-center gap-1.5 transition-all"
             >
-              <span>{isLo ? "ນັດໝາຍວິສະວະກອນສາງ" : "Book Racking Consultation"}</span>
+              <span>{getForkliftText("ນັດໝາຍວິສະວະກອນສາງ", "Book Racking Consultation")}</span>
               <ChevronRight className="w-3.5 h-3.5" />
             </a>
           </div>

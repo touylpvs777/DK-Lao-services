@@ -8,7 +8,7 @@ import { Button } from "@/components/Forklift/ui/button";
 import { useCart, calculateLAKPrice, calculateRetailForeignPrice } from "@/context/CartContext";
 import { Link } from "react-router-dom";
 import { RFQModal } from "./RFQModal";
-import { useTranslation } from "react-i18next";
+import { useCurrentLocale } from "@/i18n/useCurrentLocale";
 
 const SPEC_TRANSLATIONS_LO: Record<string, string> = {
   "Height": "ຄວາມສູງ (Height)",
@@ -191,9 +191,8 @@ interface ProductCardProps {
 
 export function ProductCard({ item, viewMode = 'grid' }: ProductCardProps) {
   const { addToCart, openCheckout, exchangeRates, isAdminMode } = useCart();
-  const { i18n } = useTranslation();
-  const locale = i18n.language || "lo";
-  const isLao = locale === 'lo';
+  const locale = useCurrentLocale();
+  const isLao = locale.toLowerCase().startsWith("lo");
 
   const [isAdded, setIsAdded] = useState(false);
   const [showQuickView, setShowQuickView] = useState(false);

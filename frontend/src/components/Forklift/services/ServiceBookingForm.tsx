@@ -18,6 +18,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { useBookingContext } from "./BookingContext";
+import { getForkliftText } from "@/i18n/forkliftLocale";
 
 export const ServiceBookingForm = ({ isLo }: { isLo: boolean }) => {
   const {
@@ -122,7 +123,7 @@ export const ServiceBookingForm = ({ isLo }: { isLo: boolean }) => {
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 dark:bg-blue-500/20 border border-blue-500/30 text-blue-700 dark:text-blue-300 text-xs font-bold uppercase tracking-wider mb-4"
           >
             <Calendar className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-            <span>{isLo ? "ສູນບໍລິການລູກຄ້າ B2B • ຕອບກັບໄວພາຍໃນ 30 ນາທີ" : "B2B Client Desk • 30-Minute Rapid Response"}</span>
+            <span>{getForkliftText("ສູນບໍລິການລູກຄ້າ B2B • ຕອບກັບໄວພາຍໃນ 30 ນາທີ", "B2B Client Desk • 30-Minute Rapid Response")}</span>
           </motion.div>
 
           <motion.h2
@@ -131,7 +132,7 @@ export const ServiceBookingForm = ({ isLo }: { isLo: boolean }) => {
             viewport={{ once: true }}
             className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight mb-4"
           >
-            {isLo ? "ຂໍໃບສະເໜີລາຄາ & ນັດໝາຍຊ່າງດ່ວນ" : "Request Quotation & Service Booking"}
+            {getForkliftText("ຂໍໃບສະເໜີລາຄາ & ນັດໝາຍຊ່າງດ່ວນ", "Request Quotation & Service Booking")}
           </motion.h2>
 
           <motion.p
@@ -140,9 +141,7 @@ export const ServiceBookingForm = ({ isLo }: { isLo: boolean }) => {
             viewport={{ once: true }}
             className="text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto"
           >
-            {isLo
-              ? "ກະລຸນາເລືອກໝວດໝູ່ບໍລິການ 4S ທີ່ທ່ານສົນໃຈ ແລະ ປ້ອນຂໍ້ມູນຕິດຕໍ່. ທີມວິສະວະກອນ ດີເຄ ລາວ ຈະຕິດຕໍ່ກັບພ້ອມໃບສະເໜີລາຄາທາງການທັນທີ."
-              : "Select your desired 4S solution and enter your contact details. Our engineering specialists will respond promptly with official B2B proposals."}
+            {getForkliftText("ກະລຸນາເລືອກໝວດໝູ່ບໍລິການ 4S ທີ່ທ່ານສົນໃຈ ແລະ ປ້ອນຂໍ້ມູນຕິດຕໍ່. ທີມວິສະວະກອນ ດີເຄ ລາວ ຈະຕິດຕໍ່ກັບພ້ອມໃບສະເໜີລາຄາທາງການທັນທີ.", "Select your desired 4S solution and enter your contact details. Our engineering specialists will respond promptly with official B2B proposals.")}
           </motion.p>
         </div>
 
@@ -157,7 +156,7 @@ export const ServiceBookingForm = ({ isLo }: { isLo: boolean }) => {
             {/* 1. 4S Pillar Selection */}
             <div>
               <label className="block text-sm font-black text-slate-900 dark:text-white uppercase tracking-wider mb-3">
-                {isLo ? "1. ເລືອກປະເພດຄວາມຕ້ອງການ (Select 4S Category):" : "1. Select 4S Service Category:"}
+                {getForkliftText("1. ເລືອກປະເພດຄວາມຕ້ອງການ (Select 4S Category):", "1. Select 4S Service Category:")}
               </label>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {urgencyOptions.map((opt) => {
@@ -202,14 +201,14 @@ export const ServiceBookingForm = ({ isLo }: { isLo: boolean }) => {
               <div>
                 <label className="block text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
                   <Building2 className="w-4 h-4 inline mr-1.5 text-blue-600 dark:text-blue-400" />
-                  {isLo ? "ຊື່ບໍລິສັດ / ໂຮງງານ / ອົງກອນ *" : "Company / Enterprise Name *"}
+                  {getForkliftText("ຊື່ບໍລິສັດ / ໂຮງງານ / ອົງກອນ *", "Company / Enterprise Name *")}
                 </label>
                 <input
                   type="text"
                   required
                   value={companyName}
                   onChange={(e) => setCompanyName(e.target.value)}
-                  placeholder={isLo ? "ເຊັ່ນ: ບໍລິສັດ ເບຍລາວ ຈຳກັດ" : "e.g. Lao Brewery Co., Ltd."}
+                  placeholder={getForkliftText("ເຊັ່ນ: ບໍລິສັດ ເບຍລາວ ຈຳກັດ", "e.g. Lao Brewery Co., Ltd.")}
                   className="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-white/10 bg-slate-50 dark:bg-slate-800/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
@@ -217,14 +216,14 @@ export const ServiceBookingForm = ({ isLo }: { isLo: boolean }) => {
               <div>
                 <label className="block text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
                   <PhoneCall className="w-4 h-4 inline mr-1.5 text-emerald-600 dark:text-emerald-400" />
-                  {isLo ? "ເບີໂທຕິດຕໍ່ / WhatsApp *" : "Phone Number / WhatsApp *"}
+                  {getForkliftText("ເບີໂທຕິດຕໍ່ / WhatsApp *", "Phone Number / WhatsApp *")}
                 </label>
                 <input
                   type="tel"
                   required
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  placeholder={isLo ? "ເຊັ່ນ: 020 5892 9299" : "e.g. +856 20 5892 9299"}
+                  placeholder={getForkliftText("ເຊັ່ນ: 020 5892 9299", "e.g. +856 20 5892 9299")}
                   className="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-white/10 bg-slate-50 dark:bg-slate-800/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
@@ -235,7 +234,7 @@ export const ServiceBookingForm = ({ isLo }: { isLo: boolean }) => {
               <div>
                 <label className="block text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
                   <MapPin className="w-4 h-4 inline mr-1.5 text-indigo-600 dark:text-indigo-400" />
-                  {isLo ? "ແຂວງ / ທີ່ຕັ້ງໂຮງງານ:" : "Location / Province:"}
+                  {getForkliftText("ແຂວງ / ທີ່ຕັ້ງໂຮງງານ:", "Location / Province:")}
                 </label>
                 <select
                   value={province}
@@ -253,7 +252,7 @@ export const ServiceBookingForm = ({ isLo }: { isLo: boolean }) => {
               <div>
                 <label className="block text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
                   <Truck className="w-4 h-4 inline mr-1.5 text-amber-500" />
-                  {isLo ? "ຍີ່ຫໍ້ລົດຍົກທີ່ສົນໃຈ ຫຼື ນຳໃຊ້:" : "Forklift Brand of Interest:"}
+                  {getForkliftText("ຍີ່ຫໍ້ລົດຍົກທີ່ສົນໃຈ ຫຼື ນຳໃຊ້:", "Forklift Brand of Interest:")}
                 </label>
                 <select
                   value={brand}
@@ -273,18 +272,14 @@ export const ServiceBookingForm = ({ isLo }: { isLo: boolean }) => {
             <div>
               <label className="block text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
                 <FileText className="w-4 h-4 inline mr-1.5 text-blue-600 dark:text-blue-400" />
-                {isLo
-                  ? "ລາຍລະອຽດຄວາມຕ້ອງການ / ຈຳນວນຄັນ / ອາໄຫຼ່ / ອາການລົດ:"
-                  : "Scope of Requirements / Fleet Count / Spare Parts / Symptoms:"}
+                {getForkliftText("ລາຍລະອຽດຄວາມຕ້ອງການ / ຈຳນວນຄັນ / ອາໄຫຼ່ / ອາການລົດ:", "Scope of Requirements / Fleet Count / Spare Parts / Symptoms:")}
               </label>
               <textarea
                 rows={3}
                 value={issueDetails}
                 onChange={(e) => setIssueDetails(e.target.value)}
                 placeholder={
-                  isLo
-                    ? "ເຊັ່ນ: ຕ້ອງການເຊົ່າລົດຍົກໄຟຟ້າ 2.5 ໂຕນ ຈຳນວນ 2 ຄັນ ສຳລັບສາງເຢັນ ໄລຍະ 2 ປີ ພ້ອມລົດສຳຮອງປ່ຽນທັນທີ..."
-                    : "e.g. Requesting quote for 2 units of 2.5-ton electric forklifts on a 2-year lease with standby units..."
+                  getForkliftText("ເຊັ່ນ: ຕ້ອງການເຊົ່າລົດຍົກໄຟຟ້າ 2.5 ໂຕນ ຈຳນວນ 2 ຄັນ ສຳລັບສາງເຢັນ ໄລຍະ 2 ປີ ພ້ອມລົດສຳຮອງປ່ຽນທັນທີ...", "e.g. Requesting quote for 2 units of 2.5-ton electric forklifts on a 2-year lease with standby units...")
                 }
                 className="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-white/10 bg-slate-50 dark:bg-slate-800/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               ></textarea>
@@ -298,9 +293,7 @@ export const ServiceBookingForm = ({ isLo }: { isLo: boolean }) => {
               >
                 <PhoneCall className="w-5 h-5" />
                 <span>
-                  {isLo
-                    ? "ສົ່ງຄຳຮ້ອງຂໍໃບສະເໜີລາຄາຜ່ານ WhatsApp ສາຍດ່ວນ"
-                    : "Submit Request via Direct WhatsApp Hotline"}
+                  {getForkliftText("ສົ່ງຄຳຮ້ອງຂໍໃບສະເໜີລາຄາຜ່ານ WhatsApp ສາຍດ່ວນ", "Submit Request via Direct WhatsApp Hotline")}
                 </span>
                 <Send className="w-4 h-4 ml-1" />
               </button>
@@ -311,15 +304,15 @@ export const ServiceBookingForm = ({ isLo }: { isLo: boolean }) => {
           <div className="mt-8 pt-6 border-t border-slate-200 dark:border-white/10 grid grid-cols-1 sm:grid-cols-3 gap-4 text-center text-xs text-slate-600 dark:text-slate-400 font-semibold">
             <div className="flex items-center justify-center gap-1.5">
               <ShieldCheck className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" />
-              <span>{isLo ? "ໃບສະເໜີລາຄາທາງການ B2B" : "Official B2B Quotations"}</span>
+              <span>{getForkliftText("ໃບສະເໜີລາຄາທາງການ B2B", "Official B2B Quotations")}</span>
             </div>
             <div className="flex items-center justify-center gap-1.5">
               <Clock className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-              <span>{isLo ? "ຕອບກັບພາຍໃນ 30 ນາທີ" : "Rapid 30-Min Response"}</span>
+              <span>{getForkliftText("ຕອບກັບພາຍໃນ 30 ນາທີ", "Rapid 30-Min Response")}</span>
             </div>
             <div className="flex items-center justify-center gap-1.5">
               <CheckCircle2 className="w-4 h-4 text-indigo-600 dark:text-indigo-400 shrink-0" />
-              <span>{isLo ? "ໃຫ້ຄຳປຶກສາວິສະວະກອນຟຣີ" : "Free Engineering Consultation"}</span>
+              <span>{getForkliftText("ໃຫ້ຄຳປຶກສາວິສະວະກອນຟຣີ", "Free Engineering Consultation")}</span>
             </div>
           </div>
         </motion.div>

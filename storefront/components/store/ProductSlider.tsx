@@ -7,7 +7,7 @@ import { ChevronLeft, ChevronRight, Heart, Timer, ShoppingCart, Zap, CheckCircle
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useLocale } from 'next-intl';
+import { useLocale } from '@/lib/locale';
 
 interface ProductSliderProps {
   title: string;
@@ -79,7 +79,7 @@ export function ProductSlider({ title, items, isFlashDeal = false }: ProductSlid
         </div>
         
         <div className="flex items-center gap-3">
-          <Link href={`/${locale}/store`} className="text-sm font-bold text-[#005BAC] hover:text-[#00488A] dark:text-blue-400 dark:hover:text-blue-300 mr-4 transition-colors">
+          <Link href="/store" className="text-sm font-bold text-[#005BAC] hover:text-[#00488A] dark:text-blue-400 dark:hover:text-blue-300 mr-4 transition-colors">
             {isLao ? "ເບິ່ງທັງໝົດ" : "View All"} &rarr;
           </Link>
           <button onClick={() => scroll('left')} className="w-12 h-12 rounded-full bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 transition-all shadow-sm border border-slate-200 dark:border-slate-700 hover:scale-105 active:scale-95">

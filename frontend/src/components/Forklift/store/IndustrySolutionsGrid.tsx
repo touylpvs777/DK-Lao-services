@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from "react-router-dom";
 import { Building2, Package, Truck, HeartPulse, Microscope, Snowflake, ShoppingCart, Hotel } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useTranslation } from "react-i18next";
+import { useCurrentLocale } from "@/i18n/useCurrentLocale";
 
 const INDUSTRIES = [
   { id: 1, name: "ໂຮງງານອຸດສາຫະກຳ", nameEn: "Factory & Manufacturing", subLo: "ໂຮງງານ & ການຜະລິດ", subEn: "Industrial Plants", image: "/images/industries/industry_factory_1788171784630.jpg" },
@@ -16,9 +16,8 @@ const INDUSTRIES = [
 ];
 
 export function IndustrySolutionsGrid() {
-  const { i18n } = useTranslation();
-  const locale = i18n.language || "lo";
-  const isLao = locale === 'lo';
+  const locale = useCurrentLocale();
+  const isLao = locale.toLowerCase().startsWith("lo");
 
   return (
     <div className="space-y-6">

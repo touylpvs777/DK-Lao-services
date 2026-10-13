@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, CheckCircle2, ArrowRight, Info, Sparkles, ShoppingBag, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useLocale } from "@/lib/locale";
 
 interface FilterFinderModalProps {
   isOpen: boolean;
@@ -248,6 +249,7 @@ const VEHICLE_FILTER_SETS: VehicleFilterSet[] = [
 ];
 
 export function FilterFinderModal({ isOpen, onClose, onSelectFilterCriteria }: FilterFinderModalProps) {
+  const isLao = useLocale() === "lo";
   const [selectedVehicleId, setSelectedVehicleId] = useState<string>("revo");
   const [activeCategoryTab, setActiveCategoryTab] = useState<"all" | "pickup" | "forklift" | "ev">("all");
 
@@ -300,13 +302,13 @@ export function FilterFinderModal({ isOpen, onClose, onSelectFilterCriteria }: F
                 </div>
                 <div>
                   <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
-                    <span>ຕົວຊ່ວຍເລືອກໝໍ້ຕອງຕາມລຸ້ນລົດ (Maintenance Filter Finder)</span>
+                    <span>{isLao ? "ຕົວຊ່ວຍເລືອກໝໍ້ຕອງຕາມລຸ້ນລົດ" : "Maintenance filter finder"}</span>
                     <span className="text-[10px] uppercase tracking-wider bg-teal-600 text-white font-bold px-2 py-0.5 rounded-full">
-                      100% Exact Match
+                      {isLao ? "ກົງກັບລຸ້ນ 100%" : "100% exact match"}
                     </span>
                   </h3>
                   <p className="text-xs text-slate-500 dark:text-slate-400">
-                    ເລືອກລຸ້ນລົດຂອງທ່ານ ລະບົບຈະສະແດງລະຫັດ OEM ແລະ ຊຸດກອງແທ້ທີ່ກົງຮຸ່ນ 100%
+                    {isLao ? "ເລືອກລຸ້ນລົດ ເພື່ອເບິ່ງລະຫັດ OEM ແລະ ຊຸດໝໍ້ຕອງທີ່ກົງລຸ້ນ" : "Choose your vehicle to see matching OEM codes and filter kits."}
                   </p>
                 </div>
               </div>
@@ -324,10 +326,10 @@ export function FilterFinderModal({ isOpen, onClose, onSelectFilterCriteria }: F
               {/* Category Filter Tabs */}
               <div className="flex items-center gap-2">
                 {[
-                  { id: "all", label: "✨ ທຸກປະເພດລົດ" },
-                  { id: "pickup", label: "🛻 ລົດກະບະ & SUV (Pickups)" },
-                  { id: "forklift", label: "🚜 ລົດຍົກ (Forklifts)" },
-                  { id: "ev", label: "⚡ ລົດໄຟຟ້າ (EVs)" }
+                  { id: "all", label: isLao ? "✨ ລົດທຸກປະເພດ" : "✨ All vehicles" },
+                  { id: "pickup", label: isLao ? "🛻 ລົດກະບະ & SUV" : "🛻 Pickups & SUVs" },
+                  { id: "forklift", label: isLao ? "🚜 ລົດຍົກ" : "🚜 Forklifts" },
+                  { id: "ev", label: isLao ? "⚡ ລົດໄຟຟ້າ" : "⚡ Electric vehicles" }
                 ].map((tab) => (
                   <button
                     key={tab.id}
@@ -347,7 +349,7 @@ export function FilterFinderModal({ isOpen, onClose, onSelectFilterCriteria }: F
               <div>
                 <label className="block text-xs font-black uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-3 flex items-center gap-1.5">
                   <span className="w-5 h-5 rounded-full bg-teal-600 text-white flex items-center justify-center text-[10px] font-black">1</span>
-                  <span>ກົດເລືອກລຸ້ນລົດຂອງທ່ານ (Select Your Vehicle Model):</span>
+                  <span>{isLao ? "ເລືອກລຸ້ນລົດຂອງທ່ານ:" : "Select your vehicle model:"}</span>
                 </label>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
@@ -388,16 +390,16 @@ export function FilterFinderModal({ isOpen, onClose, onSelectFilterCriteria }: F
                     <div className="flex items-center gap-2">
                       <Sparkles className="w-4 h-4 text-teal-400" />
                       <span className="text-sm font-black text-teal-400">
-                        ຊຸດໝໍ້ຕອງບຳລຸງຮັກສາສຳລັບ: {currentVehicle.name}
+                        {isLao ? "ຊຸດໝໍ້ຕອງບຳລຸງຮັກສາສຳລັບ:" : "Recommended service filter kit for:"} {currentVehicle.name}
                       </span>
                     </div>
                     <p className="text-[11px] text-slate-400 mt-0.5">
-                      ເຄື່ອງຈັກ: <span className="text-slate-300 font-semibold">{currentVehicle.engine}</span>
+                      {isLao ? "ເຄື່ອງຈັກ:" : "Engine:"} <span className="text-slate-300 font-semibold">{currentVehicle.engine}</span>
                     </p>
                   </div>
 
                   <div className="flex items-center gap-2 bg-teal-500/20 border border-teal-500/30 px-3 py-1 rounded-xl text-right">
-                    <span className="text-[10px] text-teal-300 uppercase font-bold">ຊື້ຍົກຊຸດຫຼຸດ {currentVehicle.bundleDiscountPercent}%:</span>
+                    <span className="text-[10px] text-teal-300 uppercase font-bold">{isLao ? `ຊື້ທັງຊຸດ ປະຢັດ ${currentVehicle.bundleDiscountPercent}%:` : `Save ${currentVehicle.bundleDiscountPercent}% on the full set:`}</span>
                     <span className="text-sm font-black text-emerald-400">${bundlePrice.toFixed(2)}</span>
                   </div>
                 </div>
@@ -408,7 +410,7 @@ export function FilterFinderModal({ isOpen, onClose, onSelectFilterCriteria }: F
                   <div className="p-3.5 rounded-xl bg-white/5 border border-white/10 space-y-1 relative hover:border-teal-500/50 transition-colors">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-bold text-teal-300 flex items-center gap-1.5">
-                        <span>🛢️ 1. ຕອງນ້ຳມັນເຄື່ອງ (Engine Oil Filter)</span>
+                        <span>🛢️ 1. {isLao ? "ຕອງນ້ຳມັນເຄື່ອງ" : "Engine oil filter"}</span>
                       </span>
                       <span className="text-xs font-black text-emerald-400">${currentVehicle.oilFilter.price.toFixed(2)}</span>
                     </div>
@@ -424,7 +426,7 @@ export function FilterFinderModal({ isOpen, onClose, onSelectFilterCriteria }: F
                   <div className="p-3.5 rounded-xl bg-white/5 border border-white/10 space-y-1 relative hover:border-teal-500/50 transition-colors">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-bold text-sky-300 flex items-center gap-1.5">
-                        <span>💨 2. ຕອງອາກາດ (Engine Air Filter)</span>
+                        <span>💨 2. {isLao ? "ຕອງອາກາດ" : "Engine air filter"}</span>
                       </span>
                       <span className="text-xs font-black text-emerald-400">${currentVehicle.airFilter.price.toFixed(2)}</span>
                     </div>
@@ -441,7 +443,7 @@ export function FilterFinderModal({ isOpen, onClose, onSelectFilterCriteria }: F
                     <div className="p-3.5 rounded-xl bg-white/5 border border-white/10 space-y-1 relative hover:border-teal-500/50 transition-colors">
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-bold text-amber-300 flex items-center gap-1.5">
-                          <span>⛽ 3. ຕອງໂຊລ່າແຍກນ້ຳ (Fuel / Diesel Filter)</span>
+                          <span>⛽ 3. {isLao ? "ຕອງນ້ຳມັນເຊື້ອໄຟ / ດີເຊວ" : "Fuel / diesel filter"}</span>
                         </span>
                         <span className="text-xs font-black text-emerald-400">${currentVehicle.fuelFilter.price.toFixed(2)}</span>
                       </div>
@@ -459,7 +461,7 @@ export function FilterFinderModal({ isOpen, onClose, onSelectFilterCriteria }: F
                     <div className="p-3.5 rounded-xl bg-white/5 border border-white/10 space-y-1 relative hover:border-teal-500/50 transition-colors">
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-bold text-purple-300 flex items-center gap-1.5">
-                          <span>❄️ 4. ຕອງແອ HEPA / ໄຮໂດຣລິກ (Cabin / Return Filter)</span>
+                          <span>❄️ 4. {isLao ? "ຕອງແອ HEPA / ຕອງກັບໄຮໂດຣລິກ" : "Cabin HEPA / hydraulic return filter"}</span>
                         </span>
                         <span className="text-xs font-black text-emerald-400">${currentVehicle.cabinFilter.price.toFixed(2)}</span>
                       </div>
@@ -479,7 +481,7 @@ export function FilterFinderModal({ isOpen, onClose, onSelectFilterCriteria }: F
             <div className="flex items-center justify-between px-6 py-4 border-t border-slate-100 dark:border-white/10 bg-slate-50 dark:bg-slate-900/50">
               <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
                 <ShieldCheck className="w-4 h-4 text-teal-500 shrink-0" />
-                <span>ຮັບປະກັນສິນຄ້າແທ້ OEM 100% ໃສ່ບໍ່ພໍດີຍິນດີປ່ຽນຄືນ</span>
+                <span>{isLao ? "ອາໄຫຼ່ OEM ແທ້ 100%; ຖ້າໃສ່ບໍ່ພໍດີສາມາດປ່ຽນຄືນໄດ້" : "100% genuine OEM parts; exchanges available if the fit is incorrect"}</span>
               </div>
 
               <div className="flex items-center gap-3">
@@ -488,13 +490,13 @@ export function FilterFinderModal({ isOpen, onClose, onSelectFilterCriteria }: F
                   onClick={onClose}
                   className="rounded-xl h-10 text-xs font-bold"
                 >
-                  ຍົກເລີກ
+                  {isLao ? "ຍົກເລີກ" : "Cancel"}
                 </Button>
                 <Button
                   onClick={() => handleApplyFilter()}
                   className="rounded-xl h-10 text-xs font-bold bg-teal-600 hover:bg-teal-500 text-white shadow-lg shadow-teal-500/25 flex items-center gap-2"
                 >
-                  <span>ເບິ່ງຊຸດໝໍ້ຕອງສຳລັບລົດຄັນນີ້</span>
+                  <span>{isLao ? "ເບິ່ງຊຸດໝໍ້ຕອງສຳລັບລົດຄັນນີ້" : "View filter kit for this vehicle"}</span>
                   <ArrowRight className="w-4 h-4" />
                 </Button>
               </div>

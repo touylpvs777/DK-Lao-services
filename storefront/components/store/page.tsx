@@ -10,7 +10,7 @@ import { ExchangeRateTicker } from "@/components/store/ExchangeRateTicker";
 
 export const metadata = {
   title: "B2B & Industrial Store | DK Lao Trading & LUD",
-  description: "Browse and order premium industrial and heavy machinery equipment parts with BCEL One QR & Bank Transfer.",
+  description: "Browse industrial equipment and submit product requests. DK LAO confirms pricing and availability before accepting orders.",
 };
 
 export default async function StorePage({
@@ -42,7 +42,7 @@ export default async function StorePage({
 
       {/* 4. Product Catalog — Interactive store with tabs, 3-step finder, filters, sidebar */}
       <div className="container mx-auto px-4 md:px-6">
-        {/* Live Online Exchange Rates Ticker */}
+        {/* Reference exchange rate estimate */}
         <ExchangeRateTicker />
 
         <Suspense fallback={<div className="py-20 text-center text-slate-400 font-bold">{isLao ? "ກຳລັງໂຫຼດລາຍການສິນຄ້າ..." : "Loading catalog products..."}</div>}>

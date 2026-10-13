@@ -3,7 +3,7 @@
 import React, { useRef } from "react";
 import { Truck, Archive, SprayCan, Settings, Pickaxe, Layers, ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
 import { PRE_CATEGORIES, PreCategory, STORE_CATEGORIES } from "@/data/categories";
-import { useLocale } from "next-intl";
+import { useLocale } from "@/lib/locale";
 
 interface PreCategoryNavProps {
   selectedPreCategory: string;

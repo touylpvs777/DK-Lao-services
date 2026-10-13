@@ -35,31 +35,46 @@ export const ServiceBookingForm = ({ isLo }: { isLo: boolean }) => {
     setUrgency,
     issueDetails,
     setIssueDetails,
+    submissionStatus,
+    submissionReference,
+    submissionMessage,
     handleBookingSubmit,
   } = useBookingContext();
 
+  const displayedSubmissionMessage = submissionStatus === "success"
+    ? isLo
+      ? "ຄຳຮ້ອງຂໍຖືກບັນທຶກໃນ CRM ແລ້ວ. ທີມງານຈະຕິດຕໍ່ກັບເພື່ອຢືນຢັນ."
+      : "Your request was saved to CRM. Our team will contact you to confirm the details."
+    : submissionStatus === "error"
+      ? isLo
+        ? "ສົ່ງຄຳຮ້ອງຂໍບໍ່ສຳເລັດ. ກະລຸນາລອງໃໝ່ ຫຼື ຕິດຕໍ່ທີມບໍລິການ."
+        : "We could not submit your request. Please try again or contact our service team."
+      : submissionMessage;
+
   const provinces = [
-    { id: "vientiane", name: "ນະຄອນຫຼວງວຽງຈັນ (Vientiane Capital)" },
-    { id: "vientiane_prov", name: "ແຂວງ ວຽງຈັນ (Vientiane Province)" },
-    { id: "luangprabang", name: "ແຂວງ ຫຼວງພະບາງ (Luang Prabang)" },
-    { id: "savannakhet", name: "ແຂວງ ສະຫວັນນະເຂດ (Savannakhet)" },
-    { id: "champasak", name: "ແຂວງ ຈຳປາສັກ (Champasak)" },
-    { id: "khammouane", name: "ແຂວງ ຄຳມ່ວນ (Khammouane)" },
-    { id: "bolikhamxay", name: "ແຂວງ ບໍລິຄຳໄຊ (Bolikhamxay)" },
-    { id: "bokeo", name: "ແຂວງ ບໍ່ແກ້ວ (Bokeo / Golden Triangle)" },
-    { id: "luangnamtha", name: "ແຂວງ ຫຼວງນ້ຳທາ (Luang Namtha)" },
-    { id: "oudomxay", name: "ແຂວງ ອຸດົມໄຊ (Oudomxay)" },
-    { id: "phongsaly", name: "ແຂວງ ຜົ້ງສາລີ (Phongsaly)" },
-    { id: "xayabury", name: "ແຂວງ ໄຊຍະບູລີ (Xayabury)" },
-    { id: "xiengkhouang", name: "ແຂວງ ຊຽງຂວາງ (Xiengkhouang)" },
-    { id: "houaphanh", name: "ແຂວງ ຫົວພັນ (Houaphanh)" },
-    { id: "saravane", name: "ແຂວງ ສາລະວັນ (Saravane)" },
-    { id: "sekong", name: "ແຂວງ ເຊກອງ (Sekong)" },
-    { id: "attapeu", name: "ແຂວງ ອັດຕະປື (Attapeu)" },
-    { id: "xaisomboun", name: "ແຂວງ ໄຊສົມບູນ (Xaisomboun)" },
+    { id: "vientiane", nameLo: "ນະຄອນຫຼວງວຽງຈັນ", nameEn: "Vientiane Capital" },
+    { id: "vientiane_prov", nameLo: "ແຂວງວຽງຈັນ", nameEn: "Vientiane Province" },
+    { id: "luangprabang", nameLo: "ແຂວງຫຼວງພະບາງ", nameEn: "Luang Prabang" },
+    { id: "savannakhet", nameLo: "ແຂວງສະຫວັນນະເຂດ", nameEn: "Savannakhet" },
+    { id: "champasak", nameLo: "ແຂວງຈຳປາສັກ", nameEn: "Champasak" },
+    { id: "khammouane", nameLo: "ແຂວງຄຳມ່ວນ", nameEn: "Khammouane" },
+    { id: "bolikhamxay", nameLo: "ແຂວງບໍລິຄຳໄຊ", nameEn: "Bolikhamxay" },
+    { id: "bokeo", nameLo: "ແຂວງບໍ່ແກ້ວ", nameEn: "Bokeo" },
+    { id: "luangnamtha", nameLo: "ແຂວງຫຼວງນ້ຳທາ", nameEn: "Luang Namtha" },
+    { id: "oudomxay", nameLo: "ແຂວງອຸດົມໄຊ", nameEn: "Oudomxay" },
+    { id: "phongsaly", nameLo: "ແຂວງຜົ້ງສາລີ", nameEn: "Phongsaly" },
+    { id: "xayabury", nameLo: "ແຂວງໄຊຍະບູລີ", nameEn: "Xayabury" },
+    { id: "xiengkhouang", nameLo: "ແຂວງຊຽງຂວາງ", nameEn: "Xiengkhouang" },
+    { id: "houaphanh", nameLo: "ແຂວງຫົວພັນ", nameEn: "Houaphanh" },
+    { id: "saravane", nameLo: "ແຂວງສາລະວັນ", nameEn: "Saravane" },
+    { id: "sekong", nameLo: "ແຂວງເຊກອງ", nameEn: "Sekong" },
+    { id: "attapeu", nameLo: "ແຂວງອັດຕະປື", nameEn: "Attapeu" },
+    { id: "xaisomboun", nameLo: "ແຂວງໄຊສົມບູນ", nameEn: "Xaisomboun" },
   ];
 
   const brands = [
+    "EP Equipment",
+    "DK Heavy",
     "Mitsubishi Forklift Trucks",
     "Jungheinrich",
     "Toyota Material Handling",
@@ -245,8 +260,8 @@ export const ServiceBookingForm = ({ isLo }: { isLo: boolean }) => {
                   className="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-white/10 bg-slate-50 dark:bg-slate-800/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   {provinces.map((p) => (
-                    <option key={p.id} value={p.name}>
-                      {p.name}
+                    <option key={p.id} value={p.nameLo}>
+                      {isLo ? p.nameLo : p.nameEn}
                     </option>
                   ))}
                 </select>
@@ -296,16 +311,26 @@ export const ServiceBookingForm = ({ isLo }: { isLo: boolean }) => {
             <div className="pt-2">
               <button
                 type="submit"
-                className="w-full py-4 px-8 rounded-full bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-600 hover:from-emerald-700 hover:to-teal-700 text-white font-black text-base shadow-xl shadow-emerald-600/30 flex items-center justify-center gap-3 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                disabled={submissionStatus === "submitting"}
+                className="w-full py-4 px-8 rounded-full bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-600 hover:from-emerald-700 hover:to-teal-700 disabled:opacity-60 disabled:cursor-wait text-white font-black text-base shadow-xl shadow-emerald-600/30 flex items-center justify-center gap-3 transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
                 <PhoneCall className="w-5 h-5" />
                 <span>
-                  {isLo
-                    ? "ສົ່ງຄຳຮ້ອງຂໍໃບສະເໜີລາຄາຜ່ານ WhatsApp ສາຍດ່ວນ"
-                    : "Submit Request via Direct WhatsApp Hotline"}
+                  {submissionStatus === "submitting"
+                    ? isLo ? "ກຳລັງບັນທຶກ..." : "Saving request..."
+                    : isLo ? "ສົ່ງຄຳຮ້ອງຂໍໃຫ້ທີມບໍລິການ" : "Submit Request to Service Team"}
                 </span>
                 <Send className="w-4 h-4 ml-1" />
               </button>
+              {submissionMessage && (
+                <p
+                  role="status"
+                  className={`mt-3 text-center text-sm font-semibold ${submissionStatus === "error" ? "text-rose-600 dark:text-rose-400" : "text-emerald-700 dark:text-emerald-400"}`}
+                >
+                  {displayedSubmissionMessage}
+                  {submissionReference ? ` (${submissionReference})` : ""}
+                </p>
+              )}
             </div>
           </form>
 

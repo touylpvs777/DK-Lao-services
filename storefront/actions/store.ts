@@ -1,49 +1,112 @@
 "use server";
 
-import { InventoryItem, INITIAL_CATALOG } from "@/data/catalog";
+import type { InventoryItem } from "@/data/catalog";
+import { getCRMApiBaseUrl } from "@/lib/crm-inquiries";
 export type { InventoryItem };
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL 
-  ? `${process.env.NEXT_PUBLIC_API_URL}/api/v1` 
-  : 'http://localhost:8000/api/v1';
+export type CatalogFetchResult = {
+  items: InventoryItem[];
+  connected: boolean;
+};
 
-export async function fetchInventory(skip: number = 0, limit: number = 100): Promise<InventoryItem[]> {
+type CRMSparePart = {
+  sku_code: string;
+  name: string;
+  description?: string | null;
+  category: string;
+  brand?: string | null;
+  unit: string;
+  unit_price: number;
+  currency: string;
+  image_url?: string | null;
+  available_to_order: boolean;
+  lead_time_days: number;
+};
+
+type CRMSparePartPage = {
+  items: CRMSparePart[];
+  total: number;
+  skip: number;
+  limit: number;
+};
+
+const PAGE_SIZE = 500;
+const SUPPORTED_CURRENCIES = new Set(["LAK", "THB", "USD"]);
+
+function toInventoryItem(item: CRMSparePart, crmBaseUrl: string): InventoryItem | null {
+  if (!SUPPORTED_CURRENCIES.has(item.currency) || !item.sku_code) return null;
+  let imageUrl = item.image_url || undefined;
+  if (imageUrl?.startsWith("/")) {
+    const origin = new URL(crmBaseUrl).origin;
+    imageUrl = `${origin}${imageUrl}`;
+  }
+  return {
+    sku_id: `crm-${item.sku_code}`,
+    sku_code: item.sku_code,
+    barcode: null,
+    part_name: item.name,
+    category: item.category,
+    description: item.description || undefined,
+    image_url: imageUrl,
+    // Requests are verified by CRM staff; exact warehouse quantities stay private.
+    qty_on_hand: 0,
+    max_order_quantity: 99,
+    unit_price: Number(item.unit_price),
+    currency: item.currency as InventoryItem["currency"],
+    lead_time: item.lead_time_days > 0 ? `${item.lead_time_days} days` : "Contact for availability",
+    pre_category_id: "spare-parts-consumables",
+    brand: item.brand || undefined,
+    crm_catalog_item: true,
+    available_to_order: item.available_to_order,
+  };
+}
+
+export async function fetchInventory(
+  skip = 0,
+  limit = PAGE_SIZE,
+): Promise<CatalogFetchResult> {
+  const apiBaseUrl = getCRMApiBaseUrl();
+  const integrationToken = process.env.CRM_STOREFRONT_TOKEN;
+  if (!apiBaseUrl || !integrationToken) return { items: [], connected: false };
+
   try {
-    const response = await fetch(`${API_BASE_URL}/wms/inventory?skip=${skip}&limit=${limit}`, {
-      next: { revalidate: 30 },
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    const items: InventoryItem[] = [];
+    let pageSkip = skip;
+    const requestedLimit = Math.min(Math.max(limit, 1), PAGE_SIZE);
+    let total = Number.POSITIVE_INFINITY;
+    const stopAt = skip === 0 ? Number.POSITIVE_INFINITY : skip + limit;
 
-    if (!response.ok) {
-      return INITIAL_CATALOG;
+    while (pageSkip < total) {
+      const response = await fetch(
+        `${apiBaseUrl}/storefront/catalog?skip=${pageSkip}&limit=${requestedLimit}`,
+        {
+          headers: { "X-Storefront-Token": integrationToken },
+          cache: "no-store",
+          signal: AbortSignal.timeout(15_000),
+        },
+      );
+      if (!response.ok) return { items: [], connected: false };
+
+      const page = (await response.json()) as CRMSparePartPage;
+      if (!Array.isArray(page.items)) return { items: [], connected: false };
+      total = Number(page.total) || 0;
+      items.push(
+        ...page.items
+          .map((item) => toInventoryItem(item, apiBaseUrl))
+          .filter((item): item is InventoryItem => item !== null),
+      );
+      pageSkip += page.items.length;
+      if (page.items.length === 0 || pageSkip >= stopAt) break;
     }
 
-    const data = await response.json();
-    if (Array.isArray(data) && data.length > 0) {
-      // Merge with enriched catalog metadata if API returns basic records
-      return data.map((item: any, idx: number) => {
-        const enriched = INITIAL_CATALOG.find(c => c.sku_code === item.sku_code) || INITIAL_CATALOG[idx % INITIAL_CATALOG.length];
-        return {
-          ...enriched,
-          ...item,
-          unit_price: Number(item.unit_price || enriched.unit_price),
-          original_price: item.original_price ? Number(item.original_price) : enriched.original_price,
-          qty_on_hand: Number(item.qty_on_hand ?? enriched.qty_on_hand),
-          image_url: item.image_url || enriched.image_url,
-        };
-      });
-    }
-
-    return INITIAL_CATALOG;
-  } catch (error) {
-    return INITIAL_CATALOG;
+    return { items, connected: true };
+  } catch {
+    return { items: [], connected: false };
   }
 }
 
 export async function fetchRentals(): Promise<InventoryItem[]> {
-  // Can be extended to fetch from API later
-  const { RENTAL_CATALOG } = await import('@/data/catalog');
-  return RENTAL_CATALOG;
+  // Rental prices and bookable availability are managed through CRM contracts,
+  // not the spare-parts stock catalog. Clients request a rental quote instead.
+  return [];
 }

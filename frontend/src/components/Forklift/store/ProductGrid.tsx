@@ -2,7 +2,7 @@ import type { InventoryItem } from "@/actions/store";
 
 import { ProductCard } from "./ProductCard";
 import { PackageSearch } from "lucide-react";
-import { useTranslation } from "react-i18next";
+import { useCurrentLocale } from "@/i18n/useCurrentLocale";
 
 interface ProductGridProps {
   items: InventoryItem[];
@@ -10,9 +10,8 @@ interface ProductGridProps {
 }
 
 export function ProductGrid({ items, viewMode = 'grid' }: ProductGridProps) {
-  const { i18n } = useTranslation();
-  const locale = i18n.language || "lo";
-  const isLao = locale === 'lo';
+  const locale = useCurrentLocale();
+  const isLao = locale.toLowerCase().startsWith("lo");
 
   if (!items || items.length === 0) {
     return (

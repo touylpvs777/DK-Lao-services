@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { MessageCircle, Wrench, FileText, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useLocale } from 'next-intl';
+import { useLocale } from '@/lib/locale';
 
 export function PromoBanners() {
   const locale = useLocale();

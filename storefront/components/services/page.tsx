@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useLocale } from "next-intl";
+import { useLocale } from "@/lib/locale";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ShoppingCart,

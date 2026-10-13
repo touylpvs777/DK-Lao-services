@@ -3,12 +3,11 @@ import { Link } from "react-router-dom";
 import { motion } from 'framer-motion';
 import { MessageCircle, Wrench, FileText, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/Forklift/ui/button';
-import { useTranslation } from "react-i18next";
+import { useCurrentLocale } from "@/i18n/useCurrentLocale";
 
 export function PromoBanners() {
-  const { i18n } = useTranslation();
-  const locale = i18n.language || "lo";
-  const isLao = locale === 'lo';
+  const locale = useCurrentLocale();
+  const isLao = locale.toLowerCase().startsWith("lo");
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

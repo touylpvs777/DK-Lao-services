@@ -1,9 +1,10 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
     <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
+      <main className="hidden">
         <Image
           className="dark:invert h-5 w-[100px]"
           src="/next.svg"
@@ -63,6 +64,39 @@ export default function Home() {
             Documentation
           </a>
         </div>
+      </main>
+      <main className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+        <section className="rounded-[2rem] bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 px-6 py-12 text-white shadow-xl sm:px-10 md:py-16">
+          <div className="max-w-3xl">
+            <p className="mb-4 inline-flex rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1 text-xs font-bold text-emerald-300">DK LAO · INDUSTRIAL 4S</p>
+            <h1 className="text-3xl font-black tracking-tight sm:text-5xl">ທຸກໂມດູນທຸລະກິດ ເຊື່ອມຕໍ່ຈາກຈຸດດຽວ</h1>
+            <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-300 sm:text-base">ຈາກສິນຄ້າ, ບໍລິການຊ່າງ, ການເຊົ່າ, ຈົນເຖິງການຈັດການກອງລົດລູກຄ້າ. ເລືອກໂມດູນທີ່ຕ້ອງການ ແລະ ສືບຕໍ່ວຽກໄດ້ທັນທີ.</p>
+            <div className="mt-7 flex flex-wrap gap-3">
+              <Link href="/store" className="rounded-xl bg-emerald-500 px-5 py-3 text-sm font-bold text-white hover:bg-emerald-400">ເລືອກຊື້ອາໄຫຼ່ →</Link>
+              <Link href="/client-dashboard" className="rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-sm font-bold text-white hover:bg-white/10">ເຂົ້າສູນ Fleet →</Link>
+            </div>
+          </div>
+        </section>
+
+        <section className="py-10" aria-labelledby="modules-heading">
+          <h2 id="modules-heading" className="text-2xl font-black text-slate-900 dark:text-white">ໂມດູນຂອງລະບົບ</h2>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">ເຂົ້າຫາຂໍ້ມູນ ແລະ ຂັ້ນຕອນງານທີ່ກ່ຽວຂ້ອງໄດ້ຈາກທຸກໜ້າ.</p>
+          <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {[
+              { href: "/store", title: "ສິນຄ້າ ແລະ ອາໄຫຼ່", label: "Store & Parts", detail: "ຄົ້ນຫາສິນຄ້າ ແລະ ສົ່ງຄຳສັ່ງຊື້ B2B." },
+              { href: "/services", title: "ບໍລິການ 4S", label: "Sales · Service · Spares · Solutions", detail: "ຂໍລາຄາ, ນັດໝາຍຊ່າງ, ແລະ ວາງແຜນ PM." },
+              { href: "/services/rental", title: "ເຊົ່າລົດຟອກລີບ", label: "Fleet Rental", detail: "ເບິ່ງແພັກເກັດເຊົ່າ ແລະ ຂໍໃບສະເໜີລາຄາ." },
+              { href: "/services/resource-center", title: "ສູນຂໍ້ມູນ", label: "Resource Center", detail: "ຄູ່ມືກວດເຊັກ ແລະ ເອກະສານສຳລັບອົງກອນ." },
+              { href: "/client-dashboard", title: "ສູນຈັດການ Fleet", label: "Client Fleet Dashboard", detail: "ເບິ່ງລາຍການລົດ ແລະ ເຊື່ອມຕໍ່ໄປ Service/Parts." },
+            ].map((module) => (
+              <Link key={module.href} href={module.href} className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-emerald-400 hover:shadow-lg dark:border-white/10 dark:bg-slate-900">
+                <span className="text-xs font-bold text-emerald-700 dark:text-emerald-400">{module.label}</span>
+                <h3 className="mt-2 font-bold text-slate-900 group-hover:text-emerald-700 dark:text-white dark:group-hover:text-emerald-400">{module.title} <span aria-hidden="true">→</span></h3>
+                <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-400">{module.detail}</p>
+              </Link>
+            ))}
+          </div>
+        </section>
       </main>
     </div>
   );

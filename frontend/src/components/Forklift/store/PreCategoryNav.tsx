@@ -1,7 +1,7 @@
 import React from "react";
 import { Truck, Archive, SprayCan, Settings, Pickaxe, Layers } from "lucide-react";
 import { PRE_CATEGORIES, STORE_CATEGORIES } from "@/data/categories";
-import { useTranslation } from "react-i18next";
+import { useCurrentLocale } from "@/i18n/useCurrentLocale";
 
 interface PreCategoryNavProps {
   selectedPreCategory: string;
@@ -22,9 +22,8 @@ export function PreCategoryNav({
   onSelectPreCategory,
   items = [],
 }: PreCategoryNavProps) {
-  const { i18n } = useTranslation();
-  const locale = i18n.language || "lo";
-  const isLao = locale === "lo";
+  const locale = useCurrentLocale();
+  const isLao = locale.toLowerCase().startsWith("lo");
   // Compute product counts dynamically per pre-category
   const counts = React.useMemo(() => {
     const map: Record<string, number> = { all: items.length };

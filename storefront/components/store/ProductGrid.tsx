@@ -4,7 +4,7 @@ import React from "react";
 import { InventoryItem } from "@/actions/store";
 import { ProductCard } from "./ProductCard";
 import { PackageSearch } from "lucide-react";
-import { useLocale } from "next-intl";
+import { useLocale } from "@/lib/locale";
 
 interface ProductGridProps {
   items: InventoryItem[];

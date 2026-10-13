@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
+import { useCurrentLocale } from "@/i18n/useCurrentLocale";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Zap,
@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/Forklift/ui/button";
 import { ImageLightboxModal } from "@/components/Forklift/ui/ImageLightboxModal";
+import { getForkliftText } from "@/i18n/forkliftLocale";
 
 interface ForkliftModel {
   series: string;
@@ -198,9 +199,8 @@ const EFG_MODELS: ForkliftModel[] = [
 ];
 
 export function JungheinrichEFGShowcase() {
-  const { i18n } = useTranslation();
-  const locale = i18n.language || "lo";
-  const isLo = locale === "lo";
+  const locale = useCurrentLocale();
+  const isLo = locale.toLowerCase().startsWith("lo");
   const [activeTab, setActiveTab] = useState<"counterbalance" | "lithium">("counterbalance");
   const [originFilter, setOriginFilter] = useState<"all" | "germany" | "china">("all");
 
@@ -252,9 +252,7 @@ export function JungheinrichEFGShowcase() {
           </h2>
 
           <p className="text-slate-300 text-base md:text-lg max-w-3xl mx-auto leading-relaxed">
-            {isLo
-              ? "ຕອບໂຈດທຸກຄວາມຕ້ອງການຍົກຍ້າຍສິນຄ້າດ້ວຍລົດຍົກໄຟຟ້າ Jungheinrich ມາດຕະຖານເຢຍລະມັນ (🇩🇪) ແລະ ລຸ້ນຄຸ້ມຄ່າປະສິດທິພາບສູງ (🇨🇳) ພ້ອມແບັດເຕີຣີ Lithium-Ion ຮັບປະກັນເຕັມ 5 ປີ."
-              : "Meeting all material handling demands with Jungheinrich electric counterbalance forklifts from Germany (🇩🇪) and high-efficiency series (🇨🇳), powered by 5-year guaranteed Lithium-Ion technology."}
+            {getForkliftText("ຕອບໂຈດທຸກຄວາມຕ້ອງການຍົກຍ້າຍສິນຄ້າດ້ວຍລົດຍົກໄຟຟ້າ Jungheinrich ມາດຕະຖານເຢຍລະມັນ (🇩🇪) ແລະ ລຸ້ນຄຸ້ມຄ່າປະສິດທິພາບສູງ (🇨🇳) ພ້ອມແບັດເຕີຣີ Lithium-Ion ຮັບປະກັນເຕັມ 5 ປີ.", "Meeting all material handling demands with Jungheinrich electric counterbalance forklifts from Germany (🇩🇪) and high-efficiency series (🇨🇳), powered by 5-year guaranteed Lithium-Ion technology.")}
           </p>
 
           {/* Sub Tab Switcher */}
@@ -268,7 +266,7 @@ export function JungheinrichEFGShowcase() {
               }`}
             >
               <Truck className="w-4 h-4" />
-              <span>{isLo ? "1. ຕາຕະລາງສະເປັກ EFG 9 ລຸ້ນ (🇩🇪/🇨🇳)" : "1. EFG Portfolio Matrix (🇩🇪/🇨🇳)"}</span>
+              <span>{getForkliftText("1. ຕາຕະລາງສະເປັກ EFG 9 ລຸ້ນ (🇩🇪/🇨🇳)", "1. EFG Portfolio Matrix (🇩🇪/🇨🇳)")}</span>
             </button>
 
             <button
@@ -280,7 +278,7 @@ export function JungheinrichEFGShowcase() {
               }`}
             >
               <Zap className="w-4 h-4 text-yellow-300" />
-              <span>{isLo ? "2. Lithium-Ion & ຮັບປະກັນ 5 ປີ (ປະຢັດ >80%)" : "2. Li-Ion & 5-Year Guarantee (>80% ROI)"}</span>
+              <span>{getForkliftText("2. Lithium-Ion & ຮັບປະກັນ 5 ປີ (ປະຢັດ >80%)", "2. Li-Ion & 5-Year Guarantee (>80% ROI)")}</span>
             </button>
           </div>
         </div>
@@ -300,7 +298,7 @@ export function JungheinrichEFGShowcase() {
             <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl">
               <div className="flex items-center gap-2 text-xs font-bold text-slate-400">
                 <SlidersHorizontal className="w-4 h-4 text-yellow-400" />
-                <span>{isLo ? "ກັ່ນກອງຕາມສາຍການຜະລິດ:" : "Filter by Manufacturing Origin:"}</span>
+                <span>{getForkliftText("ກັ່ນກອງຕາມສາຍການຜະລິດ:", "Filter by Manufacturing Origin:")}</span>
               </div>
 
               <div className="flex flex-wrap gap-2">
@@ -312,7 +310,7 @@ export function JungheinrichEFGShowcase() {
                       : "bg-white/5 text-slate-300 hover:bg-white/10"
                   }`}
                 >
-                  {isLo ? "ທັງໝົດ (9 ຊີຣີສ໌)" : "All (9 Series)"}
+                  {getForkliftText("ທັງໝົດ (9 ຊີຣີສ໌)", "All (9 Series)")}
                 </button>
 
                 <button
@@ -324,7 +322,7 @@ export function JungheinrichEFGShowcase() {
                   }`}
                 >
                   <span>🇩🇪</span>
-                  <span>{isLo ? "ເຢຍລະມັນ (Germany Flagships • 5 ລຸ້ນ)" : "Germany Flagships (5 Models)"}</span>
+                  <span>{getForkliftText("ເຢຍລະມັນ (Germany Flagships • 5 ລຸ້ນ)", "Germany Flagships (5 Models)")}</span>
                 </button>
 
                 <button
@@ -336,7 +334,7 @@ export function JungheinrichEFGShowcase() {
                   }`}
                 >
                   <span>🇨🇳</span>
-                  <span>{isLo ? "ລຸ້ນຄຸ້ມຄ່າປະສິດທິພາບສູງ (China • 4 ລຸ້ນ)" : "China Value Lines (4 Models)"}</span>
+                  <span>{getForkliftText("ລຸ້ນຄຸ້ມຄ່າປະສິດທິພາບສູງ (China • 4 ລຸ້ນ)", "China Value Lines (4 Models)")}</span>
                 </button>
               </div>
             </div>
@@ -362,7 +360,7 @@ export function JungheinrichEFGShowcase() {
                 />
                 <div className="absolute top-4 right-4 bg-slate-900/90 hover:bg-slate-900 text-white border border-white/20 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2 shadow-xl opacity-90 group-hover/img:opacity-100 group-hover/img:scale-105 transition-all">
                   <ZoomIn className="w-3.5 h-3.5 text-yellow-400" />
-                  <span>{isLo ? "🔍 ຊູມພາບ 2K" : "🔍 Zoom 2K"}</span>
+                  <span>{getForkliftText("🔍 ຊູມພາບ 2K", "🔍 Zoom 2K")}</span>
                 </div>
               </div>
               <div className="absolute top-4 left-4 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-950/80 backdrop-blur-md border border-white/20 text-xs font-bold text-yellow-400">
@@ -411,7 +409,7 @@ export function JungheinrichEFGShowcase() {
                     <div className="grid grid-cols-3 gap-2 p-3 rounded-xl bg-black/40 border border-white/5 mb-4 text-center">
                       <div>
                         <span className="block text-[10px] uppercase font-bold text-slate-400">
-                          {isLo ? "ຄວາມສູງຍົກ" : "Lift Height"}
+                          {getForkliftText("ຄວາມສູງຍົກ", "Lift Height")}
                         </span>
                         <span className="text-xs font-extrabold text-yellow-400">
                           {model.liftHeight}
@@ -420,7 +418,7 @@ export function JungheinrichEFGShowcase() {
 
                       <div>
                         <span className="block text-[10px] uppercase font-bold text-slate-400">
-                          {isLo ? "ນ້ຳໜັກຍົກ" : "Capacity"}
+                          {getForkliftText("ນ້ຳໜັກຍົກ", "Capacity")}
                         </span>
                         <span className="text-xs font-extrabold text-white">
                           {model.capacity}
@@ -429,7 +427,7 @@ export function JungheinrichEFGShowcase() {
 
                       <div>
                         <span className="block text-[10px] uppercase font-bold text-slate-400">
-                          {isLo ? "ແຮງດັນໄຟ" : "Voltage"}
+                          {getForkliftText("ແຮງດັນໄຟ", "Voltage")}
                         </span>
                         <span
                           className={`text-xs font-black ${
@@ -444,7 +442,7 @@ export function JungheinrichEFGShowcase() {
                     {/* Ideal Applications */}
                     <div className="mb-4">
                       <span className="block text-[11px] font-bold text-slate-400 mb-1">
-                        {isLo ? "🎯 ເໝາະສຳລັບ:" : "🎯 Recommended for:"}
+                        {getForkliftText("🎯 ເໝາະສຳລັບ:", "🎯 Recommended for:")}
                       </span>
                       <p className="text-xs text-slate-300 leading-normal">
                         {isLo ? model.applicationsLo : model.applicationsEn}
@@ -465,7 +463,7 @@ export function JungheinrichEFGShowcase() {
                       className="inline-flex items-center gap-1.5 text-xs font-bold text-green-400 hover:text-green-300 transition-colors"
                     >
                       <PhoneCall className="w-3.5 h-3.5" />
-                      <span>{isLo ? "ຖາມສະເປັກ WhatsApp" : "WhatsApp Inquiry"}</span>
+                      <span>{getForkliftText("ຖາມສະເປັກ WhatsApp", "WhatsApp Inquiry")}</span>
                     </a>
 
                     <Button
@@ -477,7 +475,7 @@ export function JungheinrichEFGShowcase() {
                         if (el) el.scrollIntoView({ behavior: "smooth" });
                       }}
                     >
-                      <span>{isLo ? "ຂໍໃບສະເໜີລາຄາ" : "Get Quote"}</span>
+                      <span>{getForkliftText("ຂໍໃບສະເໜີລາຄາ", "Get Quote")}</span>
                       <ChevronRight className="w-3 h-3 ml-1" />
                     </Button>
                   </div>
@@ -521,23 +519,23 @@ export function JungheinrichEFGShowcase() {
                     )}
                   </h3>
                   <p className="text-lg font-bold text-slate-200 mb-6">
-                    {isLo ? "ເມື່ອທຽບກັບ ນ້ຳມັນ (Diesel) ແລະ ແກັສ (LPG)" : "Compared to Diesel and LPG Fuel Operations"}
+                    {getForkliftText("ເມື່ອທຽບກັບ ນ້ຳມັນ (Diesel) ແລະ ແກັສ (LPG)", "Compared to Diesel and LPG Fuel Operations")}
                   </p>
 
                   <div className="space-y-3 mb-6">
                     <div className="flex items-start gap-3 text-sm text-slate-300">
                       <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
-                      <span>{isLo ? "ບໍ່ມີຄ່ານ້ຳມັນເຊື້ອເພີງລາຍເດືອນທີ່ຜັນຜວນສູງ (Zero Fuel Volatility)" : "Eliminate rising monthly diesel & gas expenses"}</span>
+                      <span>{getForkliftText("ບໍ່ມີຄ່ານ້ຳມັນເຊື້ອເພີງລາຍເດືອນທີ່ຜັນຜວນສູງ (Zero Fuel Volatility)", "Eliminate rising monthly diesel & gas expenses")}</span>
                     </div>
 
                     <div className="flex items-start gap-3 text-sm text-slate-300">
                       <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
-                      <span>{isLo ? "ບໍ່ມີຄ່າປ່ຽນນ້ຳມັນເຄື່ອງ, ຫົວທຽນ, ໄສ້ກອງ, ແລະ ສ້ອມແປງເຄື່ອງຈັກ" : "Zero engine oil changes, spark plugs, and engine overhauls"}</span>
+                      <span>{getForkliftText("ບໍ່ມີຄ່າປ່ຽນນ້ຳມັນເຄື່ອງ, ຫົວທຽນ, ໄສ້ກອງ, ແລະ ສ້ອມແປງເຄື່ອງຈັກ", "Zero engine oil changes, spark plugs, and engine overhauls")}</span>
                     </div>
 
                     <div className="flex items-start gap-3 text-sm text-slate-300">
                       <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
-                      <span>{isLo ? "ປອດຄວັນພິດ 100% ມາດຕະຖານໂຮງງານອາຫານ, ເຄື່ອງດື່ມ, ແລະ ຢາປົວພະຍາດ" : "100% zero exhaust emissions for food, pharma, and clean facilities"}</span>
+                      <span>{getForkliftText("ປອດຄວັນພິດ 100% ມາດຕະຖານໂຮງງານອາຫານ, ເຄື່ອງດື່ມ, ແລະ ຢາປົວພະຍາດ", "100% zero exhaust emissions for food, pharma, and clean facilities")}</span>
                     </div>
                   </div>
                 </div>
@@ -561,7 +559,7 @@ export function JungheinrichEFGShowcase() {
                   />
                   <div className="absolute top-3 right-3 bg-slate-900/90 hover:bg-slate-900 text-white border border-white/20 backdrop-blur-md px-2.5 py-1 rounded-full text-[11px] font-semibold flex items-center gap-1.5 shadow-xl opacity-90 group-hover/img:opacity-100 group-hover/img:scale-105 transition-all">
                     <ZoomIn className="w-3 h-3 text-emerald-400" />
-                    <span>{isLo ? "🔍 ຊູມ 2K" : "🔍 Zoom 2K"}</span>
+                    <span>{getForkliftText("🔍 ຊູມ 2K", "🔍 Zoom 2K")}</span>
                   </div>
                 </div>
               </div>
@@ -586,23 +584,23 @@ export function JungheinrichEFGShowcase() {
                     )}
                   </h3>
                   <p className="text-lg font-bold text-slate-200 mb-6">
-                    {isLo ? "ໝໍ້ໄຟ ແລະ ເຊວໝໍ້ໄຟ (Batteries & Battery Cells 100%)" : "Full Coverage on Batteries and Individual Battery Cells"}
+                    {getForkliftText("ໝໍ້ໄຟ ແລະ ເຊວໝໍ້ໄຟ (Batteries & Battery Cells 100%)", "Full Coverage on Batteries and Individual Battery Cells")}
                   </p>
 
                   <div className="space-y-3 mb-6">
                     <div className="flex items-start gap-3 text-sm text-slate-300">
                       <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
-                      <span>{isLo ? "ຮັບປະກັນທັງຕົວ Battery Module ແລະ Cell ພາຍໃນ ຍາວນານເຖິງ 5 ປີ" : "Covers complete battery module and internal cell chemistry for 5 years"}</span>
+                      <span>{getForkliftText("ຮັບປະກັນທັງຕົວ Battery Module ແລະ Cell ພາຍໃນ ຍາວນານເຖິງ 5 ປີ", "Covers complete battery module and internal cell chemistry for 5 years")}</span>
                     </div>
 
                     <div className="flex items-start gap-3 text-sm text-slate-300">
                       <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
-                      <span>{isLo ? "100% Satisfaction Guaranteed: ໝັ້ນໃຈໃນກຳລັງຂັບເຄື່ອນເຕັມປະສິດທິພາບ" : "100% Satisfaction Guaranteed with full conversion rights"}</span>
+                      <span>{getForkliftText("100% Satisfaction Guaranteed: ໝັ້ນໃຈໃນກຳລັງຂັບເຄື່ອນເຕັມປະສິດທິພາບ", "100% Satisfaction Guaranteed with full conversion rights")}</span>
                     </div>
 
                     <div className="flex items-start gap-3 text-sm text-slate-300">
                       <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
-                      <span>{isLo ? "ບໍ່ຕ້ອງເຕີມນ້ຳກັ່ນ (Maintenance-Free), ບໍ່ມີໄອລະເຫີຍກົດອັນຕະລາຍ" : "Maintenance-free design: zero distilled water topping, zero acid fumes"}</span>
+                      <span>{getForkliftText("ບໍ່ຕ້ອງເຕີມນ້ຳກັ່ນ (Maintenance-Free), ບໍ່ມີໄອລະເຫີຍກົດອັນຕະລາຍ", "Maintenance-free design: zero distilled water topping, zero acid fumes")}</span>
                     </div>
                   </div>
                 </div>
@@ -626,7 +624,7 @@ export function JungheinrichEFGShowcase() {
                   />
                   <div className="absolute top-3 right-3 bg-slate-900/90 hover:bg-slate-900 text-white border border-white/20 backdrop-blur-md px-2.5 py-1 rounded-full text-[11px] font-semibold flex items-center gap-1.5 shadow-xl opacity-90 group-hover/img:opacity-100 group-hover/img:scale-105 transition-all">
                     <ZoomIn className="w-3 h-3 text-emerald-400" />
-                    <span>{isLo ? "🔍 ຊູມ 2K" : "🔍 Zoom 2K"}</span>
+                    <span>{getForkliftText("🔍 ຊູມ 2K", "🔍 Zoom 2K")}</span>
                   </div>
                 </div>
               </div>
@@ -654,9 +652,7 @@ export function JungheinrichEFGShowcase() {
                   </h3>
 
                   <p className="text-sm text-slate-300 leading-relaxed">
-                    {isLo
-                      ? "ເທັກໂນໂລຊີ Opportunity Charging ຊ່ວຍໃຫ້ທ່ານສາກແບັດໄດ້ທຸກເວລາ (ເຊັ່ນ: ຕອນພັກບ່ຽງ 15-30 ນາທີ) ໂດຍບໍ່ທຳລາຍອາຍຸແບັດເຕີຣີ ແລະ ບໍ່ຕ້ອງລໍຖ້າໃຫ້ແບັດໝົດຄືແບັດນ້ຳກົດ."
-                      : "Opportunity charging enables rapid top-ups during short 15-30 min breaks without battery degradation, keeping your multi-shift fleet running continuously."}
+                    {getForkliftText("ເທັກໂນໂລຊີ Opportunity Charging ຊ່ວຍໃຫ້ທ່ານສາກແບັດໄດ້ທຸກເວລາ (ເຊັ່ນ: ຕອນພັກບ່ຽງ 15-30 ນາທີ) ໂດຍບໍ່ທຳລາຍອາຍຸແບັດເຕີຣີ ແລະ ບໍ່ຕ້ອງລໍຖ້າໃຫ້ແບັດໝົດຄືແບັດນ້ຳກົດ.", "Opportunity charging enables rapid top-ups during short 15-30 min breaks without battery degradation, keeping your multi-shift fleet running continuously.")}
                   </p>
 
                   <div className="pt-2">
@@ -700,7 +696,7 @@ export function JungheinrichEFGShowcase() {
                     />
                     <div className="absolute top-3 right-3 bg-slate-900/90 hover:bg-slate-900 text-white border border-white/20 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2 shadow-xl opacity-90 group-hover/img:opacity-100 group-hover/img:scale-105 transition-all">
                       <ZoomIn className="w-3.5 h-3.5 text-blue-400" />
-                      <span>{isLo ? "🔍 ຊູມພາບ 2K" : "🔍 Zoom 2K"}</span>
+                      <span>{getForkliftText("🔍 ຊູມພາບ 2K", "🔍 Zoom 2K")}</span>
                     </div>
                   </div>
                 </div>
@@ -714,7 +710,7 @@ export function JungheinrichEFGShowcase() {
                   THE DAWN OF A NEW AGE
                 </div>
                 <h3 className="text-2xl sm:text-3xl font-black text-white">
-                  {isLo ? "ກອງລົດຍົກໄຟຟ້າ Lithium-Ion ຄົບທຸກຮູບແບບສາງ" : "Complete Lithium-Ion Fleet for Every Warehouse"}
+                  {getForkliftText("ກອງລົດຍົກໄຟຟ້າ Lithium-Ion ຄົບທຸກຮູບແບບສາງ", "Complete Lithium-Ion Fleet for Every Warehouse")}
                 </h3>
               </div>
 
@@ -737,7 +733,7 @@ export function JungheinrichEFGShowcase() {
                 />
                 <div className="absolute top-4 right-4 bg-slate-900/90 hover:bg-slate-900 text-white border border-white/20 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2 shadow-xl opacity-90 group-hover/img:opacity-100 group-hover/img:scale-105 transition-all">
                   <ZoomIn className="w-3.5 h-3.5 text-yellow-400" />
-                  <span>{isLo ? "🔍 ຊູມພາບ 2K" : "🔍 Zoom 2K"}</span>
+                  <span>{getForkliftText("🔍 ຊູມພາບ 2K", "🔍 Zoom 2K")}</span>
                 </div>
               </div>
 
@@ -767,15 +763,13 @@ export function JungheinrichEFGShowcase() {
             <div className="rounded-3xl p-8 bg-gradient-to-r from-yellow-500 via-amber-500 to-yellow-600 text-slate-950 flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl">
               <div className="space-y-1 text-center md:text-left">
                 <div className="text-xs font-black uppercase tracking-wider text-slate-900">
-                  {isLo ? "ປ່ຽນຜ່ານສູ່ພະລັງງານສີຂຽວ ຫຼຸດຕົ້ນທຶນ 80%" : "TRANSITION TO GREEN POWER • SAVE 80% COSTS"}
+                  {getForkliftText("ປ່ຽນຜ່ານສູ່ພະລັງງານສີຂຽວ ຫຼຸດຕົ້ນທຶນ 80%", "TRANSITION TO GREEN POWER • SAVE 80% COSTS")}
                 </div>
                 <h4 className="text-2xl font-black text-slate-950">
-                  {isLo ? "ພ້ອມຍົກລະດັບກອງລົດຍົກສາງຂອງທ່ານແລ້ວຫຼືຍັງ?" : "Ready to Upgrade Your Warehouse Fleet to Li-Ion?"}
+                  {getForkliftText("ພ້ອມຍົກລະດັບກອງລົດຍົກສາງຂອງທ່ານແລ້ວຫຼືຍັງ?", "Ready to Upgrade Your Warehouse Fleet to Li-Ion?")}
                 </h4>
                 <p className="text-xs font-semibold text-slate-800">
-                  {isLo
-                    ? "ປຶກສາວິສະວະກອນ DK LAO ຟຣີ ເພື່ອຄຳນວນ ROI ແລະ ໄລຍະເວລາຄືນທຶນພາຍໃນ 24 ຊົ່ວໂມງ."
-                    : "Free consultation with DK LAO engineers for customized fleet ROI calculation within 24 hours."}
+                  {getForkliftText("ປຶກສາວິສະວະກອນ DK LAO ຟຣີ ເພື່ອຄຳນວນ ROI ແລະ ໄລຍະເວລາຄືນທຶນພາຍໃນ 24 ຊົ່ວໂມງ.", "Free consultation with DK LAO engineers for customized fleet ROI calculation within 24 hours.")}
                 </p>
               </div>
 
@@ -797,7 +791,7 @@ export function JungheinrichEFGShowcase() {
                   }}
                   className="px-5 py-3 rounded-xl bg-white text-slate-950 font-bold text-xs hover:bg-slate-100 shadow-md"
                 >
-                  <span>{isLo ? "ຂໍໃບສະເໜີລາຄາ 4S" : "Request 4S Proposal"}</span>
+                  <span>{getForkliftText("ຂໍໃບສະເໜີລາຄາ 4S", "Request 4S Proposal")}</span>
                   <ChevronRight className="w-4 h-4 ml-1" />
                 </Button>
               </div>

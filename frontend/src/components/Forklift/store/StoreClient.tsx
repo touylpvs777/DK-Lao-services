@@ -19,7 +19,8 @@ import { Truck, Settings, ShoppingBag, ArrowUpDown, Wrench, Sparkles, ArrowRight
 import { Link } from "react-router-dom";
 import { useCart } from "@/context/CartContext";
 import { Button } from "@/components/Forklift/ui/button";
-import { useTranslation } from "react-i18next";
+import { useCurrentLocale } from "@/i18n/useCurrentLocale";
+import { getForkliftText } from "@/i18n/forkliftLocale";
 
 interface StoreClientProps {
   initialItems: InventoryItem[];
@@ -79,9 +80,8 @@ export function StoreClient({ initialItems, rentalItems = [] }: StoreClientProps
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const { i18n } = useTranslation();
-  const locale = i18n.language || "lo";
-  const isLao = locale === "lo";
+  const locale = useCurrentLocale();
+  const isLao = locale.toLowerCase().startsWith("lo");
 
   const subsystemTags = useMemo(() => {
     return SUBSYSTEM_TAGS_DATA.map((t) => ({
@@ -256,7 +256,7 @@ export function StoreClient({ initialItems, rentalItems = [] }: StoreClientProps
             }`}
           >
             <Settings className="w-4 h-4" />
-            {isLao ? "ອຸປະກອນ & ອາໄຫຼ່" : "Equipment & Parts"}
+            {getForkliftText("ອຸປະກອນ & ອາໄຫຼ່", "Equipment & Parts")}
           </button>
           <button
             onClick={() => { setActiveTab("rental"); updateUrlParams({ tab: "rental", pre_category: null, category: null, subsystem: null, model: null, q: null }); }}
@@ -267,7 +267,7 @@ export function StoreClient({ initialItems, rentalItems = [] }: StoreClientProps
             }`}
           >
             <Truck className="w-4 h-4" />
-            {isLao ? "ບໍລິການລົດເຊົ່າ" : "Rental Services"}
+            {getForkliftText("ບໍລິການລົດເຊົ່າ", "Rental Services")}
           </button>
         </div>
 
@@ -279,7 +279,7 @@ export function StoreClient({ initialItems, rentalItems = [] }: StoreClientProps
             className="flex-1 sm:flex-initial px-3.5 py-2.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-700 dark:text-amber-400 font-bold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-sm"
           >
             <Wrench className="w-3.5 h-3.5 text-amber-500" />
-            <span>{isLao ? "ຈອງຊ່າງ PM 24 ຈຸດ" : "Book Mobile PM"}</span>
+            <span>{getForkliftText("ຈອງຊ່າງ PM 24 ຈຸດ", "Book Mobile PM")}</span>
           </button>
 
           <Link
@@ -287,7 +287,7 @@ export function StoreClient({ initialItems, rentalItems = [] }: StoreClientProps
             className="flex-1 sm:flex-initial px-3.5 py-2.5 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 text-[#005BAC] dark:text-blue-400 font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-sm"
           >
             <Sparkles className="w-3.5 h-3.5 text-blue-500" />
-            <span>{isLao ? "ໂຄງສ້າງການບໍລິຫານ 360°" : "360° Management"}</span>
+            <span>{getForkliftText("ໂຄງສ້າງການບໍລິຫານ 360°", "360° Management")}</span>
           </Link>
         </div>
       </div>
@@ -318,16 +318,14 @@ export function StoreClient({ initialItems, rentalItems = [] }: StoreClientProps
                   0 CAPEX LEASE
                 </span>
                 <span className="text-xs text-blue-300 font-bold">
-                  {isLao ? "ໂຄງສ້າງການບໍລິຫານ 360° (Full Fleet Care)" : "360° Fleet Ecosystem"}
+                  {getForkliftText("ໂຄງສ້າງການບໍລິຫານ 360° (Full Fleet Care)", "360° Fleet Ecosystem")}
                 </span>
               </div>
               <h3 className="text-base md:text-lg font-black text-white">
-                {isLao ? "ເຊົ່າລົດຍົກ Full-Service ໄລຍະຍາວ 1-5 ປີ ສຳລັບໂຮງງານອຸດສາຫະກຳ" : "Long-Term Industrial Forklift Fleet Lease (1-5 Years)"}
+                {getForkliftText("ເຊົ່າລົດຍົກ Full-Service ໄລຍະຍາວ 1-5 ປີ ສຳລັບໂຮງງານອຸດສາຫະກຳ", "Long-Term Industrial Forklift Fleet Lease (1-5 Years)")}
               </h3>
               <p className="text-xs text-slate-300 mt-1 leading-relaxed">
-                {isLao
-                  ? "ຟຣີ ຄ່າອາໄຫຼ່ 100%, ຟຣີ ປ່ຽນຢາງຕັນ, ຟຣີ ກວດເຊັກ PM ຕາມຮອບ, ແລະ ມີລົດສຳຮອງປ່ຽນແທນພາຍໃນ 24h ບໍ່ໃຫ້ສາຍການຜະລິດຢຸດ."
-                  : "100% Free parts, solid tires, preventive inspections, and 24h standby unit to ensure zero production downtime."}
+                {getForkliftText("ຟຣີ ຄ່າອາໄຫຼ່ 100%, ຟຣີ ປ່ຽນຢາງຕັນ, ຟຣີ ກວດເຊັກ PM ຕາມຮອບ, ແລະ ມີລົດສຳຮອງປ່ຽນແທນພາຍໃນ 24h ບໍ່ໃຫ້ສາຍການຜະລິດຢຸດ.", "100% Free parts, solid tires, preventive inspections, and 24h standby unit to ensure zero production downtime.")}
               </p>
             </div>
           </div>
@@ -335,7 +333,7 @@ export function StoreClient({ initialItems, rentalItems = [] }: StoreClientProps
             to="/workshop-4s#rental"
             className="w-full md:w-auto shrink-0 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-black flex items-center justify-center gap-2 transition-all shadow-lg shadow-blue-600/30"
           >
-            <span>{isLao ? "ເບິ່ງແພັກເກດເຊົ່າ & ໂຄງສ້າງບໍລິຫານ" : "View Fleet Packages & SLA"}</span>
+            <span>{getForkliftText("ເບິ່ງແພັກເກດເຊົ່າ & ໂຄງສ້າງບໍລິຫານ", "View Fleet Packages & SLA")}</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
@@ -383,8 +381,8 @@ export function StoreClient({ initialItems, rentalItems = [] }: StoreClientProps
                       updateUrlParams({ q: query || null });
                       setSearchQuery(query);
                     }}
-                    placeholder={isLao ? "ຄົ້ນຫາຊື່ສິນຄ້າ, ລະຫັດ SKU ຫຼື ອາໄຫຼ່..." : "Search item name, SKU code..."}
-                    aria-label={isLao ? "ຄົ້ນຫາສິນຄ້າ" : "Search inventory"}
+                    placeholder={getForkliftText("ຄົ້ນຫາຊື່ສິນຄ້າ, ລະຫັດ SKU ຫຼື ອາໄຫຼ່...", "Search item name, SKU code...")}
+                    aria-label={getForkliftText("ຄົ້ນຫາສິນຄ້າ", "Search inventory")}
                     className="min-w-0 flex-1 bg-transparent text-xs sm:text-sm text-slate-800 outline-none placeholder:text-slate-400 dark:text-slate-100 font-medium"
                   />
                   {searchQuery && (
@@ -407,7 +405,7 @@ export function StoreClient({ initialItems, rentalItems = [] }: StoreClientProps
                     <button
                       onClick={() => { updateUrlParams({ pre_category: null, category: null }); setSelectedPreCategory("all"); setSelectedCategory("All"); }}
                       className="text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded-lg flex items-center gap-1.5 shadow-xs transition-colors cursor-pointer"
-                      title={isLao ? "ກົດເພື່ອລຶບຕົວກັ່ນຕອງສາຍງານນີ້" : "Click to clear division filter"}
+                      title={getForkliftText("ກົດເພື່ອລຶບຕົວກັ່ນຕອງສາຍງານນີ້", "Click to clear division filter")}
                     >
                       <span>{PRE_CATEGORIES.find(p => p.id === selectedPreCategory)?.name_lo || selectedPreCategory}</span>
                       <span className="text-[10px] text-blue-200">✕</span>
@@ -415,14 +413,14 @@ export function StoreClient({ initialItems, rentalItems = [] }: StoreClientProps
                   )}
 
                   <span className="text-xs font-semibold text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/30 px-2.5 py-1 rounded-lg border border-blue-200 dark:border-blue-800/60">
-                    {selectedCategory === "All" ? (isLao ? "ທຸກໝວດໝູ່" : "All Categories") : selectedCategory}
+                    {selectedCategory === "All" ? (getForkliftText("ທຸກໝວດໝູ່", "All Categories")) : selectedCategory}
                   </span>
 
                   {selectedSubsystem !== "all" && (
                     <button
                       onClick={() => { updateUrlParams({ subsystem: null }); setSelectedSubsystem("all"); }}
                       className="text-xs font-semibold text-sky-700 dark:text-sky-300 bg-sky-50 dark:bg-sky-950/40 hover:bg-sky-100 px-2.5 py-1 rounded-lg border border-sky-200 dark:border-sky-800 flex items-center gap-1.5 transition-colors"
-                      title={isLao ? "ກົດເພື່ອລຶບຕົວກັ່ນຕອງນີ້" : "Click to clear filter"}
+                      title={getForkliftText("ກົດເພື່ອລຶບຕົວກັ່ນຕອງນີ້", "Click to clear filter")}
                     >
                       <span>{subsystemTags.find(t => t.id === selectedSubsystem)?.label}</span>
                       <span className="text-[10px] text-sky-400">✕</span>
@@ -433,7 +431,7 @@ export function StoreClient({ initialItems, rentalItems = [] }: StoreClientProps
                     <button
                       onClick={() => { updateUrlParams({ model: null }); setSelectedModel("all"); }}
                       className="text-xs font-semibold text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 px-2.5 py-1 rounded-lg border border-amber-200 dark:border-amber-800 flex items-center gap-1.5 transition-colors"
-                      title={isLao ? "ກົດເພື່ອລຶບຕົວກັ່ນຕອງນີ້" : "Click to clear filter"}
+                      title={getForkliftText("ກົດເພື່ອລຶບຕົວກັ່ນຕອງນີ້", "Click to clear filter")}
                     >
                       <span>{popularModels.find(m => m.id === selectedModel)?.label}</span>
                       <span className="text-[10px] text-amber-400">✕</span>
@@ -441,7 +439,7 @@ export function StoreClient({ initialItems, rentalItems = [] }: StoreClientProps
                   )}
 
                   <span className="text-xs text-slate-400 dark:text-slate-500 font-medium ml-1">
-                    ({filteredItems.length} {isLao ? "ລາຍການ" : "items"})
+                    ({filteredItems.length} {getForkliftText("ລາຍການ", "items")})
                   </span>
                 </div>
               </div>
@@ -470,14 +468,14 @@ export function StoreClient({ initialItems, rentalItems = [] }: StoreClientProps
                 <div className="relative">
                   <select
                     value={sortBy}
-                    aria-label={isLao ? "ຮຽງລຳດັບສິນຄ້າ" : "Sort products"}
+                    aria-label={getForkliftText("ຮຽງລຳດັບສິນຄ້າ", "Sort products")}
                     onChange={(e) => setSortBy(e.target.value as any)}
                     className="text-xs font-semibold pl-3 pr-8 py-2 bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 rounded-xl text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all cursor-pointer appearance-none"
                   >
-                    <option value="featured">{isLao ? "ແນະນຳ (Featured)" : "Featured"}</option>
-                    <option value="price_asc">{isLao ? "ລາຄາ: ຕ່ຳຫາສູງ" : "Price: Low to High"}</option>
-                    <option value="price_desc">{isLao ? "ລາຄາ: ສູງຫາຕ່ຳ" : "Price: High to Low"}</option>
-                    <option value="name">{isLao ? "ຊື່ (A-Z)" : "Name (A-Z)"}</option>
+                    <option value="featured">{getForkliftText("ແນະນຳ (Featured)", "Featured")}</option>
+                    <option value="price_asc">{getForkliftText("ລາຄາ: ຕ່ຳຫາສູງ", "Price: Low to High")}</option>
+                    <option value="price_desc">{getForkliftText("ລາຄາ: ສູງຫາຕ່ຳ", "Price: High to Low")}</option>
+                    <option value="name">{getForkliftText("ຊື່ (A-Z)", "Name (A-Z)")}</option>
                   </select>
                   <ArrowUpDown className="w-3 h-3 text-slate-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 </div>
@@ -494,7 +492,7 @@ export function StoreClient({ initialItems, rentalItems = [] }: StoreClientProps
                     variant="outline"
                     className="border-2 border-[#005BAC] text-[#005BAC] hover:bg-blue-50 font-bold rounded-xl px-8 h-12 transition-all shadow-sm"
                   >
-                    {isLao ? "ເບິ່ງເພີ່ມເຕີມ (Load More)" : "Load More"}
+                    {getForkliftText("ເບິ່ງເພີ່ມເຕີມ (Load More)", "Load More")}
                   </Button>
                 </div>
               )}

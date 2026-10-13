@@ -3,14 +3,14 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "@/context/CartContext";
-import { placeOrder, OrderResult } from "@/actions/order";
+import { placeOrder } from "@/actions/order";
+import type { OrderResult } from "@/actions/order";
 import {
   X,
   QrCode,
   Building2,
   Truck,
   CheckCircle2,
-  Send,
   Copy,
   Check,
   ShieldCheck,
@@ -20,14 +20,14 @@ import {
   MapPin,
   User,
   CreditCard,
-  Printer,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { QuotationModal } from "./QuotationModal";
+import { useLocale } from "@/lib/locale";
 
 export function CheckoutModal() {
+  const isLao = useLocale() === "lo";
   const {
     items,
     isCheckoutOpen,
@@ -43,7 +43,6 @@ export function CheckoutModal() {
   const [province, setProvince] = useState("ນະຄອນຫຼວງວຽງຈັນ");
   const [paymentMethod, setPaymentMethod] = useState<"BCEL_ONE_QR" | "BANK_TRANSFER" | "CASH_ON_DELIVERY" | "B2B_PO">("BCEL_ONE_QR");
   const [notes, setNotes] = useState("");
-  const [slipFile, setSlipFile] = useState<File | null>(null);
   
   // B2B Tax Invoice fields
   const [taxCompanyName, setTaxCompanyName] = useState("");
@@ -52,7 +51,6 @@ export function CheckoutModal() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderResult, setOrderResult] = useState<OrderResult | null>(null);
   const [copiedField, setCopiedField] = useState<string | null>(null);
-  const [isQuotationModalOpen, setIsQuotationModalOpen] = useState(false);
 
   // Restore saved customer info from localStorage for maximum convenience
   React.useEffect(() => {
@@ -81,7 +79,7 @@ export function CheckoutModal() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!customerName || !phoneNumber || !deliveryAddress) {
-      alert("ກະລຸນາປ້ອນຂໍ້ມູນ: ຊື່, ເບີໂທ, ແລະ ທີ່ຢູ່ຈັດສົ່ງໃຫ້ຄົບຖ້ວນ");
+      alert(isLao ? "ກະລຸນາປ້ອນຂໍ້ມູນ: ຊື່, ເບີໂທ ແລະ ທີ່ຢູ່ຈັດສົ່ງໃຫ້ຄົບຖ້ວນ" : "Please enter your name, phone number, and delivery address.");
       return;
     }
 
@@ -93,7 +91,6 @@ export function CheckoutModal() {
         phone_number: phoneNumber,
         delivery_address: deliveryAddress,
         province: province,
-        payment_method: paymentMethod,
         notes: notes,
         items: items.map((i) => ({
           sku_id: i.sku_id,
@@ -105,7 +102,6 @@ export function CheckoutModal() {
         })),
         total_usd: totalUSD,
         total_lak: totalLAK,
-        slip_reference: slipFile ? slipFile.name : undefined,
         tax_company_name: taxCompanyName,
         tax_id: taxId,
       });
@@ -126,10 +122,10 @@ export function CheckoutModal() {
           console.warn("Failed to persist customer info", e);
         }
       } else {
-        alert(result.message || "ເກີດຂໍ້ຜິດພາດໃນການສັ່ງຊື້");
+        alert(result.message || (isLao ? "ເກີດຂໍ້ຜິດພາດໃນການສົ່ງຄຳຮ້ອງຂໍ" : "There was a problem submitting your request."));
       }
     } catch (err: any) {
-      alert(err?.message || "ບໍ່ສາມາດສົ່ງຂໍ້ມູນການສັ່ງຊື້ໄດ້");
+      alert(err?.message || (isLao ? "ບໍ່ສາມາດສົ່ງຄຳຮ້ອງຂໍໄດ້" : "Unable to submit your request."));
     } finally {
       setIsSubmitting(false);
     }
@@ -142,7 +138,6 @@ export function CheckoutModal() {
       setPhoneNumber("");
       setDeliveryAddress("");
       setNotes("");
-      setSlipFile(null);
     }
     closeCheckout();
   };
@@ -167,12 +162,12 @@ export function CheckoutModal() {
         <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-slate-950/80">
           <div>
             <h2 className="text-lg font-bold text-white flex items-center gap-2">
-              {orderResult ? "ຢືນຢັນການສັ່ງຊື້ສຳເລັດ" : "ດຳເນີນການສັ່ງຊື້ສິນຄ້າ (Checkout)"}
+              {orderResult ? (isLao ? "ຮັບຄຳຮ້ອງຂໍແລ້ວ" : "Request received") : (isLao ? "ສົ່ງຄຳຂໍລາຄາ" : "Submit order request")}
             </h2>
             <p className="text-xs text-slate-400">
               {orderResult
-                ? "Order Confirmed & Receipt Slip"
-                : "ກະລຸນາກວດສອບລາຍການສິນຄ້າ ແລະ ເລືອກຮູບແບບການຊຳລະເງິນ"}
+                ? (isLao ? "CRM ໄດ້ຮັບຄຳຮ້ອງຂໍແລ້ວ" : "CRM has received your request")
+                : (isLao ? "ສົ່ງຄຳຂໍໃຫ້ທີມງານຢືນຢັນລາຄາ ແລະ ສະຕັອກ" : "Send your request for price and stock confirmation")}
             </p>
           </div>
           <button
@@ -193,32 +188,28 @@ export function CheckoutModal() {
               </div>
 
               <div>
-                <h3 className="text-2xl font-black text-white">ການສັ່ງຊື້ຂອງທ່ານສຳເລັດແລ້ວ!</h3>
+                <h3 className="text-2xl font-black text-white">{isLao ? "ຄຳຮ້ອງຂໍຂອງທ່ານຖືກບັນທຶກແລ້ວ" : "Your request has been recorded"}</h3>
                 <p className="text-sm text-slate-300 mt-1 max-w-md mx-auto">
-                  ລະບົບໄດ້ບັນທຶກລາຍການສັ່ງຊື້ຂອງທ່ານເຂົ້າສູ່ລະບົບ ERP ຮຽບຮ້ອຍແລ້ວ. ທີມງານຝ່າຍຂາຍຈະຕິດຕໍ່ກັບພາຍໃນ 15 ນາທີ.
+                  {isLao ? "ຄຳຮ້ອງຂໍຖືກບັນທຶກໃນ CRM ແລ້ວ. ທີມງານຈະກວດສອບລາຄາ, ສະຕັອກ ແລະ ເງື່ອນໄຂຈັດສົ່ງກ່ອນຢືນຢັນຄຳສັ່ງ." : "Your request has been saved in CRM. Our team will review pricing, stock, and delivery terms before confirming the order."}
                 </p>
               </div>
 
               {/* Order Slip Card */}
               <div className="bg-slate-950/70 border border-emerald-500/30 rounded-xl p-5 text-left max-w-lg mx-auto space-y-3 font-mono text-xs">
                 <div className="flex justify-between border-b border-white/10 pb-2">
-                  <span className="text-slate-400">ເລກທີ Order (Order No.):</span>
+                  <span className="text-slate-400">{isLao ? "ເລກອ້າງອີງ CRM:" : "CRM reference:"}</span>
                   <span className="font-bold text-emerald-400 text-sm">{orderResult.order_number}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-400">ລູກຄ້າ:</span>
+                  <span className="text-slate-400">{isLao ? "ລູກຄ້າ:" : "Customer:"}</span>
                   <span className="text-slate-200">{orderResult.data?.customerName}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-400">ເບີໂທຕິດຕໍ່:</span>
+                  <span className="text-slate-400">{isLao ? "ເບີໂທຕິດຕໍ່:" : "Phone:"}</span>
                   <span className="text-slate-200">{orderResult.data?.phone}</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-400">ຮູບແບບການຊຳລະ:</span>
-                  <span className="text-slate-200">{orderResult.data?.paymentMethod}</span>
-                </div>
                 <div className="border-t border-white/10 pt-2 flex justify-between items-baseline">
-                  <span className="text-slate-400">ຍອດລວມທັງໝົດ (Total LAK):</span>
+                  <span className="text-slate-400">{isLao ? "ຍອດປະເມີນ (LAK):" : "Estimated total (LAK):"}</span>
                   <div className="text-right">
                     <span className="text-base font-bold text-emerald-400">
                       {orderResult.data?.totalLAK?.toLocaleString()} ₭
@@ -230,34 +221,11 @@ export function CheckoutModal() {
               {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row flex-wrap gap-2.5 justify-center max-w-xl mx-auto pt-2">
                 <Button
-                  type="button"
-                  onClick={() => setIsQuotationModalOpen(true)}
-                  variant="outline"
-                  className="h-11 border-emerald-500/40 text-emerald-400 hover:bg-emerald-500/10 font-bold rounded-xl flex items-center justify-center gap-2 shadow-sm"
-                >
-                  <Printer className="w-4 h-4" />
-                  <span>{orderResult.data?.paymentMethod === "B2B_PO" ? "ພິມໃບສະເໜີລາຄາ (Print Quotation PDF)" : "ພິມໃບສັ່ງຊື້ (Print Receipt Slip)"}</span>
-                </Button>
-
-                {orderResult.whatsapp_url && (
-                  <a
-                    href={orderResult.whatsapp_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 min-w-[200px]"
-                  >
-                    <Button className="w-full h-11 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20">
-                      <Send className="w-4 h-4" />
-                      <span>ສົ່ງ Slip ຜ່ານ WhatsApp</span>
-                    </Button>
-                  </a>
-                )}
-                <Button
                   onClick={handleClose}
                   variant="outline"
                   className="border-white/10 hover:bg-white/10 text-slate-200 rounded-xl px-5"
                 >
-                  ສຳເລັດ (Done)
+                  {isLao ? "ສຳເລັດ" : "Done"}
                 </Button>
               </div>
             </div>
@@ -271,17 +239,17 @@ export function CheckoutModal() {
                     <FileText className="w-5 h-5" />
                   </div>
                   <div>
-                    <div className="text-xs text-slate-400">ຍອດສັ່ງຊື້ທັງໝົດ ({items.length} ລາຍການ)</div>
+                    <div className="text-xs text-slate-400">{isLao ? `ລາຍການທັງໝົດ (${items.length})` : `Order items (${items.length})`}</div>
                     <div className="text-lg font-black text-emerald-400">
                       {totalLAK.toLocaleString()} ₭
                     </div>
                     <div className="text-[10px] text-slate-500 mt-1">
-                      *ລາຄາລວມອັດຕາແລກປ່ຽນ (1 ບາດ = 650 ກີບ, 1 USD = 22,000 ກີບ) ແລະ ຄ່າດຳເນີນການແລ້ວ
+                      {isLao ? "*ລາຄາລວມເປັນຄ່າອ້າງອີງ ແລະ ອາດມີຄ່າດຳເນີນການ" : "*The displayed total is an estimate and may include processing costs."}
                     </div>
                   </div>
                 </div>
                 <div className="flex items-center gap-1 text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-full">
-                  <ShieldCheck className="w-3.5 h-3.5" /> ຮັບປະກັນສິນຄ້າແທ້ 100%
+                  <ShieldCheck className="w-3.5 h-3.5" /> {isLao ? "ຮັບປະກັນສິນຄ້າແທ້ 100%" : "100% genuine products"}
                 </div>
               </div>
 
@@ -289,75 +257,75 @@ export function CheckoutModal() {
               <div className="p-3.5 rounded-xl bg-blue-500/10 border border-blue-500/20 text-xs text-blue-200 flex items-center gap-2.5">
                 <Truck className="w-5 h-5 text-blue-400 flex-shrink-0" />
                 <div>
-                  <span className="font-bold text-white">ໝາຍເຫດສິນຄ້ານຳເຂົ້າຕາມອໍເດີ (Pre-Order): </span>
-                  <span>ສິນຄ້າທັງໝົດຈະຖືກດຳເນີນການສັ່ງນຳເຂົ້າທັນທີຫຼັງຈາກຢືນຢັນການສັ່ງຊື້ ຈັດສົ່ງເຖິງປາຍທາງພາຍໃນ 30-120 ວັນລັດຖະການ.</span>
+                  <span className="font-bold text-white">{isLao ? "ໝາຍເຫດສິນຄ້າສັ່ງລ່ວງໜ້າ: " : "Pre-order notice: "}</span>
+                  <span>{isLao ? "ທີມງານຈະກວດສອບລາຄາ ແລະ ສະຕັອກກ່ອນຢືນຢັນໄລຍະນຳເຂົ້າ ແລະ ການຈັດສົ່ງ." : "Our team will confirm pricing and stock before confirming import and delivery timelines."}</span>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 gap-6">
                 {/* Left Column: Customer Information */}
                 <div className="space-y-4">
                   <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
-                    <User className="w-4 h-4 text-emerald-400" /> 1. ຂໍ້ມູນຜູ້ຮັບ ແລະ ສະຖານທີ່ຈັດສົ່ງ
+                    <User className="w-4 h-4 text-emerald-400" /> {isLao ? "1. ຂໍ້ມູນຜູ້ຮັບ ແລະ ສະຖານທີ່ຈັດສົ່ງ" : "1. Customer and delivery details"}
                   </h3>
 
                   <div className="space-y-3">
                     <div>
                       <label className="text-xs font-semibold text-slate-300 block mb-1">
-                        ຊື່ ແລະ ນາມສະກຸນ (Customer Name) *
+                        {isLao ? "ຊື່ ແລະ ນາມສະກຸນ *" : "Customer name *"}
                       </label>
                       <Input
                         required
                         value={customerName}
                         onChange={(e) => setCustomerName(e.target.value)}
-                        placeholder="ເຊັ່ນ: ທ້າວ ສົມສັກ ວົງໄຊ"
+                        placeholder={isLao ? "ເຊັ່ນ: ທ້າວ ສົມສັກ ວົງໄຊ" : "e.g. Som Xay"}
                         className="bg-slate-950/60 border-white/10 text-white placeholder:text-slate-500 focus:border-emerald-500"
                       />
                     </div>
 
                     <div>
                       <label className="text-xs font-semibold text-slate-300 block mb-1">
-                        ເບີໂທລະສັບ / WhatsApp *
+                        {isLao ? "ເບີໂທລະສັບ / WhatsApp *" : "Phone number / WhatsApp *"}
                       </label>
                       <Input
                         required
                         type="tel"
                         value={phoneNumber}
                         onChange={(e) => setPhoneNumber(e.target.value)}
-                        placeholder="ເຊັ່ນ: 020 5555 9999"
+                        placeholder={isLao ? "ເຊັ່ນ: 020 5555 9999" : "e.g. +856 20 5555 9999"}
                         className="bg-slate-950/60 border-white/10 text-white placeholder:text-slate-500 focus:border-emerald-500"
                       />
                     </div>
 
                     <div>
                       <label className="text-xs font-semibold text-slate-300 block mb-1">
-                        ແຂວງ (Province)
+                        {isLao ? "ແຂວງ" : "Province"}
                       </label>
                       <select
                         value={province}
                         onChange={(e) => setProvince(e.target.value)}
                         className="w-full h-9 rounded-md bg-slate-950/60 border border-white/10 px-3 text-sm text-white focus:outline-none focus:border-emerald-500"
                       >
-                        <option value="ນະຄອນຫຼວງວຽງຈັນ">ນະຄອນຫຼວງວຽງຈັນ (Vientiane Capital)</option>
-                        <option value="ແຂວງວຽງຈັນ">ແຂວງວຽງຈັນ (Vientiane Province)</option>
-                        <option value="ແຂວງຫຼວງພະບາງ">ແຂວງຫຼວງພະບາງ (Luang Prabang)</option>
-                        <option value="ແຂວງສະຫວັນນະເຂດ">ແຂວງສະຫວັນນະເຂດ (Savannakhet)</option>
-                        <option value="ແຂວງຈຳປາສັກ">ແຂວງຈຳປາສັກ (Champasak)</option>
-                        <option value="ແຂວງຄຳມ່ວນ">ແຂວງຄຳມ່ວນ (Khammouane)</option>
-                        <option value="ແຂວງບໍລິຄຳໄຊ">ແຂວງບໍລິຄຳໄຊ (Bolikhamxai)</option>
-                        <option value="ແຂວງອື່ນໆ">ແຂວງອື່ນໆ (Other Provinces)</option>
+                        <option value="ນະຄອນຫຼວງວຽງຈັນ">{isLao ? "ນະຄອນຫຼວງວຽງຈັນ" : "Vientiane Capital"}</option>
+                        <option value="ແຂວງວຽງຈັນ">{isLao ? "ແຂວງວຽງຈັນ" : "Vientiane Province"}</option>
+                        <option value="ແຂວງຫຼວງພະບາງ">{isLao ? "ແຂວງຫຼວງພະບາງ" : "Luang Prabang"}</option>
+                        <option value="ແຂວງສະຫວັນນະເຂດ">{isLao ? "ແຂວງສະຫວັນນະເຂດ" : "Savannakhet"}</option>
+                        <option value="ແຂວງຈຳປາສັກ">{isLao ? "ແຂວງຈຳປາສັກ" : "Champasak"}</option>
+                        <option value="ແຂວງຄຳມ່ວນ">{isLao ? "ແຂວງຄຳມ່ວນ" : "Khammouane"}</option>
+                        <option value="ແຂວງບໍລິຄຳໄຊ">{isLao ? "ແຂວງບໍລິຄຳໄຊ" : "Bolikhamxai"}</option>
+                        <option value="ແຂວງອື່ນໆ">{isLao ? "ແຂວງອື່ນໆ" : "Other province"}</option>
                       </select>
                     </div>
 
                     <div>
                       <label className="text-xs font-semibold text-slate-300 block mb-1">
-                        ທີ່ຢູ່ຈັດສົ່ງລະອຽດ (ບ້ານ, ເມືອງ, ຈຸດສັງເກດ) *
+                        {isLao ? "ທີ່ຢູ່ຈັດສົ່ງລະອຽດ (ບ້ານ, ເມືອງ, ຈຸດສັງເກດ) *" : "Full delivery address (village, district, landmark) *"}
                       </label>
                       <Textarea
                         required
                         value={deliveryAddress}
                         onChange={(e) => setDeliveryAddress(e.target.value)}
-                        placeholder="ເຊັ່ນ: ບ້ານ ດົງປ່າລານ, ເມືອງ ສີສັດຕະນາກ, ໃກ້ກັບ..."
+                        placeholder={isLao ? "ເຊັ່ນ: ບ້ານດົງປ່າລານ, ເມືອງສີສັດຕະນາກ..." : "Street, district, city, and nearby landmark"}
                         rows={2}
                         className="bg-slate-950/60 border-white/10 text-white placeholder:text-slate-500 focus:border-emerald-500"
                       />
@@ -365,12 +333,12 @@ export function CheckoutModal() {
 
                     <div>
                       <label className="text-xs font-semibold text-slate-300 block mb-1">
-                        ໝາຍເຫດເພີ່ມເຕີມ (Optional Notes)
+                        {isLao ? "ໝາຍເຫດເພີ່ມເຕີມ (ບໍ່ບັງຄັບ)" : "Additional notes (optional)"}
                       </label>
                       <Input
                         value={notes}
                         onChange={(e) => setNotes(e.target.value)}
-                        placeholder="ເຊັ່ນ: ຕ້ອງການໃບກຳກັບພາສີ, ສົ່ງດ່ວນຕອນເຊົ້າ"
+                        placeholder={isLao ? "ເຊັ່ນ: ຕ້ອງການໃບກຳກັບພາສີ, ສົ່ງດ່ວນຕອນເຊົ້າ" : "e.g. Tax invoice needed, morning delivery preferred"}
                         className="bg-slate-950/60 border-white/10 text-white placeholder:text-slate-500 focus:border-emerald-500"
                       />
                     </div>
@@ -378,28 +346,34 @@ export function CheckoutModal() {
                     {/* B2B Tax Invoice Fields */}
                     <div className="p-3 rounded-xl bg-amber-500/5 border border-amber-500/20 space-y-2 mt-4">
                       <div className="text-xs font-bold text-amber-400 flex items-center gap-1.5">
-                        <FileText className="w-3.5 h-3.5" /> ໃບກຳກັບພາສີ / VAT Invoice (B2B — Optional)
+                        <FileText className="w-3.5 h-3.5" /> {isLao ? "ໃບກຳກັບພາສີ (ທາງເລືອກສຳລັບ B2B)" : "VAT invoice (optional for B2B)"}
                       </div>
                       <Input
                         value={taxCompanyName}
                         onChange={(e) => setTaxCompanyName(e.target.value)}
-                        placeholder="ຊື່ບໍລິສັດ / ຫ້ອງການ (Company Name)"
+                        placeholder={isLao ? "ຊື່ບໍລິສັດ / ຫ້ອງການ" : "Company name"}
                         className="bg-slate-950/60 border-amber-500/20 text-white placeholder:text-slate-500 focus:border-amber-400 text-xs h-9"
                       />
                       <Input
                         value={taxId}
                         onChange={(e) => setTaxId(e.target.value)}
-                        placeholder="ເລກປະຈຳຕົວຜູ້ເສຍພາສີ / Tax ID"
+                        placeholder={isLao ? "ເລກປະຈຳຕົວຜູ້ເສຍພາສີ" : "Tax ID"}
                         className="bg-slate-950/60 border-amber-500/20 text-white placeholder:text-slate-500 focus:border-amber-400 text-xs h-9"
                       />
                     </div>
                   </div>
                 </div>
 
-                {/* Right Column: Payment Method Selection */}
+                <div role="note" className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm leading-relaxed text-amber-100">
+                  <strong className="block text-amber-300">{isSubmitting ? (isLao ? "ກຳລັງສົ່ງຄຳຂໍ" : "Sending request") : (isLao ? "ນີ້ແມ່ນຄຳຂໍລາຄາ, ຍັງບໍ່ແມ່ນຄຳສັ່ງຊື້ທີ່ຢືນຢັນ ແລະ ບໍ່ມີການຊຳລະເງິນ" : "This is a quote request, not a confirmed order. No payment will be taken now.")}</strong>
+                  <span className="mt-1 block">{isLao ? "ລາຄາທີ່ສະແດງເປັນຄ່າອ້າງອີງ. ທີມງານຈະກວດສະຕັອກ ແລະ ຢືນຢັນລາຄາກ່ອນສ້າງ Order ໃນ CRM." : "Displayed prices are estimates. Our team will check stock and confirm pricing before creating an order in CRM."}</span>
+                </div>
+
+                {/* Payment details stay hidden until CRM payment processing is connected. */}
+                <div className="hidden" aria-hidden="true">
                 <div className="space-y-4">
                   <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
-                    <CreditCard className="w-4 h-4 text-emerald-400" /> 2. ເລືອກຮູບແບບການຊຳລະເງິນ
+                    <CreditCard className="w-4 h-4 text-emerald-400" /> 2. ເລືອກວິທີຊຳລະທີ່ຕ້ອງການ
                   </h3>
 
                   {/* Payment Tabs */}
@@ -457,8 +431,12 @@ export function CheckoutModal() {
                     </button>
                   </div>
 
+                  <p role="note" className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 text-xs leading-relaxed text-amber-200">
+                    ນີ້ແມ່ນການເລືອກວິທີຊຳລະເບື້ອງຕົ້ນເທົ່ານັ້ນ. ກະລຸນາຢ່າຊຳລະເງິນກ່ອນທີມງານຢືນຢັນລາຄາ, ສະຕັອກ ແລະຄຳຮ້ອງຂໍ.
+                  </p>
+
                   {/* Payment Details Container */}
-                  <div className="p-4 rounded-xl bg-slate-950/70 border border-white/10 space-y-3">
+                  <div className="hidden">
                     {paymentMethod === "BCEL_ONE_QR" && (
                         <div className="space-y-3">
                           {/* BCEL One QR Panel */}
@@ -493,21 +471,6 @@ export function CheckoutModal() {
                             </div>
                           </div>
 
-                          {/* Upload Slip */}
-                          <div>
-                            <label className="text-xs text-slate-400 block mb-1">ຫຼັກຖານການໂອນເງິນ (Upload Slip)</label>
-                            <label className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl border-2 border-dashed border-white/10 hover:border-emerald-500/50 cursor-pointer transition-colors bg-slate-950/40">
-                              <input type="file" accept="image/*" className="hidden" onChange={(e) => setSlipFile(e.target.files ? e.target.files[0] : null)} />
-                              {slipFile ? (
-                                <span className="text-xs text-emerald-400 font-semibold">✓ {slipFile.name}</span>
-                              ) : (
-                                <>
-                                  <QrCode className="w-6 h-6 text-slate-500" />
-                                  <span className="text-[11px] text-slate-500">ຄລິກເພື່ອອັພໂຫຼດ Slip ຫຼື ຖ່າຍຮູປຫຼັກຖານ</span>
-                                </>
-                              )}
-                            </label>
-                          </div>
                         </div>
                     )}
 
@@ -587,6 +550,7 @@ export function CheckoutModal() {
                     )}
                   </div>
                 </div>
+                </div>
               </div>
 
               {/* Submit Buttons */}
@@ -597,7 +561,7 @@ export function CheckoutModal() {
                   onClick={handleClose}
                   className="text-slate-400 hover:text-white"
                 >
-                  ຍົກເລີກ (Cancel)
+                  {isLao ? "ຍົກເລີກ" : "Cancel"}
                 </Button>
                 <Button
                   type="submit"
@@ -605,11 +569,11 @@ export function CheckoutModal() {
                   className="h-12 px-8 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl shadow-lg shadow-emerald-600/25 flex items-center gap-2"
                 >
                   {isSubmitting ? (
-                    <span>ກຳລັງປະມວນຜົນ...</span>
+                    <span>{isLao ? "ກຳລັງສົ່ງຄຳຂໍ..." : "Submitting request..."}</span>
                   ) : (
                     <>
                       <Check className="w-4 h-4" />
-                      <span>{paymentMethod === "B2B_PO" ? "ຂໍໃບສະເໜີລາຄາ (Request Quotation)" : "ຢືນຢັນການສັ່ງຊື້ (Confirm Order)"}</span>
+                      <span>{isLao ? "ສົ່ງຄຳຮ້ອງຂໍໃຫ້ CRM" : "Send request to CRM"}</span>
                     </>
                   )}
                 </Button>
@@ -619,31 +583,6 @@ export function CheckoutModal() {
         </div>
       </motion.div>
 
-      {/* Official A4 Quotation / Receipt Slip Print Modal */}
-      <QuotationModal
-        isOpen={isQuotationModalOpen}
-        onClose={() => setIsQuotationModalOpen(false)}
-        data={orderResult ? {
-          orderNumber: orderResult.order_number,
-          customerName: orderResult.data?.customerName || customerName,
-          phone: orderResult.data?.phone || phoneNumber,
-          deliveryAddress: deliveryAddress,
-          province: province,
-          taxCompanyName: taxCompanyName,
-          taxId: taxId,
-          paymentMethod: orderResult.data?.paymentMethod || paymentMethod,
-          items: (orderResult.data?.items || items).map((i: any) => ({
-            sku_id: i.sku_id,
-            sku_code: i.sku_code,
-            part_name: i.part_name,
-            unit_price: i.unit_price,
-            quantity: i.quantity,
-            subtotal: i.unit_price * i.quantity,
-          })),
-          totalUSD: orderResult.data?.totalUSD || totalUSD,
-          totalLAK: orderResult.data?.totalLAK || totalLAK,
-        } : null}
-      />
     </div>
   );
 }

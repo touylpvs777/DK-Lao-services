@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { useLocale } from "next-intl";
+import { useLocale } from "@/lib/locale";
 import {
   Building2,
   TrendingUp,

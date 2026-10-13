@@ -12,8 +12,9 @@ import {
   PieChart, Pie, Cell, Legend
 } from "recharts";
 import { Button } from "@/components/Forklift/ui/button";
-import { useParams } from "react-router-dom";
+import { useCurrentLocale, isLaoLocale } from "@/i18n/useCurrentLocale";
 import { Link } from "react-router-dom";
+import { getForkliftText } from "@/i18n/forkliftLocale";
 
 // Mock Data for Charts
 const trendData = [
@@ -118,9 +119,8 @@ const FLEET_UNITS_MOCK: MachineUnit[] = [
 ];
 
 export default function ClientDashboardPage() {
-  const params = useParams();
-  const locale = (params?.locale as string) || "lo";
-  const isLo = locale === "lo";
+  const locale = useCurrentLocale();
+  const isLo = isLaoLocale(locale);
 
   const [activeTab, setActiveTab] = useState<"fleet" | "telemetry" | "pm">("fleet");
   const [filterType, setFilterType] = useState<string>("all");
@@ -161,22 +161,22 @@ export default function ClientDashboardPage() {
         {/* Top Breadcrumb & Human Assurance */}
         <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
           <div className="flex items-center gap-2 text-xs font-medium text-slate-500 dark:text-slate-400">
-            <Link to={`/${locale}`} className="hover:text-emerald-600 transition-colors">
-              {isLo ? "ໜ້າຫຼັກ" : "Home"}
+            <Link to="/dashboard" className="hover:text-emerald-600 transition-colors">
+              {getForkliftText("ໜ້າຫຼັກ", "Home")}
             </Link>
             <span>/</span>
             <Link to="/workshop-4s" className="hover:text-emerald-600 transition-colors">
-              {isLo ? "ສູນບໍລິການ 4S" : "4S Services"}
+              {getForkliftText("ສູນບໍລິການ 4S", "4S Services")}
             </Link>
             <span>/</span>
             <span className="text-slate-900 dark:text-white font-semibold">
-              {isLo ? "ສູນຄຸ້ມຄອງກອງກົນຈັກລູກຄ້າອົງກອນ" : "Fleet Telemetry Hub"}
+              {getForkliftText("ສູນຄຸ້ມຄອງກອງກົນຈັກລູກຄ້າອົງກອນ", "Fleet Telemetry Hub")}
             </span>
           </div>
 
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[11px] font-semibold text-emerald-700 dark:text-emerald-400">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-            {isLo ? "ລະບົບເຊື່ອມຕໍ່ສົດກັບກອງລົດສັນຍາເຊົ່າ/ຊື້ (Live Sync 10s)" : "Telemetry Live Sync (10s Interval)"}
+            {getForkliftText("ລະບົບເຊື່ອມຕໍ່ສົດກັບກອງລົດສັນຍາເຊົ່າ/ຊື້ (Live Sync 10s)", "Telemetry Live Sync (10s Interval)")}
           </div>
         </div>
 
@@ -199,20 +199,18 @@ export default function ClientDashboardPage() {
                   </span>
                 </div>
                 <p className="text-slate-500 dark:text-slate-400 text-xs md:text-sm mt-0.5">
-                  {isLo 
-                    ? "ສັນຍາເຊົ່າລວມບຳລຸງຮັກສາຄົບວົງຈອນ (Full Comprehensive Rental Contract) • ລະຫັດອົງກອນ: SEPON-001" 
-                    : "Full Comprehensive Fleet Contract • Account ID: SEPON-001"}
+                  {getForkliftText("ສັນຍາເຊົ່າລວມບຳລຸງຮັກສາຄົບວົງຈອນ (Full Comprehensive Rental Contract) • ລະຫັດອົງກອນ: SEPON-001", "Full Comprehensive Fleet Contract • Account ID: SEPON-001")}
                 </p>
               </div>
             </div>
             <div className="flex flex-wrap items-center gap-4 text-xs text-slate-600 dark:text-slate-300 pt-1">
               <span className="inline-flex items-center gap-1.5">
                 <ShieldCheck className="w-4 h-4 text-emerald-500" />
-                {isLo ? "ຮັບປະກັນຊ່າງສຸກເສີນເຖິງໜ້າງານພາຍໃນ 2 ຊົ່ວໂມງ" : "2-Hour Emergency SLA Guaranteed"}
+                {getForkliftText("ຮັບປະກັນຊ່າງສຸກເສີນເຖິງໜ້າງານພາຍໃນ 2 ຊົ່ວໂມງ", "2-Hour Emergency SLA Guaranteed")}
               </span>
               <span className="inline-flex items-center gap-1.5">
                 <Wrench className="w-4 h-4 text-teal-500" />
-                {isLo ? "ສູນຊ່າງປະຈຳການ: DK LAO ວຽງຈັນ & ສາຂາພາກໃຕ້" : "Dedicated Workshop: Vientiane & Southern Hub"}
+                {getForkliftText("ສູນຊ່າງປະຈຳການ: DK LAO ວຽງຈັນ & ສາຂາພາກໃຕ້", "Dedicated Workshop: Vientiane & Southern Hub")}
               </span>
             </div>
           </div>
@@ -225,7 +223,7 @@ export default function ClientDashboardPage() {
               className="btn-emerald inline-flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-bold shadow-lg shadow-emerald-600/20"
             >
               <Wrench className="w-4 h-4" />
-              {isLo ? "ຮຽກຊ່າງສຸກເສີນ (DKwick Dispatch)" : "Request Emergency Dispatch"}
+              {getForkliftText("ຮຽກຊ່າງສຸກເສີນ (DKwick Dispatch)", "Request Emergency Dispatch")}
             </a>
             <a href="tel:+8562058929299"
               className="inline-flex items-center gap-2 px-4 py-3 rounded-xl border border-slate-300 dark:border-white/10 bg-white/50 dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-800 dark:text-slate-200 text-sm font-semibold transition-all"
@@ -246,16 +244,16 @@ export default function ClientDashboardPage() {
           >
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                {isLo ? "ຈຳນວນກົນຈັກທັງໝົດ" : "Active Fleet"}
+                {getForkliftText("ຈຳນວນກົນຈັກທັງໝົດ", "Active Fleet")}
               </h3>
               <div className="w-10 h-10 rounded-2xl bg-blue-500/15 flex items-center justify-center text-blue-600 dark:text-blue-400">
                 <ShieldCheck className="w-5 h-5" />
               </div>
             </div>
-            <div className="text-3xl font-black text-slate-900 dark:text-white">24 {isLo ? "ຄັນ" : "Units"}</div>
+            <div className="text-3xl font-black text-slate-900 dark:text-white">24 {getForkliftText("ຄັນ", "Units")}</div>
             <div className="text-xs text-emerald-600 dark:text-emerald-400 mt-2 font-medium flex items-center gap-1">
               <CheckCircle2 className="w-3.5 h-3.5" /> 
-              {isLo ? "100% ພ້ອມປະຕິບັດງານ (0 ເສຍ/ຈອດ)" : "100% Operational Ready"}
+              {getForkliftText("100% ພ້ອມປະຕິບັດງານ (0 ເສຍ/ຈອດ)", "100% Operational Ready")}
             </div>
           </motion.div>
 
@@ -267,7 +265,7 @@ export default function ClientDashboardPage() {
           >
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                {isLo ? "ຄວາມພ້ອມໃຊ້ງານກອງລົດ (Uptime)" : "Fleet Uptime"}
+                {getForkliftText("ຄວາມພ້ອມໃຊ້ງານກອງລົດ (Uptime)", "Fleet Uptime")}
               </h3>
               <div className="w-10 h-10 rounded-2xl bg-emerald-500/15 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
                 <Activity className="w-5 h-5" />
@@ -276,7 +274,7 @@ export default function ClientDashboardPage() {
             <div className="text-3xl font-black text-slate-900 dark:text-white">99.2%</div>
             <div className="text-xs text-emerald-600 dark:text-emerald-400 mt-2 font-medium flex items-center gap-1">
               <TrendingDown className="w-3.5 h-3.5 rotate-180" /> 
-              {isLo ? "ສູງກວ່າມາດຕະຖານສັນຍາ SLA (98%)" : "+1.2% Above SLA Target (98%)"}
+              {getForkliftText("ສູງກວ່າມາດຕະຖານສັນຍາ SLA (98%)", "+1.2% Above SLA Target (98%)")}
             </div>
           </motion.div>
 
@@ -288,16 +286,16 @@ export default function ClientDashboardPage() {
           >
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                {isLo ? "ແຜນ PM 30 ຈຸດ ສຳເລັດແລ້ວ" : "Preventive Maintenance"}
+                {getForkliftText("ແຜນ PM 30 ຈຸດ ສຳເລັດແລ້ວ", "Preventive Maintenance")}
               </h3>
               <div className="w-10 h-10 rounded-2xl bg-amber-500/15 flex items-center justify-center text-amber-600 dark:text-amber-400">
                 <Wrench className="w-5 h-5" />
               </div>
             </div>
-            <div className="text-3xl font-black text-slate-900 dark:text-white">18 {isLo ? "ຮອບ" : "Runs"}</div>
+            <div className="text-3xl font-black text-slate-900 dark:text-white">18 {getForkliftText("ຮອບ", "Runs")}</div>
             <div className="text-xs text-slate-500 dark:text-slate-400 mt-2 font-medium flex items-center gap-1">
               <Clock className="w-3.5 h-3.5 text-amber-500" /> 
-              {isLo ? "ຮອບຖັດໄປໃນ 15 ຊົ່ວໂມງແລ່ນ" : "Next PM cycle in 15 operating hours"}
+              {getForkliftText("ຮອບຖັດໄປໃນ 15 ຊົ່ວໂມງແລ່ນ", "Next PM cycle in 15 operating hours")}
             </div>
           </motion.div>
 
@@ -310,7 +308,7 @@ export default function ClientDashboardPage() {
             <div className="absolute top-0 right-0 w-28 h-28 bg-emerald-500/10 rounded-full blur-2xl -mr-6 -mt-6" />
             <div className="flex items-center justify-between mb-3 relative z-10">
               <h3 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                {isLo ? "ປະຢັດຕົ້ນທຶນນ້ຳມັນສະສົມ" : "YTD Fuel Cost Saved"}
+                {getForkliftText("ປະຢັດຕົ້ນທຶນນ້ຳມັນສະສົມ", "YTD Fuel Cost Saved")}
               </h3>
               <div className="w-10 h-10 rounded-2xl bg-teal-500/15 flex items-center justify-center text-teal-600 dark:text-teal-400">
                 <TrendingDown className="w-5 h-5" />
@@ -318,7 +316,7 @@ export default function ClientDashboardPage() {
             </div>
             <div className="text-3xl font-black text-emerald-600 dark:text-emerald-400 relative z-10">₭ 45.2M</div>
             <div className="text-xs text-slate-500 dark:text-slate-400 mt-2 font-medium relative z-10">
-              {isLo ? "ຜົນຈາກການປ່ຽນມາໃຊ້ EP Lithium EV 14 ຄັນ" : "Saved via transition to 14 EP Li-Ion Units"}
+              {getForkliftText("ຜົນຈາກການປ່ຽນມາໃຊ້ EP Lithium EV 14 ຄັນ", "Saved via transition to 14 EP Li-Ion Units")}
             </div>
           </motion.div>
         </div>
@@ -336,10 +334,10 @@ export default function ClientDashboardPage() {
               <div>
                 <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
                   <TrendingDown className="w-5 h-5 text-emerald-500" />
-                  {isLo ? "ແນວໂນ້ມຄ່າໃຊ້ຈ່າຍບຳລຸງຮັກສາ 6 ເດືອນຜ່ານມາ" : "Fleet Maintenance Cost Trend (Last 6 Months)"}
+                  {getForkliftText("ແນວໂນ້ມຄ່າໃຊ້ຈ່າຍບຳລຸງຮັກສາ 6 ເດືອນຜ່ານມາ", "Fleet Maintenance Cost Trend (Last 6 Months)")}
                 </h3>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                  {isLo ? "ຄ່າໃຊ້ຈ່າຍຫຼຸດລົງຢ່າງຕໍ່ເນື່ອງຈາກການບຳລຸງຮັກສາເຊີງປ້ອງກັນ (PM) ໂດຍ DK LAO" : "Steady reduction achieved through rigorous preventive scheduling and Li-Ion zero-battery-maintenance."}
+                  {getForkliftText("ຄ່າໃຊ້ຈ່າຍຫຼຸດລົງຢ່າງຕໍ່ເນື່ອງຈາກການບຳລຸງຮັກສາເຊີງປ້ອງກັນ (PM) ໂດຍ DK LAO", "Steady reduction achieved through rigorous preventive scheduling and Li-Ion zero-battery-maintenance.")}
                 </p>
               </div>
               <span className="text-xs font-semibold px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
@@ -360,7 +358,7 @@ export default function ClientDashboardPage() {
                   <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12 }} />
                   <YAxis tickFormatter={formatCurrency} axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12 }} />
                   <RechartsTooltip 
-                    formatter={(value: any) => [`₭ ${(Number(value)).toLocaleString()}`, isLo ? "ຄ່າໃຊ້ຈ່າຍບຳລຸງຮັກສາ" : "Maintenance Cost"]}
+                    formatter={(value: any) => [`₭ ${(Number(value)).toLocaleString()}`, getForkliftText("ຄ່າໃຊ້ຈ່າຍບຳລຸງຮັກສາ", "Maintenance Cost")]}
                     contentStyle={{ 
                       borderRadius: '16px', 
                       backgroundColor: '#0f172a',
@@ -384,10 +382,10 @@ export default function ClientDashboardPage() {
           >
             <div>
               <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
-                {isLo ? "ສັດສ່ວນປະເພດກົນຈັກໃນກອງ" : "Fleet Composition"}
+                {getForkliftText("ສັດສ່ວນປະເພດກົນຈັກໃນກອງ", "Fleet Composition")}
               </h3>
               <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
-                {isLo ? "ສັດສ່ວນກົນຈັກໄຟຟ້າ EP Lithium 58% ຂອງທັງໝົດ" : "58% converted to zero-emission EP Lithium power."}
+                {getForkliftText("ສັດສ່ວນກົນຈັກໄຟຟ້າ EP Lithium 58% ຂອງທັງໝົດ", "58% converted to zero-emission EP Lithium power.")}
               </p>
             </div>
 
@@ -422,7 +420,7 @@ export default function ClientDashboardPage() {
             </div>
 
             <div className="pt-4 border-t border-slate-200/80 dark:border-white/10 flex items-center justify-between text-xs">
-              <span className="text-slate-500">{isLo ? "ມາດຕະຖານສິ່ງແວດລ້ອມ ESG:" : "ESG Compliance:"}</span>
+              <span className="text-slate-500">{getForkliftText("ມາດຕະຖານສິ່ງແວດລ້ອມ ESG:", "ESG Compliance:")}</span>
               <span className="font-bold text-emerald-600 dark:text-emerald-400">Class A Zero-Emission</span>
             </div>
           </motion.div>
@@ -434,10 +432,10 @@ export default function ClientDashboardPage() {
             <div>
               <h3 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
                 <Gauge className="w-5 h-5 text-emerald-500" />
-                {isLo ? "ຕາຕະລາງລາຍລະອຽດສະຖານະກົນຈັກລາຍຄັນ" : "Individual Machinery Telemetry & PM Schedule"}
+                {getForkliftText("ຕາຕະລາງລາຍລະອຽດສະຖານະກົນຈັກລາຍຄັນ", "Individual Machinery Telemetry & PM Schedule")}
               </h3>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                {isLo ? "ກວດສອບຊົ່ວໂມງແລ່ນ, ສຸຂະພາບແບັດເຕີຣີ Lithium, ແລະ ຈຸດປະຈຳການ" : "Real-time hour meters, battery health metrics, and facility assignment."}
+                {getForkliftText("ກວດສອບຊົ່ວໂມງແລ່ນ, ສຸຂະພາບແບັດເຕີຣີ Lithium, ແລະ ຈຸດປະຈຳການ", "Real-time hour meters, battery health metrics, and facility assignment.")}
               </p>
             </div>
 
@@ -449,7 +447,7 @@ export default function ClientDashboardPage() {
                   filterType === "all" ? "bg-emerald-600 text-white" : "bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300"
                 }`}
               >
-                {isLo ? "ທັງໝົດ (24)" : "All (24)"}
+                {getForkliftText("ທັງໝົດ (24)", "All (24)")}
               </button>
               <button 
                 onClick={() => setFilterType("ev")} 
@@ -457,7 +455,7 @@ export default function ClientDashboardPage() {
                   filterType === "ev" ? "bg-emerald-600 text-white" : "bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300"
                 }`}
               >
-                {isLo ? "ລົດໄຟຟ້າ Lithium" : "Electric Li-Ion"}
+                {getForkliftText("ລົດໄຟຟ້າ Lithium", "Electric Li-Ion")}
               </button>
               <button 
                 onClick={() => setFilterType("diesel")} 
@@ -465,7 +463,7 @@ export default function ClientDashboardPage() {
                   filterType === "diesel" ? "bg-emerald-600 text-white" : "bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300"
                 }`}
               >
-                {isLo ? "ລົດນ້ຳມັນ Heavy" : "Heavy IC"}
+                {getForkliftText("ລົດນ້ຳມັນ Heavy", "Heavy IC")}
               </button>
             </div>
           </div>
@@ -474,13 +472,13 @@ export default function ClientDashboardPage() {
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-slate-50 dark:bg-slate-900/60 text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider">
-                  <th className="px-6 py-4 font-semibold">{isLo ? "ລະຫັດກົນຈັກ" : "Unit ID"}</th>
-                  <th className="px-6 py-4 font-semibold">{isLo ? "ລຸ້ນ & ຍີ່ຫໍ້" : "Model & Brand"}</th>
-                  <th className="px-6 py-4 font-semibold">{isLo ? "ຈຸດປະຈຳການ" : "Operating Location"}</th>
-                  <th className="px-6 py-4 font-semibold">{isLo ? "ຊົ່ວໂມງແລ່ນ (Hours)" : "Hour Meter"}</th>
-                  <th className="px-6 py-4 font-semibold">{isLo ? "ສຸຂະພາບແບັດ/ເຄື່ອງ" : "Health / Battery"}</th>
-                  <th className="px-6 py-4 font-semibold">{isLo ? "ຮອບ PM ຖັດໄປ" : "PM Status"}</th>
-                  <th className="px-6 py-4 font-semibold text-right">{isLo ? "ປະຕິບັດ" : "Action"}</th>
+                  <th className="px-6 py-4 font-semibold">{getForkliftText("ລະຫັດກົນຈັກ", "Unit ID")}</th>
+                  <th className="px-6 py-4 font-semibold">{getForkliftText("ລຸ້ນ & ຍີ່ຫໍ້", "Model & Brand")}</th>
+                  <th className="px-6 py-4 font-semibold">{getForkliftText("ຈຸດປະຈຳການ", "Operating Location")}</th>
+                  <th className="px-6 py-4 font-semibold">{getForkliftText("ຊົ່ວໂມງແລ່ນ (Hours)", "Hour Meter")}</th>
+                  <th className="px-6 py-4 font-semibold">{getForkliftText("ສຸຂະພາບແບັດ/ເຄື່ອງ", "Health / Battery")}</th>
+                  <th className="px-6 py-4 font-semibold">{getForkliftText("ຮອບ PM ຖັດໄປ", "PM Status")}</th>
+                  <th className="px-6 py-4 font-semibold text-right">{getForkliftText("ປະຕິບັດ", "Action")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-white/5 text-sm">
@@ -511,7 +509,7 @@ export default function ClientDashboardPage() {
                       ) : (
                         <div className="flex items-center gap-1.5 text-xs text-blue-600 dark:text-blue-400">
                           <CheckCircle2 className="w-3.5 h-3.5" />
-                          <span>{isLo ? "ປົກກະຕິ (Diesel Engine)" : "Engine Nominal"}</span>
+                          <span>{getForkliftText("ປົກກະຕິ (Diesel Engine)", "Engine Nominal")}</span>
                         </div>
                       )}
                     </td>
@@ -534,7 +532,7 @@ export default function ClientDashboardPage() {
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1 text-xs font-bold text-emerald-600 hover:text-emerald-500 dark:text-emerald-400 hover:underline"
                       >
-                        {isLo ? "ນັດໝາຍຊ່າງ" : "Book PM"}
+                        {getForkliftText("ນັດໝາຍຊ່າງ", "Book PM")}
                         <ChevronRight className="w-3.5 h-3.5" />
                       </a>
                     </td>
@@ -553,31 +551,29 @@ export default function ClientDashboardPage() {
             </div>
             <div>
               <h4 className="text-lg font-bold">
-                {isLo ? "ໃບຢັ້ງຢືນມາດຕະຖານການບຳລຸງຮັກສາ (PM Safety & Audit Certificate)" : "Official PM Safety & Maintenance Certification"}
+                {getForkliftText("ໃບຢັ້ງຢືນມາດຕະຖານການບຳລຸງຮັກສາ (PM Safety & Audit Certificate)", "Official PM Safety & Maintenance Certification")}
               </h4>
               <p className="text-xs md:text-sm text-slate-300 mt-1 max-w-xl">
-                {isLo 
-                  ? "ດາວໂຫຼດໃບລາຍງານຜົນການກວດເຊັກ 30 ຈຸດ ເພື່ອຍື່ນກວດສອບມາດຕະຖານຄວາມປອດໄພຂອງໂຮງງານ (ISO 9001 / Mining Safety Audit)"
-                  : "Download 30-point inspection compliance reports for ISO 9001, mining safety, and insurance audits."}
+                {getForkliftText("ດາວໂຫຼດໃບລາຍງານຜົນການກວດເຊັກ 30 ຈຸດ ເພື່ອຍື່ນກວດສອບມາດຕະຖານຄວາມປອດໄພຂອງໂຮງງານ (ISO 9001 / Mining Safety Audit)", "Download 30-point inspection compliance reports for ISO 9001, mining safety, and insurance audits.")}
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-3 shrink-0">
             <button
-              onClick={() => alert(isLo ? "ກຳລັງດາວໂຫຼດໃບຢັ້ງຢືນ PM Audit Report (PDF)..." : "Downloading PM Audit Report (PDF)...")}
+              onClick={() => alert(getForkliftText("ກຳລັງດາວໂຫຼດໃບຢັ້ງຢືນ PM Audit Report (PDF)...", "Downloading PM Audit Report (PDF)..."))}
               className="px-5 py-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-xs md:text-sm font-bold inline-flex items-center gap-2 transition-all cursor-pointer"
             >
               <Download className="w-4 h-4 text-emerald-400" />
-              {isLo ? "ດາວໂຫຼດລາຍງານ (PDF)" : "Download Audit PDF"}
+              {getForkliftText("ດາວໂຫຼດລາຍງານ (PDF)", "Download Audit PDF")}
             </button>
-            <Link
-              to={`/${locale}/contact`}
+            <a
+              href="tel:+8562058929299"
               className="btn-emerald px-5 py-3 rounded-xl text-xs md:text-sm font-bold inline-flex items-center gap-2"
             >
               <PhoneCall className="w-4 h-4" />
-              {isLo ? "ຕິດຕໍ່ວິສະວະກອນ" : "Contact Engineer"}
-            </Link>
+              {getForkliftText("ຕິດຕໍ່ວິສະວະກອນ", "Contact Engineer")}
+            </a>
           </div>
         </div>
 

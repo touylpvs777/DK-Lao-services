@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { Building2, Package, Truck, HeartPulse, Microscope, Snowflake, ShoppingCart, Hotel } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useLocale } from 'next-intl';
+import { useLocale } from '@/lib/locale';
 
 const INDUSTRIES = [
   { id: 1, name: "ໂຮງງານອຸດສາຫະກຳ", nameEn: "Factory & Manufacturing", subLo: "ໂຮງງານ & ການຜະລິດ", subEn: "Industrial Plants", image: "/images/industries/industry_factory_1788171784630.jpg" },
@@ -36,7 +36,7 @@ export function IndustrySolutionsGrid() {
         {INDUSTRIES.map((industry, idx) => (
           <Link 
             key={industry.id} 
-            href={`/${locale}/store?industry=${encodeURIComponent(industry.nameEn)}`}
+            href={`/store?q=${encodeURIComponent(industry.nameEn)}`}
             className="group block"
           >
             <motion.div 

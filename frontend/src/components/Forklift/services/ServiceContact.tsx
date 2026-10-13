@@ -1,5 +1,6 @@
 import React from "react";
 import { MapPin, PhoneCall, Mail, Building2, ExternalLink } from "lucide-react";
+import { getForkliftText } from "@/i18n/forkliftLocale";
 
 export const ServiceContact = ({ isLo }: { isLo: boolean }) => {
   return (
@@ -8,15 +9,13 @@ export const ServiceContact = ({ isLo }: { isLo: boolean }) => {
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 dark:bg-blue-500/20 border border-blue-500/30 text-blue-700 dark:text-blue-300 text-xs font-bold uppercase tracking-wider mb-4">
             <Building2 className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-            <span>{isLo ? "ສູນສ້ອມແປງກາງ & ສຳນັກງານໃຫຍ່" : "Central Workshop & Headquarters"}</span>
+            <span>{getForkliftText("ສູນສ້ອມແປງກາງ & ສຳນັກງານໃຫຍ່", "Central Workshop & Headquarters")}</span>
           </div>
           <h2 className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white mb-4">
-            {isLo ? "ຕິດຕໍ່ ດີເຄ ລາວ ສູນລົດຟອກລີບ 4S" : "Contact DK LAO 4S Hub"}
+            {getForkliftText("ຕິດຕໍ່ ດີເຄ ລາວ ສູນລົດຟອກລີບ 4S", "Contact DK LAO 4S Hub")}
           </h2>
           <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-            {isLo
-              ? "ສູນສ້ອມແປງໃຫຍ່ ແລະ ສາງອາໄຫຼ່ OEM ຕັ້ງຢູ່ຖະໜົນກຳແພງເມືອງ (T4) ນະຄອນຫຼວງວຽງຈັນ ພ້ອມໃຫ້ຄຳປຶກສາ ແລະ ຈັດສົ່ງດ່ວນທົ່ວປະເທດ."
-              : "Our central workshop and master parts depot is located on Khamphengmeuang Road (T4), Vientiane Capital. Open Monday – Saturday."}
+            {getForkliftText("ສູນສ້ອມແປງໃຫຍ່ ແລະ ສາງອາໄຫຼ່ OEM ຕັ້ງຢູ່ຖະໜົນກຳແພງເມືອງ (T4) ນະຄອນຫຼວງວຽງຈັນ ພ້ອມໃຫ້ຄຳປຶກສາ ແລະ ຈັດສົ່ງດ່ວນທົ່ວປະເທດ.", "Our central workshop and master parts depot is located on Khamphengmeuang Road (T4), Vientiane Capital. Open Monday – Saturday.")}
           </p>
         </div>
 
@@ -30,12 +29,10 @@ export const ServiceContact = ({ isLo }: { isLo: boolean }) => {
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
-                    {isLo ? "ບໍລິສັດ ດີເຄ ລາວ ຈຳກັດ" : "DK LAO CO., LTD."}
+                    {getForkliftText("ບໍລິສັດ ດີເຄ ລາວ ຈຳກັດ", "DK LAO CO., LTD.")}
                   </h3>
                   <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-sm">
-                    {isLo
-                      ? "ຖະໜົນກຳແພງເມືອງ (T4), ບ້ານໜອງໄຮ, ເມືອງຫາດຊາຍຟອງ, ນະຄອນຫຼວງວຽງຈັນ, ສປປ ລາວ"
-                      : "Khamphengmeuang Road (T4), Nonghai Village, Hadsayfong District, Vientiane Capital, Lao PDR"}
+                    {getForkliftText("ຖະໜົນກຳແພງເມືອງ (T4), ບ້ານໜອງໄຮ, ເມືອງຫາດຊາຍຟອງ, ນະຄອນຫຼວງວຽງຈັນ, ສປປ ລາວ", "Khamphengmeuang Road (T4), Nonghai Village, Hadsayfong District, Vientiane Capital, Lao PDR")}
                   </p>
                 </div>
               </div>
@@ -44,7 +41,7 @@ export const ServiceContact = ({ isLo }: { isLo: boolean }) => {
                 <div className="flex items-center gap-4 p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50">
                   <PhoneCall className="w-5 h-5 text-slate-500" />
                   <div className="flex-grow">
-                    <div className="text-xs text-slate-500 mb-1">{isLo ? "ເບີໂທສູນສ້ອມ & ສຳນັກງານໃຫຍ່" : "Central Workshop & Landlines"}</div>
+                    <div className="text-xs text-slate-500 mb-1">{getForkliftText("ເບີໂທສູນສ້ອມ & ສຳນັກງານໃຫຍ່", "Central Workshop & Landlines")}</div>
                     <div className="font-semibold text-slate-900 dark:text-white flex flex-wrap gap-4 text-sm">
                       <a href="tel:+85621480248" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">+856 21 480 248</a>
                       <a href="tel:+85621480249" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">+856 21 480 249</a>
@@ -55,7 +52,7 @@ export const ServiceContact = ({ isLo }: { isLo: boolean }) => {
                 <div className="flex items-center gap-4 p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50">
                   <PhoneCall className="w-5 h-5 text-emerald-500" />
                   <div className="flex-grow">
-                    <div className="text-xs text-slate-500 mb-1">{isLo ? "ສາຍດ່ວນ Hotline / WhatsApp 24/7" : "Emergency Hotline / WhatsApp 24/7"}</div>
+                    <div className="text-xs text-slate-500 mb-1">{getForkliftText("ສາຍດ່ວນ Hotline / WhatsApp 24/7", "Emergency Hotline / WhatsApp 24/7")}</div>
                     <a
                       href="https://wa.me/8562058929299"
                       target="_blank"
@@ -70,7 +67,7 @@ export const ServiceContact = ({ isLo }: { isLo: boolean }) => {
                 <div className="flex items-center gap-4 p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50">
                   <Mail className="w-5 h-5 text-slate-500" />
                   <div className="flex-grow">
-                    <div className="text-xs text-slate-500 mb-1">{isLo ? "ອີເມວທາງການ (Official Inquiries)" : "Official Email Inquiries"}</div>
+                    <div className="text-xs text-slate-500 mb-1">{getForkliftText("ອີເມວທາງການ (Official Inquiries)", "Official Email Inquiries")}</div>
                     <div className="font-semibold text-slate-900 dark:text-white flex flex-wrap gap-4 text-sm">
                       <a href="mailto:Salesadmin@dklao.com" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Salesadmin@dklao.com</a>
                       <a href="mailto:info@dklao.com" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">info@dklao.com</a>
@@ -103,7 +100,7 @@ export const ServiceContact = ({ isLo }: { isLo: boolean }) => {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-6 py-3 bg-white dark:bg-slate-900 text-slate-900 dark:text-white rounded-full font-semibold shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1 pointer-events-auto text-sm"
               >
-                {isLo ? "ເປີດໃນ Google Maps" : "Open in Google Maps"}
+                {getForkliftText("ເປີດໃນ Google Maps", "Open in Google Maps")}
                 <ExternalLink className="w-4 h-4" />
               </a>
             </div>

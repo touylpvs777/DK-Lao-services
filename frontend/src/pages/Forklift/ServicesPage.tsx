@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
+import { useCurrentLocale } from "@/i18n/useCurrentLocale";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ShoppingCart,
@@ -39,67 +39,57 @@ import { MitsubishiForkliftShowcase } from "@/components/Forklift/services/Mitsu
 import { JungheinrichEFGShowcase } from "@/components/Forklift/services/JungheinrichEFGShowcase";
 import { RackingAndStorageShowcase } from "@/components/Forklift/services/RackingAndStorageShowcase";
 import { NilfiskCleaningShowcase } from "@/components/Forklift/services/NilfiskCleaningShowcase";
+import { getForkliftText } from "@/i18n/forkliftLocale";
 
 type TabId = "sale" | "rental" | "service" | "parts" | "ecosystem";
 
 export default function ForkliftServicesHubPage() {
-  const { i18n } = useTranslation();
-  const locale = i18n.language || "lo";
-  const isLo = locale === "lo";
+  const locale = useCurrentLocale();
+  const isLo = locale.toLowerCase().startsWith("lo");
   const [activeTab, setActiveTab] = useState<TabId>("sale");
 
   const tabs = [
     {
       id: "sale",
-      label: isLo ? "1. ຂາຍລົດ (Sale)" : "1. Sales",
+      label: getForkliftText("1. ຂາຍລົດ (Sale)", "1. Sales"),
       icon: ShoppingCart,
-      desc: isLo
-        ? "ລົດຟອກລີບໃໝ່ & ມືສອງຍີ່ປຸ່ນ 1.5t – 10t ຮັບປະກັນສູນແທ້"
-        : "New & Japan-Reconditioned Forklifts 1.5t - 10t with Warranty",
+      desc: getForkliftText("ລົດຟອກລີບໃໝ່ & ມືສອງຍີ່ປຸ່ນ 1.5t – 10t ຮັບປະກັນສູນແທ້", "New & Japan-Reconditioned Forklifts 1.5t - 10t with Warranty"),
       color: "bg-blue-600",
       textColor: "text-blue-600 dark:text-blue-400",
       lightBg: "bg-blue-50 dark:bg-blue-900/20",
     },
     {
       id: "rental",
-      label: isLo ? "2. ເຊົ່າກອງລົດ (Rental)" : "2. Fleet Rental",
+      label: getForkliftText("2. ເຊົ່າກອງລົດ (Rental)", "2. Fleet Rental"),
       icon: KeySquare,
-      desc: isLo
-        ? "ເຊົ່າ B2B 1-5 ປີ 0-CAPEX, ຟຣີຊ່າງ PM, ລົດສຳຮອງປ່ຽນທັນທີ"
-        : "0-CAPEX 1-5 Year Operating Lease + Free Routine PM & Standby Units",
+      desc: getForkliftText("ເຊົ່າ B2B 1-5 ປີ 0-CAPEX, ຟຣີຊ່າງ PM, ລົດສຳຮອງປ່ຽນທັນທີ", "0-CAPEX 1-5 Year Operating Lease + Free Routine PM & Standby Units"),
       color: "bg-indigo-600",
       textColor: "text-indigo-600 dark:text-indigo-400",
       lightBg: "bg-indigo-50 dark:bg-indigo-900/20",
     },
     {
       id: "service",
-      label: isLo ? "3. ສູນສ້ອມແປງ (Service)" : "3. Technical Service",
+      label: getForkliftText("3. ສູນສ້ອມແປງ (Service)", "3. Technical Service"),
       icon: Wrench,
-      desc: isLo
-        ? "DKwick Mobile 2-4h ລົງໄຊທ໌ດ່ວນ, ກວດເຊັກ 24 ຈຸດ, ສູນ Overhaul ໃຫຍ່"
-        : "DKwick 2-4h Mobile Response, Certified 24-Point PM, Central Overhaul Workshop",
+      desc: getForkliftText("DKwick Mobile 2-4h ລົງໄຊທ໌ດ່ວນ, ກວດເຊັກ 24 ຈຸດ, ສູນ Overhaul ໃຫຍ່", "DKwick 2-4h Mobile Response, Certified 24-Point PM, Central Overhaul Workshop"),
       color: "bg-emerald-600",
       textColor: "text-emerald-600 dark:text-emerald-400",
       lightBg: "bg-emerald-50 dark:bg-emerald-900/20",
     },
     {
       id: "parts",
-      label: isLo ? "4. ອາໄຫຼ່ OEM (Parts)" : "4. OEM Spare Parts",
+      label: getForkliftText("4. ອາໄຫຼ່ OEM (Parts)", "4. OEM Spare Parts"),
       icon: Settings,
-      desc: isLo
-        ? "ສາງສູນກາງ 16,000+ ລາຍການ, ຢາງຕັນ, ແບັດ Li-Ion, ນ້ຳມັນ NSF H1"
-        : "16,000+ Genuine OEM Items, Solid Tires, Li-Ion Cells, NSF H1 Food Oils",
+      desc: getForkliftText("ສາງສູນກາງ 16,000+ ລາຍການ, ຢາງຕັນ, ແບັດ Li-Ion, ນ້ຳມັນ NSF H1", "16,000+ Genuine OEM Items, Solid Tires, Li-Ion Cells, NSF H1 Food Oils"),
       color: "bg-amber-600",
       textColor: "text-amber-600 dark:text-amber-400",
       lightBg: "bg-amber-50 dark:bg-amber-900/20",
     },
     {
       id: "ecosystem",
-      label: isLo ? "5. ລະບົບສາງ (Intralogistics)" : "5. Intralogistics & Racking",
+      label: getForkliftText("5. ລະບົບສາງ (Intralogistics)", "5. Intralogistics & Racking"),
       icon: PackageSearch,
-      desc: isLo
-        ? "ຊັ້ນວາງ Racking LPI, ອຸປະກອນອະນາໄມ Nilfisk, ລົດກະເຊົ້າ JLG, 3D CAD"
-        : "Heavy-Duty Racking, Nilfisk Scrubbers, JLG MEWPs & Free 3D CAD Layouts",
+      desc: getForkliftText("ຊັ້ນວາງ Racking LPI, ອຸປະກອນອະນາໄມ Nilfisk, ລົດກະເຊົ້າ JLG, 3D CAD", "Heavy-Duty Racking, Nilfisk Scrubbers, JLG MEWPs & Free 3D CAD Layouts"),
       color: "bg-purple-600",
       textColor: "text-purple-600 dark:text-purple-400",
       lightBg: "bg-purple-50 dark:bg-purple-900/20",
@@ -162,12 +152,10 @@ export default function ForkliftServicesHubPage() {
               <span>THE 4S HUB ECOSYSTEM</span>
             </div>
             <h2 className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white mb-6">
-              {isLo ? "ລະບົບນິເວດອຸດສາຫະກຳ ແລະ ສາງສິນຄ້າຄົບວົງຈອນ" : "Complete Industrial & Warehouse Ecosystem"}
+              {getForkliftText("ລະບົບນິເວດອຸດສາຫະກຳ ແລະ ສາງສິນຄ້າຄົບວົງຈອນ", "Complete Industrial & Warehouse Ecosystem")}
             </h2>
             <p className="text-lg text-slate-600 dark:text-slate-300 max-w-3xl mx-auto">
-              {isLo
-                ? "ຈາກການຂາຍ-ເຊົ່າລົດຟອກລີບ ໄປຈົນເຖິງການອອກແບບສາງສິນຄ້າອັດຕະໂນມັດ ດີເຄ ລາວ ຄືຜູ້ໃຫ້ບໍລິການ One-Stop B2B Solution ອັນດັບ 1 ໃນ ສປປ ລາວ"
-                : "From forklift sales and 0-CAPEX leasing to automated warehouse racking and Nilfisk cleaning, DK LAO is the #1 One-Stop B2B Partner in Lao PDR."}
+              {getForkliftText("ຈາກການຂາຍ-ເຊົ່າລົດຟອກລີບ ໄປຈົນເຖິງການອອກແບບສາງສິນຄ້າອັດຕະໂນມັດ ດີເຄ ລາວ ຄືຜູ້ໃຫ້ບໍລິການ One-Stop B2B Solution ອັນດັບ 1 ໃນ ສປປ ລາວ", "From forklift sales and 0-CAPEX leasing to automated warehouse racking and Nilfisk cleaning, DK LAO is the #1 One-Stop B2B Partner in Lao PDR.")}
             </p>
           </div>
 
@@ -201,7 +189,7 @@ export default function ForkliftServicesHubPage() {
                     <div
                       className={`inline-flex items-center gap-2 font-black text-sm ${tab.textColor} group-hover:gap-3 transition-all mt-auto`}
                     >
-                      <span>{isLo ? "ສຳຫຼວດລາຍລະອຽດ" : "Explore Pillar"}</span>
+                      <span>{getForkliftText("ສຳຫຼວດລາຍລະອຽດ", "Explore Pillar")}</span>
                       <ArrowRight className="w-4 h-4" />
                     </div>
                   </div>
@@ -215,12 +203,10 @@ export default function ForkliftServicesHubPage() {
         <div id="detailed-solutions" className="pt-10">
           <div className="text-center mb-10 max-w-3xl mx-auto px-4">
             <h2 className="text-3xl sm:text-4xl font-black mb-4">
-              {isLo ? "ເຈາະເລິກແຕ່ລະບໍລິການ 4S" : "Deep Dive into our 4S Pillars"}
+              {getForkliftText("ເຈາະເລິກແຕ່ລະບໍລິການ 4S", "Deep Dive into our 4S Pillars")}
             </h2>
             <p className="text-slate-600 dark:text-slate-400 text-base">
-              {isLo
-                ? "ເລືອກແຖບດ້ານລຸ່ມເພື່ອເບິ່ງລາຍລະອຽດ, ລຸ້ນລົດ, ແລະ ໂປຣໂມຊັ່ນສຳລັບແຕ່ລະໝວດໝູ່"
-                : "Select a tab below to inspect detailed strategies, equipment portfolios, and promotions."}
+              {getForkliftText("ເລືອກແຖບດ້ານລຸ່ມເພື່ອເບິ່ງລາຍລະອຽດ, ລຸ້ນລົດ, ແລະ ໂປຣໂມຊັ່ນສຳລັບແຕ່ລະໝວດໝູ່", "Select a tab below to inspect detailed strategies, equipment portfolios, and promotions.")}
             </p>
           </div>
 
@@ -296,12 +282,10 @@ export default function ForkliftServicesHubPage() {
                   <span>AUTHORIZED GLOBAL BRAND PRINCIPALS</span>
                 </div>
                 <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-6">
-                  {isLo ? "ກົນຈັກ ແລະ ອຸປະກອນມາດຕະຖານລະດັບໂລກ" : "World-Class Industrial Equipment"}
+                  {getForkliftText("ກົນຈັກ ແລະ ອຸປະກອນມາດຕະຖານລະດັບໂລກ", "World-Class Industrial Equipment")}
                 </h2>
                 <p className="text-base sm:text-lg text-slate-600 dark:text-slate-400 max-w-3xl mx-auto">
-                  {isLo
-                    ? "ດີເຄ ລາວ ເປັນຕົວແທນຈຳໜ່າຍ ແລະ ສູນບໍລິການຫຼັງການຂາຍຢ່າງເປັນທາງການ ມາດຕະຖານດຽວກັບໂຮງງານແມ່ຕ່າງປະເທດ"
-                    : "DK LAO is the certified partner and official after-sales service provider operating strictly to international factory benchmarks."}
+                  {getForkliftText("ດີເຄ ລາວ ເປັນຕົວແທນຈຳໜ່າຍ ແລະ ສູນບໍລິການຫຼັງການຂາຍຢ່າງເປັນທາງການ ມາດຕະຖານດຽວກັບໂຮງງານແມ່ຕ່າງປະເທດ", "DK LAO is the certified partner and official after-sales service provider operating strictly to international factory benchmarks.")}
                 </p>
               </div>
 

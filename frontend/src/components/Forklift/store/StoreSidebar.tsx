@@ -1,6 +1,6 @@
 import React from "react";
 import { Layers, RotateCcw, ChevronRight } from "lucide-react";
-import { useTranslation } from "react-i18next";
+import { useCurrentLocale } from "@/i18n/useCurrentLocale";
 import { STORE_CATEGORIES, PRE_CATEGORIES } from "@/data/categories";
 import { resolveStoreCategory } from "./categoryResolver";
 
@@ -21,9 +21,8 @@ export function StoreSidebar({
   hasActiveFilters = false,
   items = [],
 }: StoreSidebarProps) {
-  const { i18n } = useTranslation();
-  const locale = i18n.language || "lo";
-  const isLao = locale === "lo";
+  const locale = useCurrentLocale();
+  const isLao = locale.toLowerCase().startsWith("lo");
 
   const activePreCat = React.useMemo(() => {
     return PRE_CATEGORIES.find((p) => p.id === selectedPreCategory);

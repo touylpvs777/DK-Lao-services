@@ -5,7 +5,7 @@ import { useCart, calculateLAKPrice } from '@/context/CartContext';
 import { ChevronLeft, ChevronRight, Heart, Timer, ShoppingCart, Zap, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/Forklift/ui/button';
 import { Link } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import { useCurrentLocale } from "@/i18n/useCurrentLocale";
 
 interface ProductSliderProps {
   title: string;
@@ -16,9 +16,8 @@ interface ProductSliderProps {
 export function ProductSlider({ title, items, isFlashDeal = false }: ProductSliderProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const { addToCart } = useCart();
-  const { i18n } = useTranslation();
-  const locale = i18n.language || "lo";
-  const isLao = locale === 'lo';
+  const locale = useCurrentLocale();
+  const isLao = locale.toLowerCase().startsWith("lo");
   
   // Fake countdown for Flash Deals
   const [timeLeft, setTimeLeft] = useState({ h: 12, m: 34, s: 56 });

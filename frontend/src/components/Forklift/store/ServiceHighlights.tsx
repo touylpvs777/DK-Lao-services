@@ -1,7 +1,7 @@
 import React from "react";
 import { Settings, Truck, Sparkles, Zap, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import { useCurrentLocale } from "@/i18n/useCurrentLocale";
 
 const SERVICES = [
   {
@@ -63,9 +63,8 @@ const SERVICES = [
 ];
 
 export function ServiceHighlights() {
-  const { i18n } = useTranslation();
-  const locale = i18n.language || "lo";
-  const isLao = locale === "lo";
+  const locale = useCurrentLocale();
+  const isLao = locale.toLowerCase().startsWith("lo");
 
   return (
     <section className="py-12 relative overflow-hidden">

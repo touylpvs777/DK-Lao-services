@@ -3,7 +3,7 @@
 import React from "react";
 import { Search, Filter, Layers, Wrench, Settings, Truck, Circle, Archive, Shield, SprayCan, Building2, Package, Briefcase, RotateCcw, PhoneCall, ChevronRight, Zap, Sparkles, ArrowRight, Pickaxe } from "lucide-react";
 import Link from "next/link";
-import { useLocale } from "next-intl";
+import { useLocale } from "@/lib/locale";
 import { STORE_CATEGORIES, PRE_CATEGORIES } from "@/data/categories";
 
 interface StoreSidebarProps {
@@ -161,7 +161,7 @@ export function StoreSidebar({
             : "0 CAPEX Forklift Lease, 24/7 Dedicated Technicians & Factory Consignment."}
         </p>
         <Link
-          href={`/${locale}/services#management-ecosystem`}
+          href="/services#management-ecosystem"
           className="w-full py-2 px-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-md shadow-blue-600/30"
         >
           <span>{isLao ? "ສຳຫຼວດລະບົບ 360°" : "Explore 360° Fleet"}</span>

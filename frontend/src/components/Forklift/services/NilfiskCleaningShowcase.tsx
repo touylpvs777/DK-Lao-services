@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import { useCurrentLocale } from "@/i18n/useCurrentLocale";
 import {
   Sparkles,
   ShieldCheck,
@@ -27,11 +27,11 @@ import {
   ZoomIn,
 } from "lucide-react";
 import { ImageLightboxModal } from "@/components/Forklift/ui/ImageLightboxModal";
+import { getForkliftText } from "@/i18n/forkliftLocale";
 
 export function NilfiskCleaningShowcase() {
-  const { i18n } = useTranslation();
-  const locale = i18n.language || "lo";
-  const isLo = locale === "lo";
+  const locale = useCurrentLocale();
+  const isLo = locale.toLowerCase().startsWith("lo");
 
   // Lightbox Modal State
   const [lightbox, setLightbox] = useState<{
@@ -348,9 +348,7 @@ export function NilfiskCleaningShowcase() {
           </h3>
 
           <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
-            {isLo
-              ? "ດີເຄ ລາວ ເປັນຕົວແທນຈຳໜ່າຍ ແລະ ບໍລິການອຸປະກອນທຳຄວາມສະອາດ Nilfisk ອັນດັບ 1 ຂອງໂລກຈາກເດນມາກ. ຄົບວົງຈອນທັງລົດເຊັດຂັດພື້ນແຫ້ງ Scrubber Dryers, ລົດກວາດພື້ນໄຮບຣິດ Sweepers, ເຄື່ອງດູດຝຸ່ນອຸດສາຫະກຳດັກຝຸ່ນອັນຕະລາຍ, ດູດນ້ຳມັນຫຼໍ່ເຢັນ CNC, ແລະ ເຄື່ອງດູດຝຸ່ນ-ດູດນ້ຳມາດຕະຖານ F&B / HACCP."
-              : "DK LAO represents global cleaning leader Nilfisk (Denmark). Delivering turnkey floor care: ride-on scrubber dryers, hybrid sweeper combis, hazardous dust industrial vacuums, CNC oil & swarf extractors, and commercial wet/dry units for HACCP, cleanroom, and manufacturing plants."}
+            {getForkliftText("ດີເຄ ລາວ ເປັນຕົວແທນຈຳໜ່າຍ ແລະ ບໍລິການອຸປະກອນທຳຄວາມສະອາດ Nilfisk ອັນດັບ 1 ຂອງໂລກຈາກເດນມາກ. ຄົບວົງຈອນທັງລົດເຊັດຂັດພື້ນແຫ້ງ Scrubber Dryers, ລົດກວາດພື້ນໄຮບຣິດ Sweepers, ເຄື່ອງດູດຝຸ່ນອຸດສາຫະກຳດັກຝຸ່ນອັນຕະລາຍ, ດູດນ້ຳມັນຫຼໍ່ເຢັນ CNC, ແລະ ເຄື່ອງດູດຝຸ່ນ-ດູດນ້ຳມາດຕະຖານ F&B / HACCP.", "DK LAO represents global cleaning leader Nilfisk (Denmark). Delivering turnkey floor care: ride-on scrubber dryers, hybrid sweeper combis, hazardous dust industrial vacuums, CNC oil & swarf extractors, and commercial wet/dry units for HACCP, cleanroom, and manufacturing plants.")}
           </p>
 
           {/* 4 Main Tabs Switcher */}
@@ -365,7 +363,7 @@ export function NilfiskCleaningShowcase() {
               }`}
             >
               <Droplets className="w-3.5 h-3.5" />
-              <span>{isLo ? "1. ເຄື່ອງຂັດພື້ນແຫ້ງ (Scrubbers)" : "1. Scrubber Dryers"}</span>
+              <span>{getForkliftText("1. ເຄື່ອງຂັດພື້ນແຫ້ງ (Scrubbers)", "1. Scrubber Dryers")}</span>
             </button>
             <button
               type="button"
@@ -377,7 +375,7 @@ export function NilfiskCleaningShowcase() {
               }`}
             >
               <Combine className="w-3.5 h-3.5" />
-              <span>{isLo ? "2. ເຄື່ອງກວາດພື້ນ (Sweepers)" : "2. Sweepers & Combi"}</span>
+              <span>{getForkliftText("2. ເຄື່ອງກວາດພື້ນ (Sweepers)", "2. Sweepers & Combi")}</span>
             </button>
             <button
               type="button"
@@ -389,7 +387,7 @@ export function NilfiskCleaningShowcase() {
               }`}
             >
               <Factory className="w-3.5 h-3.5" />
-              <span>{isLo ? "3. ດູດຝຸ່ນອຸດສາຫະກຳ (Industrial Vacs)" : "3. Industrial Vacuums"}</span>
+              <span>{getForkliftText("3. ດູດຝຸ່ນອຸດສາຫະກຳ (Industrial Vacs)", "3. Industrial Vacuums")}</span>
             </button>
             <button
               type="button"
@@ -401,7 +399,7 @@ export function NilfiskCleaningShowcase() {
               }`}
             >
               <Wind className="w-3.5 h-3.5" />
-              <span>{isLo ? "4. ເຄື່ອງດູດຝຸ່ນເຄິ່ງອຸດສາຫະກຳ (Commercial)" : "4. Commercial Vacuums"}</span>
+              <span>{getForkliftText("4. ເຄື່ອງດູດຝຸ່ນເຄິ່ງອຸດສາຫະກຳ (Commercial)", "4. Commercial Vacuums")}</span>
             </button>
           </div>
         </div>
@@ -422,7 +420,7 @@ export function NilfiskCleaningShowcase() {
                     : "bg-white/5 text-slate-300 hover:bg-white/10"
                 }`}
               >
-                {isLo ? "ລົດຂັດພື້ນນັ່ງຂັບອຸດສາຫະກຳໜັກ (Heavy Ride-On)" : "Heavy-Duty Industrial Ride-On (SC3500–SC8000)"}
+                {getForkliftText("ລົດຂັດພື້ນນັ່ງຂັບອຸດສາຫະກຳໜັກ (Heavy Ride-On)", "Heavy-Duty Industrial Ride-On (SC3500–SC8000)")}
               </button>
               <button
                 type="button"
@@ -433,7 +431,7 @@ export function NilfiskCleaningShowcase() {
                     : "bg-white/5 text-slate-300 hover:bg-white/10"
                 }`}
               >
-                {isLo ? "ເຄື່ອງຂັດພື້ນຍ່າງຕາມ & Micro Ride-On (Walk-Behind)" : "Compact & Walk-Behind (SC100–SC2000)"}
+                {getForkliftText("ເຄື່ອງຂັດພື້ນຍ່າງຕາມ & Micro Ride-On (Walk-Behind)", "Compact & Walk-Behind (SC100–SC2000)")}
               </button>
             </div>
 
@@ -460,14 +458,14 @@ export function NilfiskCleaningShowcase() {
                     />
                     <div className="absolute top-4 right-4 bg-slate-900/90 hover:bg-slate-900 text-white border border-white/20 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2 shadow-xl opacity-90 group-hover/img:opacity-100 group-hover/img:scale-105 transition-all">
                       <ZoomIn className="w-3.5 h-3.5 text-blue-400" />
-                      <span>{isLo ? "🔍 ຊູມພາບ 2K" : "🔍 Zoom 2K"}</span>
+                      <span>{getForkliftText("🔍 ຊູມພາບ 2K", "🔍 Zoom 2K")}</span>
                     </div>
                   </div>
                   <div className="p-4 bg-slate-900/95 backdrop-blur-md border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
                     <div className="flex items-center gap-2 text-slate-300 font-bold">
                       <span className="text-blue-400 font-mono">NILFISK HEAVY RIDE-ON SCRUBBER DRYERS</span>
                       <span className="text-slate-600">•</span>
-                      <span>{isLo ? "ຂັດລ້າງພື້ນທີ່ກວ້າງ 5,000–10,000 m²/h ພ້ອມດູດແຫ້ງທັນທີ 100%" : "5,000–10,000 m²/h High Throughput with Instant Dry"}</span>
+                      <span>{getForkliftText("ຂັດລ້າງພື້ນທີ່ກວ້າງ 5,000–10,000 m²/h ພ້ອມດູດແຫ້ງທັນທີ 100%", "5,000–10,000 m²/h High Throughput with Instant Dry")}</span>
                     </div>
                     <div className="flex items-center gap-2 text-[11px] font-bold text-emerald-400">
                       <ShieldCheck className="w-4 h-4" />
@@ -502,7 +500,7 @@ export function NilfiskCleaningShowcase() {
                       <div className="pt-3 mt-3 border-t border-white/10 flex items-center justify-between text-[10px] font-bold text-slate-400">
                         <span>Ride-On Series</span>
                         <a href="#booking-form" className="text-blue-400 hover:underline flex items-center gap-0.5">
-                          <span>{isLo ? "ຂໍໃບສະເໜີລາຄາ" : "Get Quote"}</span>
+                          <span>{getForkliftText("ຂໍໃບສະເໜີລາຄາ", "Get Quote")}</span>
                           <ChevronRight className="w-3 h-3" />
                         </a>
                       </div>
@@ -514,7 +512,7 @@ export function NilfiskCleaningShowcase() {
                 <div className="space-y-3">
                   <h4 className="text-sm font-black text-white flex items-center gap-2">
                     <Sparkles className="w-4 h-4 text-blue-400" />
-                    <span>{isLo ? "ສະຖານທີ່ນຳໃຊ້ຕົວຈິງຕາມມາດຕະຖານສາກົນ (In-Action Applications)" : "Field Verified In-Action Applications"}</span>
+                    <span>{getForkliftText("ສະຖານທີ່ນຳໃຊ້ຕົວຈິງຕາມມາດຕະຖານສາກົນ (In-Action Applications)", "Field Verified In-Action Applications")}</span>
                   </h4>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                     {SCRUBBER_ENVIRONMENTS.map((env, idx) => {
@@ -567,14 +565,14 @@ export function NilfiskCleaningShowcase() {
                     />
                     <div className="absolute top-4 right-4 bg-slate-900/90 hover:bg-slate-900 text-white border border-white/20 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2 shadow-xl opacity-90 group-hover/img:opacity-100 group-hover/img:scale-105 transition-all">
                       <ZoomIn className="w-3.5 h-3.5 text-blue-400" />
-                      <span>{isLo ? "🔍 ຊູມພາບ 2K" : "🔍 Zoom 2K"}</span>
+                      <span>{getForkliftText("🔍 ຊູມພາບ 2K", "🔍 Zoom 2K")}</span>
                     </div>
                   </div>
                   <div className="p-4 bg-slate-900/95 backdrop-blur-md border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
                     <div className="flex items-center gap-2 text-slate-300 font-bold">
                       <span className="text-blue-400 font-mono">NILFISK WALK-BEHIND & MICRO RIDE-ON</span>
                       <span className="text-slate-600">•</span>
-                      <span>{isLo ? "ຄ່ອງຕົວສູງ ສຳລັບຊ່ອງແຄບ, ໂຮງງານ, ໂຮງໝໍ, ໂຮງແຮມ ແລະ ສາງຂະໜາດກາງ" : "Agile Cleaning for Tight Aisles, Hospitals, Hotels & Facilities"}</span>
+                      <span>{getForkliftText("ຄ່ອງຕົວສູງ ສຳລັບຊ່ອງແຄບ, ໂຮງງານ, ໂຮງໝໍ, ໂຮງແຮມ ແລະ ສາງຂະໜາດກາງ", "Agile Cleaning for Tight Aisles, Hospitals, Hotels & Facilities")}</span>
                     </div>
                   </div>
                 </div>
@@ -630,14 +628,14 @@ export function NilfiskCleaningShowcase() {
                 />
                 <div className="absolute top-4 right-4 bg-slate-900/90 hover:bg-slate-900 text-white border border-white/20 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2 shadow-xl opacity-90 group-hover/img:opacity-100 group-hover/img:scale-105 transition-all">
                   <ZoomIn className="w-3.5 h-3.5 text-amber-400" />
-                  <span>{isLo ? "🔍 ຊູມພາບ 2K" : "🔍 Zoom 2K"}</span>
+                  <span>{getForkliftText("🔍 ຊູມພາບ 2K", "🔍 Zoom 2K")}</span>
                 </div>
               </div>
               <div className="p-4 bg-slate-900/95 backdrop-blur-md border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
                 <div className="flex items-center gap-2 text-slate-300 font-bold">
                   <span className="text-amber-400 font-mono">CS7010 HYBRID COMBI & SWEEPERS</span>
                   <span className="text-slate-600">•</span>
-                  <span>{isLo ? "ລົດໄຮບຣິດຄັນທຳອິດທີ່ 'ກວາດ ແລະ ຂັດລ້າງແຫ້ງ' ພ້ອມກັນໃນຄັນດຽວ ປະຢັດຕົ້ນທຶນ 50%" : "First Hybrid Combi Sweeper-Scrubber in One Pass"}</span>
+                  <span>{getForkliftText("ລົດໄຮບຣິດຄັນທຳອິດທີ່ 'ກວາດ ແລະ ຂັດລ້າງແຫ້ງ' ພ້ອມກັນໃນຄັນດຽວ ປະຢັດຕົ້ນທຶນ 50%", "First Hybrid Combi Sweeper-Scrubber in One Pass")}</span>
                 </div>
                 <div className="flex items-center gap-2 text-[11px] font-bold text-emerald-400">
                   <ShieldCheck className="w-4 h-4" />
@@ -664,7 +662,7 @@ export function NilfiskCleaningShowcase() {
                   <div className="pt-3 mt-3 border-t border-white/10 flex items-center justify-between text-[10px] text-slate-400">
                     <span>Industrial Sweeping</span>
                     <a href="#booking-form" className="text-amber-400 hover:underline flex items-center gap-0.5">
-                      <span>{isLo ? "ນັດທົດສອບລົດ" : "Book Demo"}</span>
+                      <span>{getForkliftText("ນັດທົດສອບລົດ", "Book Demo")}</span>
                       <ChevronRight className="w-3 h-3" />
                     </a>
                   </div>
@@ -690,7 +688,7 @@ export function NilfiskCleaningShowcase() {
                     : "bg-white/5 text-slate-300 hover:bg-white/10"
                 }`}
               >
-                {isLo ? "ດູດນ້ຳມັນຫຼໍ່ເຢັນ, ເສດຂີ້ກຶງ & ອາຫານ (VHS120 & VHO200)" : "Machining Oil, Swarf & Liquids (VHS120 / VHO200)"}
+                {getForkliftText("ດູດນ້ຳມັນຫຼໍ່ເຢັນ, ເສດຂີ້ກຶງ & ອາຫານ (VHS120 & VHO200)", "Machining Oil, Swarf & Liquids (VHS120 / VHO200)")}
               </button>
               <button
                 type="button"
@@ -701,7 +699,7 @@ export function NilfiskCleaningShowcase() {
                     : "bg-white/5 text-slate-300 hover:bg-white/10"
                 }`}
               >
-                {isLo ? "ດັກຝຸ່ນອັນຕະລາຍ M/H & ແບັດ Lithium (Heavy Duty & Battery)" : "Hazardous Dust & Li-Ion Battery Vacuums"}
+                {getForkliftText("ດັກຝຸ່ນອັນຕະລາຍ M/H & ແບັດ Lithium (Heavy Duty & Battery)", "Hazardous Dust & Li-Ion Battery Vacuums")}
               </button>
             </div>
 
@@ -728,14 +726,14 @@ export function NilfiskCleaningShowcase() {
                     />
                     <div className="absolute top-4 right-4 bg-slate-900/90 hover:bg-slate-900 text-white border border-white/20 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2 shadow-xl opacity-90 group-hover/img:opacity-100 group-hover/img:scale-105 transition-all">
                       <ZoomIn className="w-3.5 h-3.5 text-indigo-400" />
-                      <span>{isLo ? "🔍 ຊູມພາບ 2K" : "🔍 Zoom 2K"}</span>
+                      <span>{getForkliftText("🔍 ຊູມພາບ 2K", "🔍 Zoom 2K")}</span>
                     </div>
                   </div>
                   <div className="p-4 bg-slate-900/95 backdrop-blur-md border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
                     <div className="flex items-center gap-2 text-slate-300 font-bold">
                       <span className="text-indigo-400 font-mono">NILFISK OIL & SWARF RECOVERY</span>
                       <span className="text-slate-600">•</span>
-                      <span>{isLo ? "ແຍກເສດໂລຫະ ແລະ ນ້ຳມັນຫຼໍ່ເຢັນ CNC ພ້ອມວາວ Diverting Valve ປ່ອຍນ້ຳມັນໄວ" : "Coolant & Chip Recovery with Rapid Diverting Valve Discharge"}</span>
+                      <span>{getForkliftText("ແຍກເສດໂລຫະ ແລະ ນ້ຳມັນຫຼໍ່ເຢັນ CNC ພ້ອມວາວ Diverting Valve ປ່ອຍນ້ຳມັນໄວ", "Coolant & Chip Recovery with Rapid Diverting Valve Discharge")}</span>
                     </div>
                   </div>
                 </div>
@@ -788,14 +786,14 @@ export function NilfiskCleaningShowcase() {
                     />
                     <div className="absolute top-4 right-4 bg-slate-900/90 hover:bg-slate-900 text-white border border-white/20 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2 shadow-xl opacity-90 group-hover/img:opacity-100 group-hover/img:scale-105 transition-all">
                       <ZoomIn className="w-3.5 h-3.5 text-indigo-400" />
-                      <span>{isLo ? "🔍 ຊູມພາບ 2K" : "🔍 Zoom 2K"}</span>
+                      <span>{getForkliftText("🔍 ຊູມພາບ 2K", "🔍 Zoom 2K")}</span>
                     </div>
                   </div>
                   <div className="p-4 bg-slate-900/95 backdrop-blur-md border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
                     <div className="flex items-center gap-2 text-slate-300 font-bold">
                       <span className="text-indigo-400 font-mono">HAZARDOUS DUST & BATTERY VACUUMS</span>
                       <span className="text-slate-600">•</span>
-                      <span>{isLo ? "ມາດຕະຖານ Class M/H ສຳລັບຝຸ່ນຕັດຄອນກຣີດ ແລະ ມໍເຕີ 4kW InfiniClean™ 24/7" : "Class M/H Certified for Concrete Dust & 4 kW Continuous InfiniClean™"}</span>
+                      <span>{getForkliftText("ມາດຕະຖານ Class M/H ສຳລັບຝຸ່ນຕັດຄອນກຣີດ ແລະ ມໍເຕີ 4kW InfiniClean™ 24/7", "Class M/H Certified for Concrete Dust & 4 kW Continuous InfiniClean™")}</span>
                     </div>
                   </div>
                 </div>
@@ -843,7 +841,7 @@ export function NilfiskCleaningShowcase() {
                     : "bg-white/5 text-slate-300 hover:bg-white/10"
                 }`}
               >
-                {isLo ? "ດູດນ້ຳ-ດູດແຫ້ງ (VL100, VL200, VL500)" : "Commercial Wet & Dry (VL Series)"}
+                {getForkliftText("ດູດນ້ຳ-ດູດແຫ້ງ (VL100, VL200, VL500)", "Commercial Wet & Dry (VL Series)")}
               </button>
               <button
                 type="button"
@@ -854,7 +852,7 @@ export function NilfiskCleaningShowcase() {
                     : "bg-white/5 text-slate-300 hover:bg-white/10"
                 }`}
               >
-                {isLo ? "ດູດຝຸ່ນແຫ້ງ 8 ລຸ້ນ (VP Series & Backpack)" : "Commercial Dry Vacuums (VP Series)"}
+                {getForkliftText("ດູດຝຸ່ນແຫ້ງ 8 ລຸ້ນ (VP Series & Backpack)", "Commercial Dry Vacuums (VP Series)")}
               </button>
             </div>
 
@@ -881,14 +879,14 @@ export function NilfiskCleaningShowcase() {
                     />
                     <div className="absolute top-4 right-4 bg-slate-900/90 hover:bg-slate-900 text-white border border-white/20 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2 shadow-xl opacity-90 group-hover/img:opacity-100 group-hover/img:scale-105 transition-all">
                       <ZoomIn className="w-3.5 h-3.5 text-teal-400" />
-                      <span>{isLo ? "🔍 ຊູມພາບ 2K" : "🔍 Zoom 2K"}</span>
+                      <span>{getForkliftText("🔍 ຊູມພາບ 2K", "🔍 Zoom 2K")}</span>
                     </div>
                   </div>
                   <div className="p-4 bg-slate-900/95 backdrop-blur-md border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
                     <div className="flex items-center gap-2 text-slate-300 font-bold">
                       <span className="text-teal-400 font-mono">NILFISK VL SERIES WET & DRY</span>
                       <span className="text-slate-600">•</span>
-                      <span>{isLo ? "ດູດໄດ້ທັງຝຸ່ນ ແລະ ນ້ຳ ພ້ອມລະບົບຖັງເທນ້ຳ Ergonomic Tipping System" : "Wet & Dry Pickup with Ergonomic Tipping System"}</span>
+                      <span>{getForkliftText("ດູດໄດ້ທັງຝຸ່ນ ແລະ ນ້ຳ ພ້ອມລະບົບຖັງເທນ້ຳ Ergonomic Tipping System", "Wet & Dry Pickup with Ergonomic Tipping System")}</span>
                     </div>
                     <div className="flex items-center gap-2 text-[11px] font-bold text-emerald-400">
                       <ShieldCheck className="w-4 h-4" />
@@ -945,7 +943,7 @@ export function NilfiskCleaningShowcase() {
                     />
                     <div className="absolute top-4 right-4 bg-slate-900/90 hover:bg-slate-900 text-white border border-white/20 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2 shadow-xl opacity-90 group-hover/img:opacity-100 group-hover/img:scale-105 transition-all">
                       <ZoomIn className="w-3.5 h-3.5 text-teal-400" />
-                      <span>{isLo ? "🔍 ຊູມພາບ 2K" : "🔍 Zoom 2K"}</span>
+                      <span>{getForkliftText("🔍 ຊູມພາບ 2K", "🔍 Zoom 2K")}</span>
                     </div>
                   </div>
                 </div>
@@ -969,7 +967,7 @@ export function NilfiskCleaningShowcase() {
                       <div className="pt-3 mt-3 border-t border-white/10 flex items-center justify-between text-[10px] font-bold text-slate-400">
                         <span>Commercial Series</span>
                         <a href="#booking-form" className="text-cyan-400 hover:underline flex items-center gap-0.5">
-                          <span>{isLo ? "ສັ່ງຊື້" : "Inquire"}</span>
+                          <span>{getForkliftText("ສັ່ງຊື້", "Inquire")}</span>
                           <ChevronRight className="w-3 h-3" />
                         </a>
                       </div>
@@ -985,12 +983,10 @@ export function NilfiskCleaningShowcase() {
         <div className="p-6 rounded-2xl bg-gradient-to-r from-blue-950/60 via-slate-900 to-cyan-950/60 border border-blue-500/40 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="space-y-1 text-center md:text-left">
             <h4 className="text-base sm:text-lg font-black text-white">
-              {isLo ? "ຕ້ອງການທົດສອບເຄື່ອງຂັດພື້ນ ຫຼື ເຄື່ອງດູດຝຸ່ນ Nilfisk ຕົວຈິງທີ່ໂຮງງານຂອງທ່ານ?" : "Request Free On-Site Nilfisk Scrubber or Industrial Vacuum Demo?"}
+              {getForkliftText("ຕ້ອງການທົດສອບເຄື່ອງຂັດພື້ນ ຫຼື ເຄື່ອງດູດຝຸ່ນ Nilfisk ຕົວຈິງທີ່ໂຮງງານຂອງທ່ານ?", "Request Free On-Site Nilfisk Scrubber or Industrial Vacuum Demo?")}
             </h4>
             <p className="text-xs text-slate-300">
-              {isLo
-                ? "ທີມງານວິສະວະກອນ DK LAO ພ້ອມນຳເຄື່ອງຂັດພື້ນ Ride-on Scrubber, ລົດກວາດໄຮບຣິດ CS7010 ແລະ ເຄື່ອງດູດຝຸ່ນອຸດສາຫະກຳ Nilfisk ລົງສາທິດປະສິດທິພາບຕົວຈິງເຖິງໂຮງງານຂອງທ່ານຟຣີ."
-                : "DK LAO specialists will bring Nilfisk ride-on scrubbers, hybrid combi sweepers, and industrial vacuums for live proof-of-concept testing at your factory."}
+              {getForkliftText("ທີມງານວິສະວະກອນ DK LAO ພ້ອມນຳເຄື່ອງຂັດພື້ນ Ride-on Scrubber, ລົດກວາດໄຮບຣິດ CS7010 ແລະ ເຄື່ອງດູດຝຸ່ນອຸດສາຫະກຳ Nilfisk ລົງສາທິດປະສິດທິພາບຕົວຈິງເຖິງໂຮງງານຂອງທ່ານຟຣີ.", "DK LAO specialists will bring Nilfisk ride-on scrubbers, hybrid combi sweepers, and industrial vacuums for live proof-of-concept testing at your factory.")}
             </p>
           </div>
 
@@ -1000,7 +996,7 @@ export function NilfiskCleaningShowcase() {
               className="py-2.5 px-4 rounded-xl border border-white/20 hover:bg-white/10 text-white font-bold text-xs flex items-center gap-1.5 transition-all"
             >
               <ShoppingBag className="w-3.5 h-3.5 text-cyan-400" />
-              <span>{isLo ? "ເບິ່ງສິນຄ້າ Nilfisk ໃນ Store 🛒" : "Browse Nilfisk in Store 🛒"}</span>
+              <span>{getForkliftText("ເບິ່ງສິນຄ້າ Nilfisk ໃນ Store 🛒", "Browse Nilfisk in Store 🛒")}</span>
             </Link>
             <a
               href="tel:+8562058929299"

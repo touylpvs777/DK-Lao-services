@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight, ArrowRight, ShieldCheck, Truck, Zap, PhoneCall, Sparkles } from "lucide-react";
 import Link from "next/link";
-import { useLocale } from "next-intl";
+import { useLocale } from "@/lib/locale";
 
 interface HeroSlide {
   id: number;
@@ -43,7 +43,7 @@ export function HeroCarousel() {
         : ["1.5T - 3.5T Capacity", "5-Year Battery Warranty", "2h Fast Charge", "Zero Emissions"],
       ctaText: "ຂໍໃບສະເໜີລາຄາ B2B",
       ctaTextEn: "Request B2B Quote",
-      link: `/${locale}/catalog?category=electric`,
+      link: "/store?q=Electric",
       whatsAppMsg: "ສະບາຍດີ ຕ້ອງການຂໍໃບສະເໜີລາຄາ ລົດຍົກໄຟຟ້າ Lithium-Ion",
       theme: "emerald",
     },
@@ -61,7 +61,7 @@ export function HeroCarousel() {
         : ["1.5T - 10T", "Genuine Japan Engine", "30-Point PM", "100% OEM Spares"],
       ctaText: "ເລືອກເບິ່ງລຸ້ນ Mitsubishi",
       ctaTextEn: "Explore Mitsubishi",
-      link: `/${locale}/catalog?brand=mitsubishi`,
+      link: "/store?q=Mitsubishi",
       whatsAppMsg: "ສະບາຍດີ ຕ້ອງການສອບຖາມ ລົດຍົກ Mitsubishi Heavy Duty",
       theme: "blue",
     },
@@ -79,7 +79,7 @@ export function HeroCarousel() {
         : ["Ride-on & Walk-Behind", "GMP / HACCP Food Grade", "High Suction", "Factory Authorized"],
       ctaText: "ເບິ່ງເຄື່ອງຂັດພື້ນ Nilfisk",
       ctaTextEn: "Explore Nilfisk",
-      link: `/${locale}/catalog?category=cleaning`,
+      link: "/store?q=Nilfisk",
       whatsAppMsg: "ສະບາຍດີ ຕ້ອງການຂໍໃບສະເໜີລາຄາ ເຄື່ອງຂັດລ້າງພື້ນ Nilfisk",
       theme: "teal",
     },
@@ -97,7 +97,7 @@ export function HeroCarousel() {
         : ["AS 4084 Standard", "Radio Shuttle AS/RS", "Free 3D Layout", "1-3 Tons / Pallet"],
       ctaText: "ປຶກສາວິສະວະກອນສາງ",
       ctaTextEn: "Consult Warehouse Engineer",
-      link: `/${locale}/catalog?category=racking`,
+      link: "/store?q=Racking",
       whatsAppMsg: "ສະບາຍດີ ຕ້ອງການປຶກສາອອກແບບລະບົບຊັ້ນວາງສາງ Racking 3D",
       theme: "amber",
     },

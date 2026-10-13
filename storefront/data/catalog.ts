@@ -30,6 +30,9 @@ export interface InventoryItem {
   pre_category_id?: string;
   brand?: string;
   sub_category?: string;
+  crm_catalog_item?: boolean;
+  available_to_order?: boolean;
+  max_order_quantity?: number;
 }
 
 // Enterprise B2B & Industrial Catalog (100% Verified Images & Specifications)

@@ -1,5 +1,5 @@
 import client from './client'
-import type { DashboardSummary, TrendPoint, LeadMetrics, ErpDashboardSummary, ProfitTrendPoint, DashboardRevenueRange } from '@/types/dashboard'
+import type { DashboardSummary, TrendPoint, LeadMetrics, ErpDashboardSummary, ProfitTrendPoint, DashboardRevenueRange, CrmSummary } from '@/types/dashboard'
 
 export const getSummary = () =>
   client.get<DashboardSummary>('/dashboard/summary')
@@ -18,3 +18,6 @@ export const getCustomerTrend = (months = 12) =>
 
 export const getLeadMetrics = () =>
   client.get<LeadMetrics>('/dashboard/lead-metrics')
+
+export const getCrmSummary = () =>
+  client.get<CrmSummary>('/dashboard/crm-summary')

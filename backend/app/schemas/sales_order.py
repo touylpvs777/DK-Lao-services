@@ -160,6 +160,9 @@ class SalesOrderListResponse(BaseModel):
 
 class SalesOrderItemCreate(BaseModel):
     item_code: str | None = Field(default=None, max_length=100)
+    product_id: int | None = None
+    spare_part_id: int | None = None
+    forklift_id: int | None = None
     description: str = Field(..., min_length=1, max_length=1000)
     quantity: float = Field(default=1.0, gt=0)
     unit: str = Field(default="unit", max_length=50)
@@ -184,6 +187,9 @@ class SalesOrderItemOut(BaseModel):
     sales_order_id: int
     line_number: int
     item_code: str | None = None
+    product_id: int | None = None
+    spare_part_id: int | None = None
+    forklift_id: int | None = None
     description: str
     quantity: float
     unit: str

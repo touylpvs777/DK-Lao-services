@@ -1,3 +1,4 @@
+import { goToSection } from "./sectionNav";
 import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -23,10 +24,7 @@ import { getForkliftText } from "@/i18n/forkliftLocale";
 
 export const ServiceHero = ({ isLo }: { isLo: boolean }) => {
   const scrollToSection = (id: string) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
+    goToSection(id);
   };
 
   return (

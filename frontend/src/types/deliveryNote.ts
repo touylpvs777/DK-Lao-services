@@ -24,6 +24,10 @@ export interface DeliveryNoteItemOut {
   delivery_note_id: number
   line_number: number
   item_code: string | null
+  sales_order_item_id?: number | null
+  product_id?: number | null
+  spare_part_id?: number | null
+  forklift_id?: number | null
   description: string
   quantity_ordered: number | null
   quantity_delivered: number
@@ -112,6 +116,10 @@ export interface DeliveryNoteUpdate {
 
 export interface DeliveryNoteItemCreate {
   item_code?: string
+  sales_order_item_id?: number | null
+  product_id?: number | null
+  spare_part_id?: number | null
+  forklift_id?: number | null
   description: string
   quantity_ordered?: number | null
   quantity_delivered?: number

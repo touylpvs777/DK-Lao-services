@@ -17,6 +17,7 @@ import type {
 import { quotationHeaderSchema, QUOTATION_EDITOR_DEFAULTS, type QuotationEditorFormValues } from '@/schemas/quotationEditorSchema'
 import type { SalesOrderConversionPrefill } from '@/types/salesOrder'
 import LineItemsGrid, { type GridColumn, type GridRow } from '@/components/grid/LineItemsGrid'
+import ItemLookup from '@/components/grid/ItemLookup'
 import DocumentEditorHeader from '@/components/documents/DocumentEditorHeader'
 import VehicleInfoSection from '@/components/documents/VehicleInfoSection'
 import DocumentTotalsPanel from '@/components/documents/DocumentTotalsPanel'
@@ -37,6 +38,10 @@ interface QuotationLineRow extends GridRow {
   id: number | null
   item_type: string
   item_code: string
+  // Hidden cross-module links — not grid columns, but round-tripped so a Save
+  // never wipes them and downstream documents (SO → DN → Invoice) inherit them.
+  product_id?: number | null
+  forklift_id?: number | null
   description: string
   quantity: number
   unit: string
@@ -165,6 +170,7 @@ export default function QuotationEditorPage() {
       setItems(data.items.length
         ? data.items.map((it) => ({
           _key: nextRowKey++, id: it.id, item_type: it.item_type, item_code: it.item_code ?? '',
+          product_id: it.product?.id ?? null, forklift_id: it.forklift?.id ?? null,
           description: it.description, quantity: it.quantity, unit: it.unit, unit_price: it.unit_price,
           discount_percent: it.discount_percent, tax_percent: it.tax_percent,
         }))
@@ -218,6 +224,8 @@ export default function QuotationEditorPage() {
   const buildBulkItems = (): QuotationItemBulkItem[] => items.map((r) => ({
     id: r.id ?? undefined,
     item_type: r.item_type as QuotationItemBulkItem['item_type'],
+    product_id: r.product_id ?? null,
+    forklift_id: r.forklift_id ?? null,
     item_code: r.item_code || undefined,
     description: r.description,
     quantity: r.quantity,
@@ -402,6 +410,8 @@ export default function QuotationEditorPage() {
       },
       items: items.filter((r) => r.description.trim()).map((r) => ({
         item_code: r.item_code,
+        product_id: r.product_id ?? null,
+        forklift_id: r.forklift_id ?? null,
         description: r.description,
         quantity: r.quantity,
         unit: r.unit,
@@ -562,6 +572,17 @@ export default function QuotationEditorPage() {
 
               <div className="doc-editor-section">
                 <h3 className="doc-editor-section-title">{t('quotations.editor.grid.title')}</h3>
+                {!readOnly && (
+                  <ItemLookup onPick={(it) => setItems((prev) => {
+                    const row: QuotationLineRow = {
+                      ...emptyRow(values.tax_rate || 0), item_code: it.item_code, description: it.description,
+                      unit: it.unit, unit_price: it.unit_price,
+                      item_type: it.forklift_id ? 'forklift_sale' : 'spare_part',
+                      product_id: it.product_id, forklift_id: it.forklift_id,
+                    }
+                    return prev.length === 1 && !prev[0].description.trim() ? [row] : [...prev, row]
+                  })} />
+                )}
                 <LineItemsGrid<QuotationLineRow>
                   columns={columns}
                   rows={items}

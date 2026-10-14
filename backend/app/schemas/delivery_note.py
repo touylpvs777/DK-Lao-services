@@ -109,6 +109,10 @@ class DeliveryNoteListResponse(BaseModel):
 
 class DeliveryNoteItemCreate(BaseModel):
     item_code: str | None = Field(default=None, max_length=100)
+    sales_order_item_id: int | None = None
+    product_id: int | None = None
+    spare_part_id: int | None = None
+    forklift_id: int | None = None
     description: str = Field(..., min_length=1, max_length=1000)
     quantity_ordered: float | None = Field(default=None, ge=0)
     quantity_delivered: float = Field(default=0.0, ge=0)
@@ -130,6 +134,10 @@ class DeliveryNoteItemOut(BaseModel):
     delivery_note_id: int
     line_number: int
     item_code: str | None = None
+    sales_order_item_id: int | None = None
+    product_id: int | None = None
+    spare_part_id: int | None = None
+    forklift_id: int | None = None
     description: str
     quantity_ordered: float | None = None
     quantity_delivered: float

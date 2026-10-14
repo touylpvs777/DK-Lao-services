@@ -47,6 +47,12 @@ class Invoice(Base):
         Integer, ForeignKey("customers.id", ondelete="RESTRICT"),
         nullable=False, index=True,
     )
+    # Real FK to the sales order this invoice bills (the polymorphic
+    # reference_type/reference_id pair below has no referential integrity).
+    sales_order_id: Mapped[int | None] = mapped_column(
+        Integer, ForeignKey("sales_orders.id", ondelete="SET NULL"),
+        nullable=True, index=True,
+    )
 
     # Generic source tag for non-rental invoices (mirrors the entity_type/
     # entity_id polymorphic-association pattern already used by ActivityLog).

@@ -33,6 +33,11 @@ class SparePart(Base):
     brand_id: Mapped[int | None] = mapped_column(
         Integer, ForeignKey("brands.id", ondelete="SET NULL"), nullable=True, index=True,
     )
+    # Link to the Catalog product this stock item is (one catalog product may
+    # have several stock keeping variants, hence not unique).
+    product_id: Mapped[int | None] = mapped_column(
+        Integer, ForeignKey("products.id", ondelete="SET NULL"), nullable=True, index=True,
+    )
     unit: Mapped[str] = mapped_column(String(30), default="piece", nullable=False)
     unit_price: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
     currency: Mapped[str] = mapped_column(String(3), default="LAK", nullable=False)

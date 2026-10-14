@@ -17,6 +17,20 @@ class DeliveryNoteItem(Base):
     line_number: Mapped[int] = mapped_column(Integer, nullable=False)
 
     item_code: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    # Cross-module links (all optional). `sales_order_item_id` ties the delivered
+    # line to the ordered line so delivered-vs-ordered can be tracked per line.
+    sales_order_item_id: Mapped[int | None] = mapped_column(
+        Integer, ForeignKey("sales_order_items.id", ondelete="SET NULL"), nullable=True, index=True,
+    )
+    product_id: Mapped[int | None] = mapped_column(
+        Integer, ForeignKey("products.id", ondelete="SET NULL"), nullable=True, index=True,
+    )
+    spare_part_id: Mapped[int | None] = mapped_column(
+        Integer, ForeignKey("spare_parts.id", ondelete="SET NULL"), nullable=True, index=True,
+    )
+    forklift_id: Mapped[int | None] = mapped_column(
+        Integer, ForeignKey("forklifts.id", ondelete="SET NULL"), nullable=True, index=True,
+    )
     description: Mapped[str] = mapped_column(String(1000), nullable=False)
     # Reference-only — what the sales order called for, not stored back onto it.
     quantity_ordered: Mapped[float | None] = mapped_column(Float, nullable=True)

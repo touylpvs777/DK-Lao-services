@@ -19,6 +19,7 @@ import {
   salesOrderHeaderSchema, SALES_ORDER_EDITOR_DEFAULTS, type SalesOrderEditorFormValues,
 } from '@/schemas/salesOrderEditorSchema'
 import LineItemsGrid, { type GridColumn, type GridRow } from '@/components/grid/LineItemsGrid'
+import ItemLookup from '@/components/grid/ItemLookup'
 import SalesOrderEditorHeader from '@/components/documents/SalesOrderEditorHeader'
 import VehicleInfoSection from '@/components/documents/VehicleInfoSection'
 import DocumentTotalsPanel from '@/components/documents/DocumentTotalsPanel'
@@ -38,6 +39,10 @@ import '@/styles/detail.css'
 interface SalesOrderLineRow extends GridRow {
   id: number | null
   item_code: string
+  // Hidden cross-module links (round-tripped, not grid columns).
+  product_id?: number | null
+  spare_part_id?: number | null
+  forklift_id?: number | null
   description: string
   quantity: number
   unit: string
@@ -97,7 +102,9 @@ export default function SalesOrderEditorPage() {
   const [items, setItems] = useState<SalesOrderLineRow[]>(isNew
     ? (prefill?.items.length
       ? prefill.items.map((it) => ({
-        _key: nextRowKey++, id: null, item_code: it.item_code, description: it.description,
+        _key: nextRowKey++, id: null, item_code: it.item_code,
+        product_id: it.product_id ?? null, spare_part_id: it.spare_part_id ?? null, forklift_id: it.forklift_id ?? null,
+        description: it.description,
         quantity: it.quantity, unit: it.unit, unit_price: it.unit_price,
         discount_percent: it.discount_percent, tax_percent: it.tax_percent,
       }))
@@ -197,6 +204,7 @@ export default function SalesOrderEditorPage() {
       setItems(data.items.length
         ? data.items.map((it) => ({
           _key: nextRowKey++, id: it.id, item_code: it.item_code ?? '',
+          product_id: it.product_id ?? null, spare_part_id: it.spare_part_id ?? null, forklift_id: it.forklift_id ?? null,
           description: it.description, quantity: it.quantity, unit: it.unit, unit_price: it.unit_price,
           discount_percent: it.discount_percent, tax_percent: it.tax_percent,
         }))
@@ -248,6 +256,9 @@ export default function SalesOrderEditorPage() {
 
   const buildBulkItems = (): SalesOrderItemBulkItem[] => items.map((r) => ({
     id: r.id ?? undefined,
+    product_id: r.product_id ?? null,
+    spare_part_id: r.spare_part_id ?? null,
+    forklift_id: r.forklift_id ?? null,
     item_code: r.item_code || undefined,
     description: r.description,
     quantity: r.quantity,
@@ -420,6 +431,9 @@ export default function SalesOrderEditorPage() {
       },
       items: items.filter((r) => r.description.trim()).map((r) => ({
         item_code: r.item_code,
+        product_id: r.product_id ?? null,
+        spare_part_id: r.spare_part_id ?? null,
+        forklift_id: r.forklift_id ?? null,
         description: r.description,
         quantity: r.quantity,
         unit: r.unit,
@@ -556,6 +570,16 @@ export default function SalesOrderEditorPage() {
 
               <div className="doc-editor-section">
                 <h3 className="doc-editor-section-title">{t('quotations.editor.grid.title')}</h3>
+                {!readOnly && (
+                  <ItemLookup onPick={(it) => setItems((prev) => {
+                    const row: SalesOrderLineRow = {
+                      ...emptyRow(values.tax_rate || 0), item_code: it.item_code, description: it.description,
+                      unit: it.unit, unit_price: it.unit_price,
+                      product_id: it.product_id, spare_part_id: it.spare_part_id, forklift_id: it.forklift_id,
+                    }
+                    return prev.length === 1 && !prev[0].description.trim() ? [row] : [...prev, row]
+                  })} />
+                )}
                 <LineItemsGrid<SalesOrderLineRow>
                   columns={columns}
                   rows={items}

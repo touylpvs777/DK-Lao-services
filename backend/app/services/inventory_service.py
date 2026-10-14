@@ -6,6 +6,7 @@ from fastapi import HTTPException, status
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.models.product import Product
 from app.models.spare_part import SparePart
 from app.models.warehouse import Warehouse
 from app.models.inventory_transaction import InventoryTransaction, TransactionType
@@ -46,12 +47,18 @@ class InventoryService:
         if p is None: raise HTTPException(status_code=404, detail="Spare part not found")
         return p
 
+    async def _require_product(self, product_id: int | None) -> None:
+        """A spare part may be linked to a Catalog product; the product must exist."""
+        if product_id is not None and await self.db.get(Product, product_id) is None:
+            raise HTTPException(status_code=404, detail="Catalog product not found")
+
     async def create_part(self, data: SparePartCreate) -> SparePart:
         if await self._repo.part_number_exists(data.part_number):
             raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Part number already exists")
+        await self._require_product(data.product_id)
         part = SparePart(
             part_number=data.part_number.strip(), name=data.name.strip(), description=data.description,
-            part_category=data.part_category.value, brand_id=data.brand_id, unit=data.unit,
+            part_category=data.part_category.value, brand_id=data.brand_id, product_id=data.product_id, unit=data.unit,
             unit_price=data.unit_price, currency=data.currency, min_stock_level=data.min_stock_level,
             reorder_quantity=data.reorder_quantity, lead_time_days=data.lead_time_days, image_url=data.image_url,
         )
@@ -62,6 +69,7 @@ class InventoryService:
     async def update_part(self, part_id: int, data: SparePartUpdate) -> SparePart:
         part = await self.get_part(part_id)
         changes = data.model_dump(exclude_unset=True)
+        await self._require_product(changes.get("product_id"))
         if "part_category" in changes and changes["part_category"]:
             changes["part_category"] = changes["part_category"].value
         await self._repo.update_part(part, changes)
@@ -202,6 +210,70 @@ class InventoryService:
         )
         txn = await self._repo.create_transaction(txn)
         await self._apply_balance(part_id, warehouse_id, TransactionType.RECEIVE.value, quantity)
+        return txn
+
+    async def issue_stock(
+        self,
+        part_id: int,
+        warehouse_id: int,
+        quantity: float,
+        user_id: int | None,
+        reference_type: str | None = None,
+        reference_id: int | None = None,
+        notes: str | None = None,
+    ) -> InventoryTransaction:
+        """
+        Records a Goods Issue (ISSUE) — stock leaving the warehouse (e.g. on a
+        delivery note dispatch). Unlike `create_transaction`, refuses to issue
+        more than is available instead of letting the balance silently clamp
+        to zero. Does not commit — the caller controls the transaction boundary.
+        """
+        if quantity <= 0:
+            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail="Issued quantity must be greater than zero")
+        bal = await self._repo.get_or_create_balance(part_id, warehouse_id)
+        available = bal.quantity_on_hand - bal.quantity_reserved
+        if quantity > available:
+            part = await self.get_part(part_id)
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+                detail=f"Insufficient stock for {part.part_number} ({part.name}): need {quantity:g}, available {max(available, 0):g}.",
+            )
+        number = await self._gen_number("IT")
+        txn = InventoryTransaction(
+            transaction_number=number, transaction_type=TransactionType.ISSUE.value,
+            spare_part_id=part_id, warehouse_id=warehouse_id,
+            quantity=quantity, unit_cost=0.0, total_cost=0.0,
+            reference_type=reference_type, reference_id=reference_id,
+            notes=notes, created_by=user_id,
+        )
+        txn = await self._repo.create_transaction(txn)
+        await self._apply_balance(part_id, warehouse_id, TransactionType.ISSUE.value, quantity)
+        return txn
+
+    async def return_stock(
+        self,
+        part_id: int,
+        warehouse_id: int,
+        quantity: float,
+        user_id: int | None,
+        reference_type: str | None = None,
+        reference_id: int | None = None,
+        notes: str | None = None,
+    ) -> InventoryTransaction:
+        """Records a RETURN — stock coming back (e.g. a dispatched delivery
+        note cancelled). Does not commit."""
+        if quantity <= 0:
+            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail="Returned quantity must be greater than zero")
+        number = await self._gen_number("IT")
+        txn = InventoryTransaction(
+            transaction_number=number, transaction_type=TransactionType.RETURN.value,
+            spare_part_id=part_id, warehouse_id=warehouse_id,
+            quantity=quantity, unit_cost=0.0, total_cost=0.0,
+            reference_type=reference_type, reference_id=reference_id,
+            notes=notes, created_by=user_id,
+        )
+        txn = await self._repo.create_transaction(txn)
+        await self._apply_balance(part_id, warehouse_id, TransactionType.RETURN.value, quantity)
         return txn
 
     async def _apply_balance(self, part_id: int, wh_id: int, txn_type: str, qty: float) -> None:

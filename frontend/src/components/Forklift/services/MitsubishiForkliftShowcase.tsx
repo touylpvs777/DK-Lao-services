@@ -1,3 +1,4 @@
+import { goToSection } from "./sectionNav";
 import React, { useState } from "react";
 import { useCurrentLocale } from "@/i18n/useCurrentLocale";
 import { motion, AnimatePresence } from "framer-motion";
@@ -458,8 +459,7 @@ export function MitsubishiForkliftShowcase() {
                       size="sm"
                       className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs"
                       onClick={() => {
-                        const el = document.getElementById("booking-form");
-                        if (el) el.scrollIntoView({ behavior: "smooth" });
+                        goToSection("booking-form");
                       }}
                     >
                       <span>{getForkliftText("ຂໍໃບສະເໜີລາຄາ", "Get Proposal")}</span>
@@ -547,8 +547,7 @@ export function MitsubishiForkliftShowcase() {
                       variant="outline"
                       className="border-teal-500/30 text-teal-300 hover:bg-teal-500 hover:text-slate-950 text-xs font-bold"
                       onClick={() => {
-                        const el = document.getElementById("booking-form");
-                        if (el) el.scrollIntoView({ behavior: "smooth" });
+                        goToSection("booking-form");
                       }}
                     >
                       <span>{getForkliftText("ສອບຖາມສະເປັກ", "Inquire Specs")}</span>
@@ -728,8 +727,7 @@ export function MitsubishiForkliftShowcase() {
 
                 <Button
                   onClick={() => {
-                    const el = document.getElementById("booking-form");
-                    if (el) el.scrollIntoView({ behavior: "smooth" });
+                    goToSection("booking-form");
                   }}
                   className="px-5 py-3 rounded-xl bg-white text-slate-950 font-bold text-xs hover:bg-slate-100 shadow-md"
                 >

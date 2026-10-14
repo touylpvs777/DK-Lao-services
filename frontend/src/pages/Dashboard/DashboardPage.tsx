@@ -12,6 +12,7 @@ import { useDashboardStats } from '@/hooks/useDashboardStats'
 import type { DashboardRevenueRange } from '@/types/dashboard'
 import { ProfitTrendChart, RevenueBreakdownChart, ServiceCostChart, SampleTrendChart } from './ErpCharts'
 import IoTWidget from './IoTWidget'
+import CrmTab from './CrmTab'
 
 const lakFormatter = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 })
 const formatLak = (v: number) => `₭ ${lakFormatter.format(Math.round(v))}`
@@ -22,7 +23,7 @@ const FONT_SIZE_CLASS: Record<FontSizeTier, string> = {
   large: 'text-base',
 }
 
-type Tab = 'financial' | 'operations' | 'service'
+type Tab = 'financial' | 'operations' | 'service' | 'crm'
 
 interface KpiCardProps {
   label: string
@@ -234,9 +235,12 @@ export default function DashboardPage() {
         <TabButton active={tab === 'financial'} onClick={() => setTab('financial')}>{t('dashboard.erp.tabs.financial')}</TabButton>
         <TabButton active={tab === 'operations'} onClick={() => setTab('operations')}>{t('dashboard.erp.tabs.operations')}</TabButton>
         <TabButton active={tab === 'service'} onClick={() => setTab('service')}>{t('dashboard.erp.tabs.service')}</TabButton>
+        <TabButton active={tab === 'crm'} onClick={() => setTab('crm')}>{t('dashboard.erp.tabs.crm', { defaultValue: 'ການຂາຍ & CRM' })}</TabButton>
       </div>
 
-      {!isLoading && data && (
+      {tab === 'crm' && <div className="mt-6"><CrmTab /></div>}
+
+      {!isLoading && data && tab !== 'crm' && (
         <div className="mt-6">
           {tab === 'financial' && (
             <div className="flex flex-col gap-4">

@@ -24,6 +24,9 @@ export interface SalesOrderItemOut {
   sales_order_id: number
   line_number: number
   item_code: string | null
+  product_id?: number | null
+  spare_part_id?: number | null
+  forklift_id?: number | null
   description: string
   quantity: number
   unit: string
@@ -169,6 +172,9 @@ export interface SalesOrderUpdate {
 
 export interface SalesOrderItemCreate {
   item_code?: string
+  product_id?: number | null
+  spare_part_id?: number | null
+  forklift_id?: number | null
   description: string
   quantity?: number
   unit?: string
@@ -217,6 +223,9 @@ export interface SalesOrderConversionPrefill {
   }
   items: {
     item_code: string
+    product_id?: number | null
+    spare_part_id?: number | null
+    forklift_id?: number | null
     description: string
     quantity: number
     unit: string

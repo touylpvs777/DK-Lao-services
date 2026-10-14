@@ -81,6 +81,10 @@ export interface Customer360Summary {
   active_rental_count: number
   open_work_order_count: number
   total_outstanding: number
+  total_invoiced?: number
+  total_paid?: number
+  open_quotation_count?: number
+  open_pipeline_value?: number
   currency: string
 }
 
@@ -91,4 +95,34 @@ export interface Customer360 {
   rental_contracts: Customer360RentalContract[]
   work_orders: Customer360WorkOrder[]
   invoices: Customer360Invoice[]
+  quotations?: Customer360Quotation[]
+  sales_orders?: Customer360SalesOrder[]
+  leads?: Customer360Lead[]
+}
+
+export interface Customer360Quotation {
+  id: number
+  quotation_number: string
+  title: string
+  status: string
+  total_amount: number
+  currency: string
+  valid_until: string | null
+}
+
+export interface Customer360SalesOrder {
+  id: number
+  so_number: string
+  title: string
+  status: string
+  total_amount: number
+  currency: string
+  order_date: string
+}
+
+export interface Customer360Lead {
+  id: number
+  title: string
+  status: string
+  value: number | null
 }

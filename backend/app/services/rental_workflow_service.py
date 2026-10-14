@@ -126,7 +126,8 @@ class RentalWorkflowService:
         for item in contract.items:
             if item.forklift_id:
                 forklift = await self._forklift_repo.get_by_id(item.forklift_id)
-                if forklift and forklift.status == ForkliftStatus.RESERVED.value:
+                # Reserve-before-rent is optional: a unit straight from stock can be rented too.
+                if forklift and forklift.status in (ForkliftStatus.RESERVED.value, ForkliftStatus.IN_STOCK.value):
                     old_status = forklift.status
                     await self._forklift_repo.update(forklift, {
                         "status": ForkliftStatus.RENTED.value,

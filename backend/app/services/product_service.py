@@ -133,7 +133,9 @@ class ProductService:
         try:
             product = await self._repo.create(product)
             await self.db.commit()
-            return product
+            # Re-fetch with eager-loaded brand/category: serializing the freshly
+            # created row would lazy-load them outside the async greenlet (500).
+            return await self._repo.get_by_id(product.id)
         except IntegrityError:
             await self.db.rollback()
             raise HTTPException(

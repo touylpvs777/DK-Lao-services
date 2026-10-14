@@ -14,6 +14,7 @@ const Customer360Page = lazy(() => import('@/pages/Customers/Customer360Page'))
 const LeadsPage = lazy(() => import('@/pages/Leads/LeadsPage'))
 const ActivityPage = lazy(() => import('@/pages/Activity/ActivityPage'))
 const ReportsPage = lazy(() => import('@/pages/Reports/ReportsPage'))
+const PCBuilderPage = lazy(() => import('@/pages/Catalog/PCBuilderPage'))
 const CatalogPage = lazy(() => import('@/pages/Catalog/CatalogPage'))
 const ProductDetailPage = lazy(() => import('@/pages/Catalog/ProductDetailPage'))
 const BrandsPage = lazy(() => import('@/pages/Catalog/BrandsPage'))
@@ -97,6 +98,8 @@ export default function App() {
         <Route path="/login" element={<Suspense fallback={<PageLoader />}><LoginPage /></Suspense>} />
 
         <Route element={<PrivateRoute />}>
+          <Route path="/pc-builder" element={<Navigate to="/catalog/pc-builder" replace />} />
+          <Route path="/catalog/pc-builder" element={<Suspense fallback={<PageLoader />}><PCBuilderPage /></Suspense>} />
           <Route element={<AppLayout />}>
             <Route path="/portal" element={<Suspense fallback={<PageLoader />}><DashboardPage /></Suspense>} />
             <Route path="/dashboard" element={<Suspense fallback={<PageLoader />}><DashboardPage /></Suspense>} />

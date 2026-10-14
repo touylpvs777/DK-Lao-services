@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wght@300;400;500;600;700&display=swap');
 @import './styles/tokens.css';
@@ -132,3 +133,10 @@ textarea:focus-visible {
   border-color: var(--color-danger-600);
 }
 .btn-danger:hover:not(:disabled) { background: var(--color-danger-700); border-color: var(--color-danger-700); }
+
+/* ── Enterprise baseline (applies to every page) ─────────────────────── */
+table { font-variant-numeric: tabular-nums; }
+button:disabled, [aria-disabled="true"] { cursor: not-allowed; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+}

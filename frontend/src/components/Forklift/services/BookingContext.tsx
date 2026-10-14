@@ -1,3 +1,4 @@
+import { goToSection } from "./sectionNav";
 import React, { createContext, useContext, useState } from "react";
 import type { ReactNode } from "react";
 
@@ -62,19 +63,13 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
         ? `ຕ້ອງການຈອງແພັກເກັດບຳລຸງຮັກສາ ${pkgLabel} ສຳລັບລົດຍົກ ${selectedForkliftType === "diesel" ? "ດີເຊວ" : "ໄຟຟ້າ"}`
         : `Requesting booking for maintenance package: ${pkgLabel} for ${selectedForkliftType === "diesel" ? "Diesel" : "Electric"} Forklift`
     );
-    const formElement = document.getElementById("booking-form");
-    if (formElement) {
-      formElement.scrollIntoView({ behavior: "smooth" });
-    }
+    goToSection("booking-form");
   };
 
   const handleBookConsultation = (topic: string) => {
     setUrgency("sale_inquiry");
     setIssueDetails(topic);
-    const formElement = document.getElementById("booking-form");
-    if (formElement) {
-      formElement.scrollIntoView({ behavior: "smooth" });
-    }
+    goToSection("booking-form");
   };
 
   const handleBookingSubmit = (e: React.FormEvent, isLo: boolean) => {

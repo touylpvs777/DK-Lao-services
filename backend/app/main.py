@@ -59,11 +59,48 @@ async def _backfill_ownership_state(conn) -> None:
     ))
 
 
+_ITEM_TABLES = ("sales_order_items", "delivery_note_items", "invoice_items")
+_ITEM_LINKS = (("product_id", "products"), ("spare_part_id", "spare_parts"), ("forklift_id", "forklifts"))
+
+
+def _cross_module_link_statements(*, postgres: bool) -> list[str]:
+    """
+    Cross-module link columns (all nullable FKs): document line items point at
+    the catalog product / spare part / forklift they are for, delivery lines at
+    the ordered line, and invoices at their sales order.
+    """
+    add = "ADD COLUMN IF NOT EXISTS" if postgres else "ADD COLUMN"
+    stmts = [
+        f"ALTER TABLE {table} {add} {col} INTEGER REFERENCES {ref} (id) ON DELETE SET NULL"
+        for table in _ITEM_TABLES for col, ref in _ITEM_LINKS
+    ]
+    stmts.append(
+        f"ALTER TABLE delivery_note_items {add} sales_order_item_id INTEGER "
+        "REFERENCES sales_order_items (id) ON DELETE SET NULL"
+    )
+    stmts.append(
+        f"ALTER TABLE spare_parts {add} product_id INTEGER "
+        "REFERENCES products (id) ON DELETE SET NULL"
+    )
+    stmts.append(
+        f"ALTER TABLE invoices {add} sales_order_id INTEGER "
+        "REFERENCES sales_orders (id) ON DELETE SET NULL"
+    )
+    return stmts
+
+
 async def _apply_sqlite_migrations(conn) -> None:
     """
     Non-destructive schema migrations for SQLite.
     Each block is idempotent — safe to run on every startup.
     """
+    # ── cross-module link columns (items -> product/spare part/forklift, invoice -> SO)
+    for statement in _cross_module_link_statements(postgres=False):
+        try:
+            await conn.execute(text(statement))
+        except OperationalError:
+            pass  # column already exists
+
     # ── leads.source ───────────────────────────────────────────────────────
     try:
         await conn.execute(text("ALTER TABLE leads ADD COLUMN source VARCHAR(50)"))
@@ -333,6 +370,7 @@ async def _apply_postgres_migrations(conn) -> None:
         "ALTER TABLE quotation_items ADD COLUMN IF NOT EXISTS tax_percent DOUBLE PRECISION NOT NULL DEFAULT 0",
         "ALTER TABLE purchase_orders ADD COLUMN IF NOT EXISTS partner_id INTEGER REFERENCES partners (id) ON DELETE SET NULL",
         "CREATE INDEX IF NOT EXISTS ix_purchase_orders_partner_id ON purchase_orders (partner_id)",
+        *_cross_module_link_statements(postgres=True),
     ):
         await conn.execute(text(statement))
 

@@ -17,6 +17,16 @@ class SalesOrderItem(Base):
     line_number: Mapped[int] = mapped_column(Integer, nullable=False)
 
     item_code: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    # Cross-module links (all optional): what catalog/inventory/fleet record this line is for.
+    product_id: Mapped[int | None] = mapped_column(
+        Integer, ForeignKey("products.id", ondelete="SET NULL"), nullable=True, index=True,
+    )
+    spare_part_id: Mapped[int | None] = mapped_column(
+        Integer, ForeignKey("spare_parts.id", ondelete="SET NULL"), nullable=True, index=True,
+    )
+    forklift_id: Mapped[int | None] = mapped_column(
+        Integer, ForeignKey("forklifts.id", ondelete="SET NULL"), nullable=True, index=True,
+    )
     description: Mapped[str] = mapped_column(String(1000), nullable=False)
     quantity: Mapped[float] = mapped_column(Float, default=1.0, nullable=False)
     unit: Mapped[str] = mapped_column(String(50), default="unit", nullable=False)

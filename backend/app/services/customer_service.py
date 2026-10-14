@@ -7,12 +7,18 @@ from sqlalchemy.orm import selectinload
 from app.models.customer import Customer
 from app.models.forklift import Forklift
 from app.models.invoice import Invoice, InvoiceStatus
+from app.models.lead import Lead, LeadStatus
+from app.models.quotation import Quotation, QuotationStatus
+from app.models.sales_order import SalesOrder
 from app.models.rental_contract import RentalContract, RentalContractStatus
 from app.models.work_order import WorkOrder, WorkOrderStatus
 from app.schemas.customer import (
     Customer360Forklift,
     Customer360Invoice,
+    Customer360Lead,
     Customer360Out,
+    Customer360Quotation,
+    Customer360SalesOrder,
     Customer360RentalContract,
     Customer360Summary,
     Customer360WorkOrder,
@@ -124,7 +130,31 @@ class CustomerService:
         )
         invoices = list(invoices_result.scalars().all())
 
+        quotations = list((await self.db.execute(
+            select(Quotation).where(Quotation.customer_id == customer_id)
+            .order_by(Quotation.created_at.desc())
+        )).scalars().all())
+        sales_orders = list((await self.db.execute(
+            select(SalesOrder).where(SalesOrder.customer_id == customer_id)
+            .order_by(SalesOrder.created_at.desc())
+        )).scalars().all())
+        leads = list((await self.db.execute(
+            select(Lead).where(Lead.customer_id == customer_id)
+            .order_by(Lead.created_at.desc())
+        )).scalars().all())
+
+        _OPEN_QUOTATION = {
+            QuotationStatus.DRAFT.value, QuotationStatus.UNDER_REVIEW.value, QuotationStatus.APPROVED.value,
+            QuotationStatus.REVISION.value, QuotationStatus.SENT.value,
+        }
+        _CLOSED_LEAD = {LeadStatus.WON, LeadStatus.LOST}
+        billable = [inv for inv in invoices if inv.status not in ("draft", "cancelled", "voided")]
+
         summary = Customer360Summary(
+            total_invoiced=sum(inv.total_amount for inv in billable),
+            total_paid=sum(inv.amount_paid for inv in billable),
+            open_quotation_count=sum(1 for q in quotations if q.status in _OPEN_QUOTATION),
+            open_pipeline_value=sum((l.value or 0.0) for l in leads if l.status not in _CLOSED_LEAD),
             forklift_count=len(forklifts),
             active_rental_count=sum(
                 1 for c in contracts if c.status == RentalContractStatus.ACTIVE.value
@@ -146,4 +176,7 @@ class CustomerService:
             rental_contracts=[Customer360RentalContract.model_validate(c) for c in contracts],
             work_orders=[Customer360WorkOrder.model_validate(wo) for wo in work_orders],
             invoices=[Customer360Invoice.model_validate(inv) for inv in invoices],
+            quotations=[Customer360Quotation.model_validate(q) for q in quotations],
+            sales_orders=[Customer360SalesOrder.model_validate(s) for s in sales_orders],
+            leads=[Customer360Lead.model_validate(l) for l in leads],
         )

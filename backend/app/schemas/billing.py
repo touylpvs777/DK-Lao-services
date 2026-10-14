@@ -41,6 +41,9 @@ class InvoiceItemOut(BaseModel):
     billing_cycle_id: int | None = None
     line_number: int
     item_code: str | None = None
+    product_id: int | None = None
+    spare_part_id: int | None = None
+    forklift_id: int | None = None
     description: str
     unit: str | None = None
     quantity: float
@@ -55,6 +58,9 @@ class InvoiceItemOut(BaseModel):
 
 class InvoiceItemCreate(BaseModel):
     item_code: str | None = Field(default=None, max_length=100)
+    product_id: int | None = None
+    spare_part_id: int | None = None
+    forklift_id: int | None = None
     description: str = Field(..., min_length=1, max_length=500)
     unit: str | None = Field(default=None, max_length=50)
     quantity: float = Field(default=1.0, gt=0)
@@ -66,6 +72,7 @@ class InvoiceCreate(BaseModel):
     customer_id: int
     reference_type: ReferenceType | None = None
     reference_id: int | None = None
+    sales_order_id: int | None = None
     issue_date: date | None = None
     due_date: date | None = None
     billing_period_start: date | None = None
@@ -105,6 +112,7 @@ class InvoiceOut(BaseModel):
     customer_id: int
     reference_type: str | None = None
     reference_id: int | None = None
+    sales_order_id: int | None = None
     status: str
     issue_date: date | None = None
     due_date: date | None = None

@@ -9,7 +9,7 @@ import {
   dispatchDeliveryNote, deliverDeliveryNote, cancelDeliveryNote,
 } from '@/api/deliveryNote'
 import { getCustomers } from '@/api/customers'
-import { getSalesOrders } from '@/api/salesOrder'
+import { getSalesOrders, getSalesOrder as getSalesOrderDetail } from '@/api/salesOrder'
 import type { Customer } from '@/types/customer'
 import type {
   DeliveryNoteDetail, DeliveryNoteCreate, DeliveryNoteUpdate, DeliveryNoteItemBulkItem,
@@ -19,6 +19,7 @@ import {
   deliveryNoteHeaderSchema, DELIVERY_NOTE_EDITOR_DEFAULTS, type DeliveryNoteEditorFormValues,
 } from '@/schemas/deliveryNoteEditorSchema'
 import LineItemsGrid, { type GridColumn, type GridRow } from '@/components/grid/LineItemsGrid'
+import ItemLookup from '@/components/grid/ItemLookup'
 import DeliveryNoteEditorHeader from '@/components/documents/DeliveryNoteEditorHeader'
 import DocumentFooterSection from '@/components/documents/DocumentFooterSection'
 import { Badge, type BadgeVariant } from '@/components/ui/Badge'
@@ -32,6 +33,11 @@ import '@/styles/detail.css'
 interface DeliveryNoteLineRow extends GridRow {
   id: number | null
   item_code: string
+  // Hidden cross-module links (round-tripped, not grid columns).
+  sales_order_item_id?: number | null
+  product_id?: number | null
+  spare_part_id?: number | null
+  forklift_id?: number | null
   description: string
   quantity_ordered: number | null
   quantity_delivered: number
@@ -92,6 +98,28 @@ export default function DeliveryNoteEditorPage() {
     defaultValues: DELIVERY_NOTE_EDITOR_DEFAULTS,
   })
 
+  // New delivery note: once a Sales Order is picked and the grid is still
+  // untouched, pre-fill the lines from the order (keeping the item links) so
+  // delivered-vs-ordered can be tracked per line.
+  const pickedSalesOrderId = methods.watch('sales_order_id')
+  useEffect(() => {
+    if (!isNew || !pickedSalesOrderId) return
+    if (items.some((r) => r.description.trim())) return
+    let cancelled = false
+    getSalesOrderDetail(Number(pickedSalesOrderId)).then(({ data }) => {
+      if (cancelled || !data.items.length) return
+      setItems(data.items.map((it) => ({
+        _key: nextRowKey++, id: null, item_code: it.item_code ?? '',
+        sales_order_item_id: it.id, product_id: it.product_id ?? null,
+        spare_part_id: it.spare_part_id ?? null, forklift_id: it.forklift_id ?? null,
+        description: it.description, quantity_ordered: it.quantity,
+        quantity_delivered: it.quantity, unit: it.unit, notes: '',
+      })))
+    }).catch(() => {})
+    return () => { cancelled = true }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isNew, pickedSalesOrderId])
+
   const load = async () => {
     if (isNew) return
     setIsLoading(true)
@@ -115,6 +143,8 @@ export default function DeliveryNoteEditorPage() {
       setItems(data.items.length
         ? data.items.map((it) => ({
           _key: nextRowKey++, id: it.id, item_code: it.item_code ?? '',
+          sales_order_item_id: it.sales_order_item_id ?? null, product_id: it.product_id ?? null,
+          spare_part_id: it.spare_part_id ?? null, forklift_id: it.forklift_id ?? null,
           description: it.description, quantity_ordered: it.quantity_ordered,
           quantity_delivered: it.quantity_delivered, unit: it.unit, notes: it.notes ?? '',
         }))
@@ -141,6 +171,10 @@ export default function DeliveryNoteEditorPage() {
 
   const buildBulkItems = (): DeliveryNoteItemBulkItem[] => items.map((r) => ({
     id: r.id ?? undefined,
+    sales_order_item_id: r.sales_order_item_id ?? null,
+    product_id: r.product_id ?? null,
+    spare_part_id: r.spare_part_id ?? null,
+    forklift_id: r.forklift_id ?? null,
     item_code: r.item_code || undefined,
     description: r.description,
     quantity_ordered: r.quantity_ordered,
@@ -305,6 +339,15 @@ export default function DeliveryNoteEditorPage() {
 
           <div className="doc-editor-section">
             <h3 className="doc-editor-section-title">{t('quotations.editor.grid.title')}</h3>
+            {!readOnly && (
+              <ItemLookup onPick={(it) => setItems((prev) => {
+                const row: DeliveryNoteLineRow = {
+                  ...emptyRow(), item_code: it.item_code, description: it.description, unit: it.unit,
+                  product_id: it.product_id, spare_part_id: it.spare_part_id, forklift_id: it.forklift_id,
+                }
+                return prev.length === 1 && !prev[0].description.trim() ? [row] : [...prev, row]
+              })} />
+            )}
             <LineItemsGrid<DeliveryNoteLineRow>
               columns={columns}
               rows={items}

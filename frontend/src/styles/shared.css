@@ -224,3 +224,17 @@
   .form-row-3   { grid-template-columns: 1fr; }
   .toolbar-count { display: none; }
 }
+
+/* ── View toggle (grid/list, board/table) — shared so any page can use it ── */
+.catalog-view-toggle {
+  display: flex; border: 1px solid var(--color-border);
+  border-radius: var(--radius); overflow: hidden; margin-left: auto;
+}
+.catalog-view-btn {
+  width: 34px; height: 34px; display: flex; align-items: center; justify-content: center;
+  background: var(--color-surface); border: none; cursor: pointer;
+  color: var(--color-text-muted); transition: background var(--duration-fast), color var(--duration-fast);
+}
+.catalog-view-btn + .catalog-view-btn { border-left: 1px solid var(--color-border); }
+.catalog-view-btn.active { background: var(--color-primary); color: var(--color-on-primary); }
+.catalog-view-btn:hover:not(.active) { background: var(--color-bg-subtle); color: var(--color-text); }

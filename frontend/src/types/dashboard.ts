@@ -97,3 +97,21 @@ export interface ErpDashboardSummary {
   revenue_breakdown: RevenueBreakdown
   net_profit: number
 }
+
+export interface CrmStatusBucket { status: string; count: number; value: number }
+export interface CrmAgingBucket { label: string; amount: number; count: number }
+export interface CrmTopCustomer { customer_id: number; name: string; invoiced: number; paid: number }
+export interface CrmSummary {
+  pipeline: CrmStatusBucket[]
+  open_pipeline_value: number
+  win_rate: number
+  quotations: CrmStatusBucket[]
+  quotation_conversion_rate: number
+  sales_orders: CrmStatusBucket[]
+  receivables_total: number
+  receivables_aging: CrmAgingBucket[]
+  fleet: CrmStatusBucket[]
+  fleet_utilisation: number
+  top_customers: CrmTopCustomer[]
+  currency: string
+}

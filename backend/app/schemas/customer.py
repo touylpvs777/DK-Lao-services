@@ -102,11 +102,48 @@ class Customer360Invoice(BaseModel):
     due_date: date | None = None
 
 
+class Customer360Quotation(BaseModel):
+    model_config = {"from_attributes": True}
+
+    id: int
+    quotation_number: str
+    title: str
+    status: str
+    total_amount: float
+    currency: str
+    valid_until: date | None = None
+
+
+class Customer360SalesOrder(BaseModel):
+    model_config = {"from_attributes": True}
+
+    id: int
+    so_number: str
+    title: str
+    status: str
+    total_amount: float
+    currency: str
+    order_date: date
+
+
+class Customer360Lead(BaseModel):
+    model_config = {"from_attributes": True}
+
+    id: int
+    title: str
+    status: str
+    value: float | None = None
+
+
 class Customer360Summary(BaseModel):
     forklift_count: int
     active_rental_count: int
     open_work_order_count: int
     total_outstanding: float
+    total_invoiced: float = 0.0
+    total_paid: float = 0.0
+    open_quotation_count: int = 0
+    open_pipeline_value: float = 0.0
     currency: str = "LAK"
 
 
@@ -117,3 +154,6 @@ class Customer360Out(BaseModel):
     rental_contracts: list[Customer360RentalContract]
     work_orders: list[Customer360WorkOrder]
     invoices: list[Customer360Invoice]
+    quotations: list[Customer360Quotation] = []
+    sales_orders: list[Customer360SalesOrder] = []
+    leads: list[Customer360Lead] = []

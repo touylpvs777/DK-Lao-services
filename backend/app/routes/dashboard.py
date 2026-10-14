@@ -5,6 +5,7 @@ from app.core.permissions import PermissionName, require_permission
 from app.database.session import get_db
 from app.models.user import User
 from app.schemas.dashboard import DashboardSummary, ErpDashboardSummary, LeadMetrics, ProfitTrendPoint, TrendPoint
+from app.services.crm_dashboard_service import CrmDashboardService, CrmSummary
 from app.services.dashboard_service import DashboardService
 
 router = APIRouter(prefix="/dashboard", tags=["Dashboard"])
@@ -85,3 +86,15 @@ async def get_lead_metrics(
     _: User = require_permission(PermissionName.VIEW_DASHBOARD),
 ):
     return await DashboardService(db).get_lead_metrics()
+
+
+@router.get(
+    "/crm-summary",
+    response_model=CrmSummary,
+    summary="Sales & CRM summary: lead pipeline, quotation conversion, receivables aging, fleet utilisation, top customers",
+)
+async def get_crm_summary(
+    db: AsyncSession = Depends(get_db),
+    _: User = require_permission(PermissionName.VIEW_DASHBOARD),
+):
+    return await CrmDashboardService(db).get_summary()

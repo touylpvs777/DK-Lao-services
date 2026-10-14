@@ -35,6 +35,7 @@ class SparePartCreate(BaseModel):
     description: str | None = None
     part_category: PartCategory = PartCategory.GENERAL
     brand_id: int | None = None
+    product_id: int | None = None
     unit: str = Field(default="piece", max_length=30)
     unit_price: float = Field(default=0.0, ge=0)
     currency: str = Field(default="LAK", max_length=3)
@@ -48,6 +49,7 @@ class SparePartUpdate(BaseModel):
     description: str | None = None
     part_category: PartCategory | None = None
     brand_id: int | None = None
+    product_id: int | None = None
     unit: str | None = None
     unit_price: float | None = Field(default=None, ge=0)
     min_stock_level: int | None = Field(default=None, ge=0)
@@ -60,6 +62,7 @@ class SparePartOut(BaseModel):
     model_config = {"from_attributes": True}
     id: int; part_number: str; name: str; description: str | None = None
     part_category: str; brand: BrandBrief | None = None
+    product_id: int | None = None
     unit: str; unit_price: float; currency: str
     min_stock_level: int; reorder_quantity: int; lead_time_days: int
     image_url: str | None = None; is_active: bool

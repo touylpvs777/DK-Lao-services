@@ -22,6 +22,16 @@ class InvoiceItem(Base):
 
     line_number: Mapped[int] = mapped_column(Integer, nullable=False)
     item_code: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    # Cross-module links (all optional): what catalog/inventory/fleet record this line bills.
+    product_id: Mapped[int | None] = mapped_column(
+        Integer, ForeignKey("products.id", ondelete="SET NULL"), nullable=True, index=True,
+    )
+    spare_part_id: Mapped[int | None] = mapped_column(
+        Integer, ForeignKey("spare_parts.id", ondelete="SET NULL"), nullable=True, index=True,
+    )
+    forklift_id: Mapped[int | None] = mapped_column(
+        Integer, ForeignKey("forklifts.id", ondelete="SET NULL"), nullable=True, index=True,
+    )
     description: Mapped[str] = mapped_column(String(500), nullable=False)
     unit: Mapped[str | None] = mapped_column(String(50), nullable=True)
 

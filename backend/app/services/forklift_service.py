@@ -183,7 +183,9 @@ class ForkliftService:
             await self.db.flush()
 
         await self.db.commit()
-        return forklift
+        # Re-fetch with eager-loaded brand/model/customer so serialization never
+        # lazy-loads outside the async greenlet (MissingGreenlet -> 500).
+        return await self._repo.get_by_id(forklift.id)
 
     # ── Update ───────────────────────────────────────────────────────────────
 

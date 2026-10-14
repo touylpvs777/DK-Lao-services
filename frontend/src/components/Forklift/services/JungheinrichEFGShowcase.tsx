@@ -1,3 +1,4 @@
+import { goToSection } from "./sectionNav";
 import React, { useState } from "react";
 import { useCurrentLocale } from "@/i18n/useCurrentLocale";
 import { motion, AnimatePresence } from "framer-motion";
@@ -471,8 +472,7 @@ export function JungheinrichEFGShowcase() {
                       variant="outline"
                       className="text-xs border-yellow-500/30 text-yellow-400 hover:bg-yellow-500 hover:text-slate-950 transition-all"
                       onClick={() => {
-                        const el = document.getElementById("booking-form");
-                        if (el) el.scrollIntoView({ behavior: "smooth" });
+                        goToSection("booking-form");
                       }}
                     >
                       <span>{getForkliftText("ຂໍໃບສະເໜີລາຄາ", "Get Quote")}</span>
@@ -786,8 +786,7 @@ export function JungheinrichEFGShowcase() {
 
                 <Button
                   onClick={() => {
-                    const el = document.getElementById("booking-form");
-                    if (el) el.scrollIntoView({ behavior: "smooth" });
+                    goToSection("booking-form");
                   }}
                   className="px-5 py-3 rounded-xl bg-white text-slate-950 font-bold text-xs hover:bg-slate-100 shadow-md"
                 >

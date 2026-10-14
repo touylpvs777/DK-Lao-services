@@ -1,3 +1,4 @@
+import { goToSection } from "./sectionNav";
 import React, { useState } from "react";
 import { useCurrentLocale } from "@/i18n/useCurrentLocale";
 import {
@@ -383,8 +384,7 @@ export function MaintenanceChecklistShowcase({ onOpenInspectionModal }: Maintena
               size="sm"
               className="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs"
               onClick={() => {
-                const el = document.getElementById("booking-form");
-                if (el) el.scrollIntoView({ behavior: "smooth" });
+                goToSection("booking-form");
               }}
             >
               <span>{getForkliftText("ນັດໝາຍຊ່າງກວດເຊັກ (Mobile Service)", "Book 12-Point Inspection")}</span>

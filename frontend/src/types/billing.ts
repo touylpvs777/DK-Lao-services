@@ -14,6 +14,7 @@ export interface ContractBrief { id: number; contract_number: string; status: st
 export interface InvoiceItemOut {
   id: number; invoice_id: number; billing_cycle_id: number | null
   line_number: number; item_code: string | null; description: string; unit: string | null
+  product_id?: number | null; spare_part_id?: number | null; forklift_id?: number | null
   quantity: number; unit_rate: number; amount: number; tax_amount: number; line_total: number
   sort_order: number; created_at: string; updated_at: string | null
 }
@@ -25,7 +26,7 @@ export interface PaymentAllocationOut {
 
 export interface InvoiceOut {
   id: number; invoice_number: string; contract_id: number | null; customer_id: number
-  reference_type: ReferenceType | null; reference_id: number | null
+  reference_type: ReferenceType | null; reference_id: number | null; sales_order_id?: number | null
   status: InvoiceStatus; issue_date: string | null; due_date: string | null; paid_date: string | null
   subtotal: number; tax_rate: number; tax_amount: number; discount_amount: number
   total_amount: number; amount_paid: number; balance_due: number; currency: string
@@ -90,11 +91,11 @@ export interface BillingDashboardSummary {
   total_overdue: number; invoice_count: number; payment_count: number; currency: string
 }
 
-export interface InvoiceItemCreate { item_code?: string; description: string; unit?: string; quantity: number; unit_rate: number }
+export interface InvoiceItemCreate { item_code?: string; product_id?: number | null; spare_part_id?: number | null; forklift_id?: number | null; description: string; unit?: string; quantity: number; unit_rate: number }
 
 export interface InvoiceCreate {
   contract_id?: number; customer_id: number
-  reference_type?: ReferenceType; reference_id?: number
+  reference_type?: ReferenceType; reference_id?: number; sales_order_id?: number
   issue_date?: string; due_date?: string
   billing_period_start?: string; billing_period_end?: string
   tax_rate?: number; discount_amount?: number; currency?: string
@@ -139,6 +140,9 @@ export interface InvoiceConversionPrefill {
   }
   items: {
     item_code: string
+    product_id?: number | null
+    spare_part_id?: number | null
+    forklift_id?: number | null
     description: string
     quantity: number
     unit: string

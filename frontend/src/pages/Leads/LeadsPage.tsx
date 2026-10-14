@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
-  TrendingUp, Search, Pencil, Trash2,
+  TrendingUp, Search, Pencil, Trash2, Kanban, List,
   ChevronUp, ChevronDown, ChevronLeft, ChevronRight,
   AlertCircle,
 } from 'lucide-react'
@@ -9,6 +9,7 @@ import { useLeads } from '@/hooks/useLeads'
 import { LeadStatusBadge } from '@/components/ui/Badge'
 import ConfirmDialog from '@/components/ui/ConfirmDialog'
 import LeadForm from './LeadForm'
+import LeadsBoard from './LeadsBoard'
 import type { Lead, LeadCreate, LeadStatus, LeadSource } from '@/types/lead'
 import PageHeader from '@/components/layout/PageHeader'
 import './LeadsPage.css'
@@ -72,6 +73,7 @@ export default function LeadsPage() {
   const { t } = useTranslation()
   const { leads, isLoading, error, create, update, remove } = useLeads()
 
+  const [view, setView]                   = useState<'board' | 'table'>('board')
   const [search, setSearch]               = useState('')
   const [statusFilter, setStatusFilter]   = useState<LeadStatus | 'all'>('all')
   const [sourceFilter, setSourceFilter]   = useState<LeadSource | 'all'>('all')
@@ -211,10 +213,22 @@ export default function LeadsPage() {
           ))}
         </select>
         <span className="toolbar-count">{t('leads.list.resultsCount', { count: filtered.length })}</span>
+        <div className="catalog-view-toggle">
+          <button className={`catalog-view-btn${view === 'board' ? ' active' : ''}`} onClick={() => setView('board')} title="Pipeline"><Kanban size={15} /></button>
+          <button className={`catalog-view-btn${view === 'table' ? ' active' : ''}`} onClick={() => setView('table')} title={t('common.listView')}><List size={15} /></button>
+        </div>
       </div>
 
+      {view === 'board' && (
+        <LeadsBoard
+          leads={filtered}
+          onMove={(lead, status) => update(lead.id, { status })}
+          onOpen={openEdit}
+        />
+      )}
+
       {/* Table */}
-      <div className="table-card">
+      {view === 'table' && <div className="table-card">
         <div className="table-wrap">
           <table className="data-table">
             <thead>
@@ -314,7 +328,7 @@ export default function LeadsPage() {
             </div>
           </div>
         )}
-      </div>
+      </div>}
 
       {/* Create / Edit modal */}
       <LeadForm

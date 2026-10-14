@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
   ChevronLeft, AlertCircle, Truck, ClipboardList, Wrench, Receipt,
-  Mail, Phone, Building2, User,
+  Mail, Phone, Building2, User, TrendingUp, FileText,
 } from 'lucide-react'
 import { getCustomerOverview } from '@/api/customers'
 import { CustomerStatusBadge } from '@/components/ui/Badge'
@@ -79,6 +79,9 @@ export default function Customer360Page() {
   }
 
   const { customer, summary, forklifts, rental_contracts, work_orders, invoices } = data
+  const quotations = data.quotations ?? []
+  const salesOrders = data.sales_orders ?? []
+  const leads = data.leads ?? []
 
   return (
     <div className="c360-page">
@@ -122,6 +125,18 @@ export default function Customer360Page() {
           <span className="c360-stat-value">{fmtAmount(summary.total_outstanding, summary.currency)}</span>
           <span className="c360-stat-label">{t('customer360.outstanding')}</span>
         </div>
+        <div className="c360-stat-chip">
+          <span className="c360-stat-value">{fmtAmount(summary.total_paid ?? 0, summary.currency)}</span>
+          <span className="c360-stat-label">{t('customer360.lifetimePaid', { defaultValue: 'ຊຳລະແລ້ວທັງໝົດ' })}</span>
+        </div>
+        <div className="c360-stat-chip">
+          <span className="c360-stat-value">{fmtAmount(summary.open_pipeline_value ?? 0, summary.currency)}</span>
+          <span className="c360-stat-label">{t('customer360.pipeline', { defaultValue: 'ມູນຄ່າ Pipeline' })}</span>
+        </div>
+        <div className="c360-stat-chip">
+          <span className="c360-stat-value">{summary.open_quotation_count ?? 0}</span>
+          <span className="c360-stat-label">{t('customer360.openQuotations', { defaultValue: 'ໃບສະເໜີລາຄາທີ່ເປີດ' })}</span>
+        </div>
       </div>
 
       <div className="c360-sections">
@@ -134,6 +149,86 @@ export default function Customer360Page() {
             </div>
           </div>
         )}
+
+        {/* Sales pipeline: leads, quotations, sales orders */}
+        <div className="c360-card">
+          <div className="c360-card-header">
+            <TrendingUp size={16} /> {t('customer360.leads', { defaultValue: 'ໂອກາດການຂາຍ (Leads)' })}
+            <span className="c360-card-count">({leads.length})</span>
+          </div>
+          {leads.length === 0 ? (
+            <div className="c360-empty">{t('customer360.noLeads', { defaultValue: 'ຍັງບໍ່ມີ Lead' })}</div>
+          ) : (
+            <div className="table-wrap">
+              <table className="data-table">
+                <thead><tr><th>{t('customer360.colTitle')}</th><th>{t('customer360.colStatus')}</th><th>{t('customer360.colValue', { defaultValue: 'ມູນຄ່າ' })}</th></tr></thead>
+                <tbody>
+                  {leads.map((l) => (
+                    <tr key={l.id}>
+                      <td>{l.title}</td>
+                      <td className="cell-muted">{l.status}</td>
+                      <td className="cell-muted">{l.value != null ? fmtAmount(l.value, summary.currency) : '—'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+
+        <div className="c360-card">
+          <div className="c360-card-header">
+            <FileText size={16} /> {t('customer360.quotations', { defaultValue: 'ໃບສະເໜີລາຄາ' })}
+            <span className="c360-card-count">({quotations.length})</span>
+          </div>
+          {quotations.length === 0 ? (
+            <div className="c360-empty">{t('customer360.noQuotations', { defaultValue: 'ຍັງບໍ່ມີໃບສະເໜີລາຄາ' })}</div>
+          ) : (
+            <div className="table-wrap">
+              <table className="data-table">
+                <thead><tr><th>{t('customer360.colNumber', { defaultValue: 'ເລກທີ' })}</th><th>{t('customer360.colTitle')}</th><th>{t('customer360.colStatus')}</th><th>{t('customer360.colTotalAmount')}</th><th className="col-hide-sm">{t('customer360.colValidUntil', { defaultValue: 'ໝົດອາຍຸ' })}</th></tr></thead>
+                <tbody>
+                  {quotations.map((q) => (
+                    <tr key={q.id} style={{ cursor: 'pointer' }} onClick={() => navigate(`/quotations/${q.id}`)}>
+                      <td>{q.quotation_number}</td>
+                      <td className="cell-muted">{q.title}</td>
+                      <td className="cell-muted">{q.status}</td>
+                      <td className="cell-muted">{fmtAmount(q.total_amount, q.currency)}</td>
+                      <td className="cell-muted col-hide-sm">{fmtDate(q.valid_until)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+
+        <div className="c360-card">
+          <div className="c360-card-header">
+            <ClipboardList size={16} /> {t('customer360.salesOrders', { defaultValue: 'ໃບສັ່ງຂາຍ' })}
+            <span className="c360-card-count">({salesOrders.length})</span>
+          </div>
+          {salesOrders.length === 0 ? (
+            <div className="c360-empty">{t('customer360.noSalesOrders', { defaultValue: 'ຍັງບໍ່ມີໃບສັ່ງຂາຍ' })}</div>
+          ) : (
+            <div className="table-wrap">
+              <table className="data-table">
+                <thead><tr><th>{t('customer360.colNumber', { defaultValue: 'ເລກທີ' })}</th><th>{t('customer360.colTitle')}</th><th>{t('customer360.colStatus')}</th><th>{t('customer360.colTotalAmount')}</th><th className="col-hide-sm">{t('customer360.colDate', { defaultValue: 'ວັນທີ' })}</th></tr></thead>
+                <tbody>
+                  {salesOrders.map((s) => (
+                    <tr key={s.id} style={{ cursor: 'pointer' }} onClick={() => navigate(`/sales-orders/${s.id}`)}>
+                      <td>{s.so_number}</td>
+                      <td className="cell-muted">{s.title}</td>
+                      <td className="cell-muted">{s.status}</td>
+                      <td className="cell-muted">{fmtAmount(s.total_amount, s.currency)}</td>
+                      <td className="cell-muted col-hide-sm">{fmtDate(s.order_date)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
 
         {/* Forklifts */}
         <div className="c360-card">

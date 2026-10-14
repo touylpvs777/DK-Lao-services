@@ -180,6 +180,9 @@ class QuotationRepository:
         self.db.add(item)
         await self.db.flush()
         await self.db.refresh(item)
+        # QuotationItemOut serializes forklift/product: load them here, inside the
+        # async context, or the response 500s with MissingGreenlet on linked rows.
+        await self.db.refresh(item, attribute_names=["forklift", "product"])
         return item
 
     async def update_item(self, item: QuotationItem, changes: dict) -> QuotationItem:
@@ -187,6 +190,7 @@ class QuotationRepository:
             setattr(item, key, value)
         await self.db.flush()
         await self.db.refresh(item)
+        await self.db.refresh(item, attribute_names=["forklift", "product"])
         return item
 
     async def delete_item(self, item: QuotationItem) -> None:

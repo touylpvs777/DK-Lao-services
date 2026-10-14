@@ -25,8 +25,17 @@ const queryClient = new QueryClient({
       staleTime: 30_000,
       gcTime: 5 * 60_000,
       refetchOnWindowFocus: true,
-      retry: 1,
+      // Retry transient failures (network, timeout, 5xx) with backoff, but never
+      // client errors (4xx): retrying a 401/403/404/422 cannot succeed.
+      retry: (failureCount, error) => {
+        const status = (error as { response?: { status?: number } }).response?.status
+        if (status !== undefined && status >= 400 && status < 500) return false
+        return failureCount < 2
+      },
+      retryDelay: (attempt) => Math.min(1000 * 2 ** attempt, 8000),
     },
+    // Mutations are not retried: they may not be idempotent.
+    mutations: { retry: false },
   },
 })
 

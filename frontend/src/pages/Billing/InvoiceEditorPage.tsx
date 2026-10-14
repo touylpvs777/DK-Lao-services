@@ -16,6 +16,7 @@ import {
   invoiceHeaderSchema, INVOICE_EDITOR_DEFAULTS, type InvoiceEditorFormValues,
 } from '@/schemas/invoiceEditorSchema'
 import LineItemsGrid, { type GridColumn, type GridRow } from '@/components/grid/LineItemsGrid'
+import ItemLookup from '@/components/grid/ItemLookup'
 import InvoiceEditorHeader from '@/components/documents/InvoiceEditorHeader'
 import InvoiceVehicleInfoSection from '@/components/documents/InvoiceVehicleInfoSection'
 import DocumentTotalsPanel from '@/components/documents/DocumentTotalsPanel'
@@ -34,6 +35,10 @@ import '@/styles/detail.css'
 interface InvoiceLineRow extends GridRow {
   id: number | null
   item_code: string
+  // Hidden cross-module links (carried over from the Sales Order lines).
+  product_id?: number | null
+  spare_part_id?: number | null
+  forklift_id?: number | null
   description: string
   quantity: number
   unit: string
@@ -92,7 +97,9 @@ export default function InvoiceEditorPage() {
   const [items, setItems] = useState<InvoiceLineRow[]>(isNew
     ? (prefill?.items.length
       ? prefill.items.map((it) => ({
-        _key: nextRowKey++, id: null, item_code: it.item_code, description: it.description,
+        _key: nextRowKey++, id: null, item_code: it.item_code,
+        product_id: it.product_id ?? null, spare_part_id: it.spare_part_id ?? null, forklift_id: it.forklift_id ?? null,
+        description: it.description,
         quantity: it.quantity, unit: it.unit, unit_rate: it.unit_rate,
       }))
       : [emptyRow()])
@@ -231,6 +238,7 @@ export default function InvoiceEditorPage() {
           customer_id: form.customer_id!,
           reference_type: form.reference_type,
           reference_id: form.reference_id ?? undefined,
+          sales_order_id: form.reference_type === 'sales' ? (form.reference_id ?? undefined) : undefined,
           issue_date: form.issue_date || undefined,
           due_date: form.due_date || undefined,
           tax_rate: form.tax_rate,
@@ -247,6 +255,9 @@ export default function InvoiceEditorPage() {
           internal_notes: form.internal_notes || undefined,
           items: validItems.map((r) => ({
             item_code: r.item_code || undefined,
+            product_id: r.product_id ?? undefined,
+            spare_part_id: r.spare_part_id ?? undefined,
+            forklift_id: r.forklift_id ?? undefined,
             description: r.description,
             unit: r.unit || undefined,
             quantity: r.quantity,
@@ -427,6 +438,16 @@ export default function InvoiceEditorPage() {
 
               <div className="doc-editor-section">
                 <h3 className="doc-editor-section-title">{t('quotations.editor.grid.title')}</h3>
+                {!itemsReadOnly && (
+                  <ItemLookup onPick={(it) => setItems((prev) => {
+                    const row: InvoiceLineRow = {
+                      ...emptyRow(), item_code: it.item_code, description: it.description,
+                      unit: it.unit, unit_rate: it.unit_price,
+                      product_id: it.product_id, spare_part_id: it.spare_part_id, forklift_id: it.forklift_id,
+                    }
+                    return prev.length === 1 && !prev[0].description.trim() ? [row] : [...prev, row]
+                  })} />
+                )}
                 <LineItemsGrid<InvoiceLineRow>
                   columns={columns}
                   rows={items}

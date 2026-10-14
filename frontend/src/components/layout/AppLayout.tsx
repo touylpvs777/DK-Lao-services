@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useSidebarStore } from '@/store/sidebarStore'
 import Sidebar from './Sidebar'
 import Header from './Header'
+import { RouteErrorBoundary } from '@/components/ErrorBoundary'
 import PrintHeader from '@/components/print/PrintHeader'
 import './AppLayout.css'
 
@@ -51,7 +52,9 @@ export default function AppLayout() {
       <div className="app-main">
         <Header />
         <main className="app-content" id="main-content">
-          <Outlet />
+          <RouteErrorBoundary>
+            <Outlet />
+          </RouteErrorBoundary>
         </main>
       </div>
     </div>

@@ -17,6 +17,7 @@ from app.models.payment_allocation import PaymentAllocation
 from app.models.rental_billing_cycle import BillingType, RentalBillingCycle
 from app.models.rental_contract import RentalContract
 from app.models.rental_contract_item import RentalContractItem
+from app.models.sales_order import SalesOrder
 from app.models.revenue_recognition import (
     RecognitionStatus, RecognitionType, RevenueRecognition,
 )
@@ -68,13 +69,29 @@ class BillingService:
         if customer is None:
             raise HTTPException(status_code=404, detail="Customer not found")
 
+        reference_type = data.reference_type.value if data.reference_type else None
+        reference_id = data.reference_id
+        if data.sales_order_id is not None:
+            sales_order = await self.db.get(SalesOrder, data.sales_order_id)
+            if sales_order is None:
+                raise HTTPException(status_code=404, detail="Sales order not found")
+            if sales_order.customer_id is not None and sales_order.customer_id != data.customer_id:
+                raise HTTPException(
+                    status_code=422,
+                    detail="Invoice customer does not match the sales order's customer.",
+                )
+            # Keep the legacy polymorphic reference in sync with the real FK.
+            reference_type = reference_type or "sales"
+            reference_id = reference_id or data.sales_order_id
+
         number = await self._gen_invoice_number()
         invoice = Invoice(
             invoice_number=number,
             contract_id=data.contract_id,
             customer_id=data.customer_id,
-            reference_type=data.reference_type.value if data.reference_type else None,
-            reference_id=data.reference_id,
+            sales_order_id=data.sales_order_id,
+            reference_type=reference_type,
+            reference_id=reference_id,
             currency=data.currency,
             exchange_rate=data.exchange_rate,
             bank_details=data.bank_details,
@@ -1263,6 +1280,9 @@ class BillingService:
                 invoice_id=invoice.id,
                 line_number=line_number,
                 item_code=item_data.item_code,
+                product_id=item_data.product_id,
+                spare_part_id=item_data.spare_part_id,
+                forklift_id=item_data.forklift_id,
                 description=item_data.description.strip(),
                 unit=item_data.unit,
                 quantity=item_data.quantity,

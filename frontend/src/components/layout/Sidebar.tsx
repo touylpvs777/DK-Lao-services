@@ -47,21 +47,15 @@ function SidebarAvatarContent({
   return <>{initials}</>
 }
 
+// Module architecture: one group per business module, ordered the way work flows
+// (customer -> sale -> asset -> rental -> service -> parts -> project -> money -> reports).
+// Marketing/website pages sit last: they duplicate the public site, not daily ERP work.
 const NAV_GROUPS: NavGroup[] = [
   {
     id: 'dashboard',
     labelKey: 'nav.groups.dashboard',
     items: [
       { to: '/dashboard', labelKey: 'nav.items.overview', icon: LayoutDashboard },
-    ],
-  },
-  {
-    id: 'forklift_modules',
-    labelKey: 'ລົດຟອກລິບ & ບໍລິການ',
-    items: [
-      { to: '/forklift-store', labelKey: 'ຮ້ານຄ້າລົດຟອກລິບ', icon: ShoppingCart },
-      { to: '/client-fleet', labelKey: 'ຕິດຕາມລົດ (Client)', icon: Car },
-      { to: '/workshop-4s', labelKey: 'ສູນບໍລິການ 4S', icon: Wrench },
     ],
   },
   {
@@ -79,14 +73,6 @@ const NAV_GROUPS: NavGroup[] = [
       { to: '/quotations', labelKey: 'nav.items.quotations', icon: FileText },
       { to: '/sales-orders', labelKey: 'nav.items.salesOrders', icon: FileCheck2 },
       { to: '/inventory/delivery-notes', labelKey: 'nav.items.deliveryNotes', icon: FileOutput },
-    ],
-  },
-  {
-    id: 'purchasing',
-    labelKey: 'nav.groups.purchasing',
-    items: [
-      { to: '/inventory/purchase-orders', labelKey: 'nav.items.purchaseOrders', icon: ShoppingCart },
-      { to: '/inventory/goods-receive', labelKey: 'nav.items.goodsReceive', icon: PackageCheck },
     ],
   },
   {
@@ -116,9 +102,11 @@ const NAV_GROUPS: NavGroup[] = [
     labelKey: 'nav.groups.inventory',
     items: [
       { to: '/inventory', labelKey: 'nav.items.inventory', icon: Box },
-      { to: '/inventory/pos', labelKey: 'nav.items.partsPOS', icon: LayoutGrid },
-      { to: '/inventory/goods-issue', labelKey: 'nav.items.goodsIssue', icon: PackageMinus },
       { to: '/catalog', labelKey: 'nav.items.products', icon: Package },
+      { to: '/inventory/pos', labelKey: 'nav.items.partsPOS', icon: LayoutGrid },
+      { to: '/inventory/purchase-orders', labelKey: 'nav.items.purchaseOrders', icon: ShoppingCart },
+      { to: '/inventory/goods-receive', labelKey: 'nav.items.goodsReceive', icon: PackageCheck },
+      { to: '/inventory/goods-issue', labelKey: 'nav.items.goodsIssue', icon: PackageMinus },
     ],
   },
   {
@@ -147,11 +135,18 @@ const NAV_GROUPS: NavGroup[] = [
     id: 'executive',
     labelKey: 'nav.groups.executive',
     items: [
-      { to: '/activities', labelKey: 'nav.items.activity', icon: Activity, adminOnly: true },
       { to: '/reports', labelKey: 'nav.items.reports', icon: BarChart2 },
+      { to: '/activities', labelKey: 'nav.items.activity', icon: Activity, adminOnly: true },
       { to: '/iot-management', labelKey: 'nav.items.iotTelemetry', icon: Radio, adminOnly: true },
-      // '/executive' (Analytics) removed for the MVP presentation — redundant with
-      // the new /dashboard executive overview, and the endpoint isn't wired up yet.
+    ],
+  },
+  {
+    id: 'marketing',
+    labelKey: 'nav.groups.marketing',
+    items: [
+      { to: '/workshop-4s', labelKey: 'nav.items.workshop4s', icon: Wrench },
+      { to: '/forklift-store', labelKey: 'nav.items.forkliftStore', icon: ShoppingCart },
+      { to: '/client-fleet', labelKey: 'nav.items.clientFleet', icon: Car },
     ],
   },
 ]

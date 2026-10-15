@@ -14,7 +14,9 @@ interface SidebarStore {
 
 function readGroups(): string[] {
   try {
-    return JSON.parse(localStorage.getItem('dk-sidebar-groups') || '[]')
+    // First visit: keep the daily-work modules open, fold the rest.
+    const saved = localStorage.getItem('dk-sidebar-groups')
+    return saved ? JSON.parse(saved) : ['finance', 'executive', 'marketing']
   } catch {
     return []
   }

@@ -6,6 +6,7 @@ import {
   Mail, Phone, Building2, User, TrendingUp, FileText,
 } from 'lucide-react'
 import { getCustomerOverview } from '@/api/customers'
+import SitesContactsCard from '@/components/customers/SitesContactsCard'
 import { CustomerStatusBadge } from '@/components/ui/Badge'
 import { ForkliftStatusBadge } from '@/components/equipment/ForkliftStatusBadge'
 import { RentalStatusBadge } from '@/components/rental/RentalStatusBadge'
@@ -149,6 +150,8 @@ export default function Customer360Page() {
             </div>
           </div>
         )}
+
+        <SitesContactsCard customerId={customer.id} />
 
         {/* Sales pipeline: leads, quotations, sales orders */}
         <div className="c360-card">

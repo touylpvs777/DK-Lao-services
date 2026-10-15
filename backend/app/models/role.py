@@ -13,6 +13,9 @@ class RoleName(str, enum.Enum):
     MANAGER = "manager"
     SALES = "sales"
     SUPPORT = "support"
+    TECHNICIAN = "technician"
+    PARTS = "parts"
+    ACCOUNTANT = "accountant"
 
 
 class Role(Base):

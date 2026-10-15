@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import {
   Plus, Upload, LayoutGrid, List, AlertCircle,
   ChevronLeft, ChevronRight, Package, RefreshCw,
-  Pencil, Trash2, Cpu,
+  Pencil, Trash2,
 } from 'lucide-react'
 import { useCatalog } from '@/hooks/useCatalog'
 import { useBrands } from '@/hooks/useBrands'
@@ -155,9 +155,6 @@ export default function CatalogPage() {
         </button>
         <button className="btn btn-ghost" onClick={() => navigate('/catalog/import')} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           <Upload size={14} /> {t('inventory.import.button')}
-        </button>
-        <button className="btn btn-ghost" onClick={() => navigate('/catalog/pc-builder')} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <Cpu size={14} /> ຈັດສະເປັກຄອມ
         </button>
         <button className="btn btn-primary" onClick={openCreate}>
           <Plus size={15} /> {t('catalog.products.newProduct')}

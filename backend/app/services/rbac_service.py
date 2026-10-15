@@ -10,6 +10,9 @@ _ROLE_DESCRIPTIONS: dict[RoleName, str] = {
     RoleName.MANAGER: "Manage customers, leads, and view dashboard",
     RoleName.SALES: "Create and edit customers and leads",
     RoleName.SUPPORT: "Create and edit customers; view dashboard",
+    RoleName.TECHNICIAN: "Service technician — work orders, forklifts, rentals (read), project milestones",
+    RoleName.PARTS: "Parts & warehouse — spare parts, stock, purchase orders, delivery notes",
+    RoleName.ACCOUNTANT: "Accounting — invoices, receipts, payments, billing approval, reports",
 }
 
 

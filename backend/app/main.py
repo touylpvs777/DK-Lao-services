@@ -32,9 +32,10 @@ from app.core.security import hash_password
 from app.models.role import Role, RoleName
 from app.models.user import User
 from app.models.warehouse import Warehouse
-from app.routes import activity, auth, billing, crm_activities, customer_sites, customers, dashboard, delivery_notes, forklifts, inventory, iot_telemetry, leads, maintenance, movements, notifications, partners, projects, quotations, receipts, rentals, reports, roles, sales_orders, users, uploads
+from app.routes import activity, auth, billing, crm_activities, customer_portal, customer_sites, customers,dashboard, delivery_notes, forklifts, inventory, iot_telemetry, leads, maintenance, movements, notifications, partners, projects, quotations, receipts, rentals, reports, roles, sales_orders, users, uploads
 from app.routes.catalog import router as catalog_router
 from app.routes.settings import router as settings_router
+from app.routes.storefront import router as storefront_router
 from app.scheduler import shutdown_scheduler, start_scheduler
 from app.services.notification_subscribers import register_notification_subscribers
 from app.services.rbac_service import RBACService
@@ -469,6 +470,9 @@ app.include_router(uploads.router, prefix="/api/v1")
 app.include_router(notifications.router, prefix="/api/v1")
 app.include_router(projects.router, prefix="/api/v1")
 app.include_router(settings_router, prefix="/api/v1")
+# Public storefront integration: token-protected catalog, and the customer self-service portal.
+app.include_router(storefront_router, prefix="/api/v1")
+app.include_router(customer_portal.router, prefix="/api/v1")
 
 _uploads_dir = Path(settings.UPLOAD_DIR)
 _uploads_dir.mkdir(parents=True, exist_ok=True)

@@ -24,6 +24,10 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
 
+    # Shared secret for the public storefront server (catalog reads and inquiry intake).
+    # Must match CRM_STOREFRONT_TOKEN in storefront/.env.local. Empty disables those endpoints.
+    STOREFRONT_INTEGRATION_TOKEN: str = ""
+
     UPLOAD_DIR: str = "uploads/images"
     MAX_UPLOAD_SIZE_MB: int = 5
 

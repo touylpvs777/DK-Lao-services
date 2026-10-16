@@ -6,7 +6,7 @@ import {
   Building2, CalendarDays, Check, ChevronDown, ChevronRight, CircleDollarSign,
   ClipboardList, CreditCard, FileCheck2, FileText, Forklift, Gauge,
   LayoutDashboard, LifeBuoy, LogOut, Menu, Package, PackageCheck, PackageMinus,
-  Radio, Receipt, Search, Settings, ShoppingCart, TrendingDown,
+  Radio, Receipt, Search, Settings, TrendingDown,
   TrendingUp, Truck, Users, Warehouse, Wrench, X, Zap,
 } from 'lucide-react'
 import {
@@ -35,14 +35,6 @@ const NAV_GROUPS: DashboardNavGroup[] = [
   {
     id: 'overview', labelLo: 'ໜ້າປັດຈະຕະການ', labelEn: 'Dashboard', icon: LayoutDashboard,
     items: [{ labelLo: 'ພາບລວມການດຳເນີນງານ', labelEn: 'Operations overview', to: '/dashboard', icon: Activity }],
-  },
-  {
-    id: 'fleet', labelLo: 'ລົດຟອກລິຟ & ບໍລິການ', labelEn: 'Forklift & services', icon: Forklift,
-    items: [
-      { labelLo: 'ຮ້ານຄ້າລົດຟອກລິຟ', labelEn: 'Equipment catalog', to: '/forklift-store', icon: ShoppingCart },
-      { labelLo: 'ຕິດຕາມລົດ (Client)', labelEn: 'Client fleet', to: '/client-fleet', icon: Truck },
-      { labelLo: 'ສູນບໍລິການ 4S', labelEn: '4S service center', to: '/workshop-4s', icon: Wrench },
-    ],
   },
   {
     id: 'crm', labelLo: 'CRM', labelEn: 'CRM', icon: Users,

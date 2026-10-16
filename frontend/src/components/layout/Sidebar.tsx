@@ -143,15 +143,9 @@ const NAV_GROUPS: NavGroup[] = [
       { to: '/iot-management', labelKey: 'nav.items.iotTelemetry', icon: Radio, adminOnly: true },
     ],
   },
-  {
-    id: 'marketing',
-    labelKey: 'nav.groups.marketing',
-    items: [
-      { to: '/workshop-4s', labelKey: 'nav.items.workshop4s', icon: Wrench },
-      { to: '/forklift-store', labelKey: 'nav.items.forkliftStore', icon: ShoppingCart },
-      { to: '/client-fleet', labelKey: 'nav.items.clientFleet', icon: Car },
-    ],
-  },
+  // Marketing/website group (4S service centre, forklift store, client fleet) is hidden:
+  // those are customer-facing pages that live in the separate storefront app.
+  // Routes in App.tsx are kept for now so the pages can be restored if needed.
 ]
 
 export default function Sidebar() {

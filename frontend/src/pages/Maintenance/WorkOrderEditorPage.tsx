@@ -12,6 +12,7 @@ import {
 } from '@/api/maintenance'
 import AssetSelect from '@/components/maintenance/AssetSelect'
 import WorkOrderEquipmentSection from '@/components/maintenance/WorkOrderEquipmentSection'
+import WorkOrderChecklistCard from '@/components/maintenance/WorkOrderChecklistCard'
 import { WOStatusBadge, WOTypeBadge, WOPriorityBadge } from '@/components/maintenance/MaintenanceStatusBadge'
 import type { WorkOrderDetail, WOCreate, UserBrief, MCostType } from '@/types/maintenance'
 import type { Forklift } from '@/types/forklift'
@@ -420,6 +421,8 @@ export default function WorkOrderEditorPage() {
               </div>
 
               {wo && <WorkOrderEquipmentSection forklift={wo.forklift} hourMeterAtService={wo.hour_meter_at_service} />}
+
+              {wo && <WorkOrderChecklistCard woId={wo.id} readOnly={!['scheduled', 'due', 'in_progress'].includes(wo.status)} />}
 
               {wo?.findings && (
                 <div className="doc-editor-section">

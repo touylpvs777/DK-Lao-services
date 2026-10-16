@@ -10,6 +10,7 @@ export interface UserBrief { id: number; username: string; full_name: string | n
 export interface SparePart {
   id: number; part_number: string; name: string; description: string | null
   part_category: string; brand: BrandBrief | null; product_id?: number | null
+  oem_number?: string | null; equivalent_numbers?: string | null; compatible_models?: string | null
   unit: string; unit_price: number; currency: string
   min_stock_level: number; reorder_quantity: number; lead_time_days: number
   image_url: string | null; is_active: boolean

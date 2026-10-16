@@ -78,6 +78,11 @@ def _cross_module_link_statements(*, postgres: bool) -> list[str]:
         f"ALTER TABLE delivery_note_items {add} sales_order_item_id INTEGER "
         "REFERENCES sales_order_items (id) ON DELETE SET NULL"
     )
+    stmts += [
+        f"ALTER TABLE spare_parts {add} oem_number VARCHAR(100)",
+        f"ALTER TABLE spare_parts {add} equivalent_numbers TEXT",
+        f"ALTER TABLE spare_parts {add} compatible_models TEXT",
+    ]
     stmts.append(
         f"ALTER TABLE spare_parts {add} product_id INTEGER "
         "REFERENCES products (id) ON DELETE SET NULL"

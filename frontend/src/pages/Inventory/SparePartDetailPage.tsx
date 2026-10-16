@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { ChevronLeft, AlertCircle, Package } from 'lucide-react'
 import { getPart, getBalances, getTransactions } from '@/api/inventory'
 import { PartCategoryBadge, StockLevelBadge } from '@/components/inventory/StockBadge'
+import PartCrossRefCard from '@/components/inventory/PartCrossRefCard'
 import type { SparePart, InventoryBalance, InventoryTransaction } from '@/types/inventory'
 import '@/pages/Catalog/ProductDetailPage.css'
 import '@/styles/detail.css'
@@ -72,6 +73,8 @@ export default function SparePartDetailPage() {
       </div>
 
       {part.description && <div className="detail-description" style={{ marginTop: 16 }}><div className="detail-section-title">{t('common.description')}</div><p>{part.description}</p></div>}
+
+      <PartCrossRefCard key={part.updated_at ?? part.id} part={part} onSaved={load} />
 
       {balances.length > 0 && (
         <div className="detail-specs-section" style={{ marginTop: 24 }}>

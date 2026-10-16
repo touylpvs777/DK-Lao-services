@@ -46,7 +46,10 @@ class InventoryRepository:
             stmt = stmt.where(SparePart.brand_id == f.brand_id)
         if f.q:
             p = f"%{f.q}%"
-            stmt = stmt.where(or_(SparePart.part_number.ilike(p), SparePart.name.ilike(p)))
+            stmt = stmt.where(or_(
+                SparePart.part_number.ilike(p), SparePart.name.ilike(p), SparePart.oem_number.ilike(p),
+                SparePart.equivalent_numbers.ilike(p), SparePart.compatible_models.ilike(p),
+            ))
 
         count = (await self.db.execute(select(func.count()).select_from(stmt.subquery()))).scalar_one()
         sort_col = {"name": SparePart.name, "part_number": SparePart.part_number, "created_at": SparePart.created_at, "unit_price": SparePart.unit_price}.get(f.sort, SparePart.name)

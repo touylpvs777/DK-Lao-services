@@ -1,4 +1,5 @@
 from datetime import date, datetime
+from typing import Literal
 
 from pydantic import BaseModel, Field
 
@@ -284,3 +285,36 @@ class MaintenanceDashboardSummary(BaseModel):
     completed_this_month: int
     total_cost_this_month: float
     currency: str
+
+
+# ── Work order checklist (PM inspection results) ─────────────────────────────
+
+class ChecklistItemOut(BaseModel):
+    model_config = {"from_attributes": True}
+
+    id: int
+    work_order_id: int
+    position: int
+    label: str
+    result: str
+    remark: str | None = None
+    checked_by: int | None = None
+    checked_at: datetime | None = None
+
+
+class ChecklistItemUpdate(BaseModel):
+    result: Literal["pending", "ok", "attention", "fail", "na"] | None = None
+    remark: str | None = None
+
+
+class ChecklistItemCreate(BaseModel):
+    label: str = Field(..., min_length=1, max_length=300)
+
+
+class ChecklistSummary(BaseModel):
+    total: int
+    pending: int
+    ok: int
+    attention: int
+    fail: int
+    na: int

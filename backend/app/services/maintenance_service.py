@@ -8,6 +8,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.events import event_bus
+from app.services import work_order_checklist as checklist
 from app.models.maintenance_plan import IntervalType, MaintenancePlan
 from app.models.maintenance_schedule import MaintenanceSchedule, ScheduleStatus
 from app.models.work_order import WorkOrder, WorkOrderStatus
@@ -190,6 +191,7 @@ class MaintenanceService:
         )
         try:
             wo = await self._repo.create_work_order(wo)
+            await checklist.seed_checklist(self.db, wo)
             await self.db.commit()
             return await self._repo.get_work_order_by_id(wo.id)
         except IntegrityError:
@@ -226,6 +228,13 @@ class MaintenanceService:
     async def complete_work_order(self, wo_id: int, data: CompleteAction, user_id: int) -> WorkOrder:
         wo = await self._require_wo(wo_id)
         self._validate(wo.status, WorkOrderStatus.COMPLETED.value)
+
+        pending = await checklist.pending_count(self.db, wo_id)
+        if pending:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+                detail=f"Complete the inspection checklist first ({pending} item(s) still pending).",
+            )
 
         total_cost = await self._repo.get_wo_total_cost(wo_id)
 

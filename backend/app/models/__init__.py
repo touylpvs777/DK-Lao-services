@@ -65,10 +65,12 @@ from app.models.revenue_recognition import RevenueRecognition
 from app.models.revoked_token import RevokedToken
 from app.models.role import Role
 from app.models.scheduler_lock import SchedulerLock
+from app.models.work_order_checklist_item import WorkOrderChecklistItem
 from app.models.setting import Setting
 from app.models.user import User
 
 __all__ = [
+    "WorkOrderChecklistItem",
     "CrmActivity",
     "CustomerContact",
     "CustomerSite",

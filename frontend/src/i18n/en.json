@@ -3628,5 +3628,31 @@
       "tabDone": "Done",
       "empty": "Nothing here. Add follow-ups from a customer page (Customer 360)."
     }
+  },
+  "woChecklist": {
+    "title": "PM inspection checklist",
+    "empty": "No inspection points yet. Add one below.",
+    "remark": "Remark",
+    "delete": "Delete",
+    "add": "Add",
+    "addPlaceholder": "Add an inspection point…",
+    "saveFailed": "Could not save the result",
+    "result": {
+      "ok": "OK",
+      "attention": "Watch",
+      "fail": "Fail",
+      "na": "N/A"
+    }
+  },
+  "partXref": {
+    "title": "Cross-reference / equivalents",
+    "oem": "OEM number",
+    "equivalent": "Equivalent numbers (other brands)",
+    "models": "Compatible models",
+    "listHint": "Separate with commas or new lines",
+    "edit": "Edit",
+    "save": "Save",
+    "cancel": "Cancel",
+    "saveFailed": "Could not save"
   }
 }

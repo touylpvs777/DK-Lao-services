@@ -8,6 +8,10 @@ from app.core.permissions import PermissionName, require_permission
 from app.database.session import get_db
 from app.models.user import User
 from app.schemas.maintenance import (
+    ChecklistItemCreate,
+    ChecklistItemOut,
+    ChecklistItemUpdate,
+    ChecklistSummary,
     CancelAction,
     CompleteAction,
     CostBulkReplaceRequest,
@@ -29,6 +33,8 @@ from app.schemas.maintenance import (
     WorkOrderOut,
     WorkOrderUpdate,
 )
+from app.models.work_order_checklist_item import WorkOrderChecklistItem
+from app.services import work_order_checklist as checklist
 from app.services.maintenance_service import MaintenanceService
 
 logger = logging.getLogger(__name__)
@@ -267,3 +273,64 @@ async def service_history(
 ):
     entries = await MaintenanceService(db).get_service_history(forklift_id)
     return [ServiceHistoryOut.model_validate(e) for e in entries]
+
+
+# ── Work order inspection checklist ──────────────────────────────────────────
+
+@router.get("/work-orders/{wo_id}/checklist", response_model=list[ChecklistItemOut], summary="PM checklist of a work order")
+async def get_checklist(
+    wo_id: int, db: AsyncSession = Depends(get_db),
+    _: User = require_permission(PermissionName.FORKLIFT_READ),
+):
+    await MaintenanceService(db).get_work_order(wo_id)  # 404 if missing
+    return await checklist.list_items(db, wo_id)
+
+
+@router.get("/work-orders/{wo_id}/checklist/summary", response_model=ChecklistSummary, summary="Checklist progress")
+async def get_checklist_summary(
+    wo_id: int, db: AsyncSession = Depends(get_db),
+    _: User = require_permission(PermissionName.FORKLIFT_READ),
+):
+    await MaintenanceService(db).get_work_order(wo_id)
+    return checklist.summarise(await checklist.list_items(db, wo_id))
+
+
+@router.post("/work-orders/{wo_id}/checklist", response_model=ChecklistItemOut, status_code=status.HTTP_201_CREATED,
+             summary="Add an inspection point")
+async def add_checklist_item(
+    wo_id: int, body: ChecklistItemCreate, db: AsyncSession = Depends(get_db),
+    _: User = require_permission(PermissionName.FORKLIFT_UPDATE),
+):
+    await MaintenanceService(db).get_work_order(wo_id)
+    items = await checklist.list_items(db, wo_id)
+    item = WorkOrderChecklistItem(work_order_id=wo_id, position=len(items) + 1, label=body.label.strip())
+    db.add(item)
+    await db.commit()
+    await db.refresh(item)
+    return item
+
+
+@router.patch("/work-orders/{wo_id}/checklist/{item_id}", response_model=ChecklistItemOut, summary="Record an inspection result")
+async def update_checklist_item(
+    wo_id: int, item_id: int, body: ChecklistItemUpdate, db: AsyncSession = Depends(get_db),
+    current_user: User = require_permission(PermissionName.FORKLIFT_UPDATE),
+):
+    item = await checklist.get_item(db, wo_id, item_id)
+    changes = body.model_dump(exclude_unset=True)
+    for k, v in changes.items():
+        setattr(item, k, v)
+    if "result" in changes:
+        checklist.stamp(item, current_user.id)
+    await db.commit()
+    await db.refresh(item)
+    return item
+
+
+@router.delete("/work-orders/{wo_id}/checklist/{item_id}", status_code=status.HTTP_204_NO_CONTENT, summary="Remove an inspection point")
+async def delete_checklist_item(
+    wo_id: int, item_id: int, db: AsyncSession = Depends(get_db),
+    _: User = require_permission(PermissionName.FORKLIFT_UPDATE),
+):
+    item = await checklist.get_item(db, wo_id, item_id)
+    await db.delete(item)
+    await db.commit()

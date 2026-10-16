@@ -30,3 +30,15 @@ export const addCost = (woId: number, data: { cost_type: string; description: st
 export const replaceCostsBulk = (woId: number, data: CostBulkReplaceRequest) => client.put<CostEntry[]>(`${B}/work-orders/${woId}/items/bulk`, data)
 
 export const getServiceHistory = (forkliftId: number) => client.get<ServiceHistoryEntry[]>(`${B}/service-history/${forkliftId}`)
+
+// PM inspection checklist
+export type ChecklistResult = 'pending' | 'ok' | 'attention' | 'fail' | 'na'
+export interface ChecklistItem {
+  id: number; work_order_id: number; position: number; label: string
+  result: ChecklistResult; remark: string | null; checked_by: number | null; checked_at: string | null
+}
+export const getChecklist = (woId: number) => client.get<ChecklistItem[]>(`${B}/work-orders/${woId}/checklist`)
+export const addChecklistItem = (woId: number, label: string) => client.post<ChecklistItem>(`${B}/work-orders/${woId}/checklist`, { label })
+export const updateChecklistItem = (woId: number, id: number, d: { result?: ChecklistResult; remark?: string | null }) =>
+  client.patch<ChecklistItem>(`${B}/work-orders/${woId}/checklist/${id}`, d)
+export const deleteChecklistItem = (woId: number, id: number) => client.delete(`${B}/work-orders/${woId}/checklist/${id}`)

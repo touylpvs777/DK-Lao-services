@@ -30,7 +30,7 @@ from datetime import UTC, date, datetime, timedelta
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
-from sqlalchemy import and_, or_, select, update
+from sqlalchemy import and_, func, or_, select, update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
@@ -40,6 +40,8 @@ from app.events import event_bus
 from app.models.crm_activity import CrmActivity
 from app.models.customer import Customer
 from app.models.forklift import Forklift
+from app.models.inventory_balance import InventoryBalance
+from app.models.spare_part import SparePart
 from app.models.notification import Notification, NotificationChannel, NotificationStatus
 from app.models.maintenance_schedule import MaintenanceSchedule, ScheduleStatus
 from app.models.rental_billing_cycle import BillingType, RentalBillingCycle
@@ -57,6 +59,10 @@ logger = logging.getLogger("app.scheduler")
 PM_SCAN_JOB = "pm_scan"
 BILLING_SCAN_JOB = "billing_scan"
 TASK_SCAN_JOB = "task_scan"
+RENTAL_SCAN_JOB = "rental_scan"
+STOCK_SCAN_JOB = "stock_scan"
+RENTAL_EXPIRY_WARN_DAYS = 7
+RENTAL_BILLING_WARN_DAYS = 3
 TASK_OVERDUE_EVENT = "activity.overdue"
 LOCK_STALE_AFTER = timedelta(hours=1)
 _OPEN_WORK_ORDER_STATUSES = {
@@ -346,6 +352,145 @@ async def _run_task_scan(db: AsyncSession) -> int:
     return created
 
 
+async def _notify_once(
+    db: AsyncSession, *, user_id: int | None, event_type: str, entity_type: str, entity_id: int,
+    subject: str, message: str,
+) -> bool:
+    """Create one in-app notification unless the same (event_type, entity) already has one."""
+    exists = (await db.execute(
+        select(Notification.id).where(
+            Notification.event_type == event_type, Notification.entity_type == entity_type,
+            Notification.entity_id == entity_id,
+        ).limit(1)
+    )).first()
+    if exists:
+        return False
+    db.add(Notification(
+        channel=NotificationChannel.IN_APP.value,
+        status=NotificationStatus.SENT.value,
+        recipient=f"user:{user_id}" if user_id else "role:admin",
+        subject=subject, message=message,
+        event_type=event_type, entity_type=entity_type, entity_id=entity_id,
+        recipient_user_id=user_id,
+        target_role=None if user_id else "admin",
+        sent_at=datetime.now(UTC),
+    ))
+    return True
+
+
+async def _next_billing_start(db: AsyncSession, contract: RentalContract) -> date | None:
+    """Earliest next-period start across the contract's items, or None if fully billed."""
+    items = (await db.execute(
+        select(RentalContractItem).where(RentalContractItem.contract_id == contract.id)
+    )).scalars().all()
+    starts: list[date] = []
+    for item in items:
+        last_end = (await db.execute(
+            select(RentalBillingCycle.period_end).where(
+                RentalBillingCycle.contract_id == contract.id,
+                RentalBillingCycle.contract_item_id == item.id,
+                RentalBillingCycle.billing_type == BillingType.RENTAL_PERIOD.value,
+            ).order_by(RentalBillingCycle.period_end.desc()).limit(1)
+        )).scalar_one_or_none()
+        nxt = (last_end + timedelta(days=1)) if last_end else (contract.actual_start_date or contract.start_date)
+        if nxt <= contract.end_date:
+            starts.append(nxt)
+    return min(starts) if starts else None
+
+
+async def rental_scan(db: AsyncSession | None = None) -> int:
+    """
+    Reminders for active rentals, one in-app notification per contract per milestone:
+      - ending within RENTAL_EXPIRY_WARN_DAYS days            (rental.expiring)
+      - past end_date but still active (not returned)         (rental.overdue)
+      - next billing period starting within RENTAL_BILLING_WARN_DAYS days (rental.billing_soon)
+    Sent to the contract's assignee, or the admin feed when unassigned.
+    The milestone date is part of event_type, so extending a contract re-arms the reminder.
+    Returns the number of notifications created.
+    """
+    if db is None:
+        async with AsyncSessionLocal() as session:
+            return await _run_rental_scan(session)
+    return await _run_rental_scan(db)
+
+
+async def _run_rental_scan(db: AsyncSession) -> int:
+    if not await _try_acquire_lock(db, RENTAL_SCAN_JOB):
+        logger.info("rental_scan: lock held by another run, skipping this cycle")
+        return 0
+    created = 0
+    try:
+        today = date.today()
+        contracts = (await db.execute(
+            select(RentalContract, Customer.company, Customer.first_name, Customer.last_name)
+            .join(Customer, Customer.id == RentalContract.customer_id)
+            .where(RentalContract.status.in_((RentalContractStatus.ACTIVE.value, RentalContractStatus.OVERDUE.value)))
+        )).all()
+        for contract, company, first, last in contracts:
+            who = company or f"{first} {last}"
+            ref = f"{contract.contract_number} — {who}"
+            notify = dict(user_id=contract.assigned_to, entity_type="rental_contract", entity_id=contract.id)
+            days_left = (contract.end_date - today).days
+            if days_left < 0:
+                created += await _notify_once(
+                    db, event_type=f"rental.overdue.{contract.end_date}", subject="ສັນຍາເຊົ່າເກີນກຳນົດສົ່ງຄືນ",
+                    message=f"{ref} · ກຳນົດ {contract.end_date} (ເກີນ {-days_left} ວັນ)", **notify)
+            elif days_left <= RENTAL_EXPIRY_WARN_DAYS:
+                created += await _notify_once(
+                    db, event_type=f"rental.expiring.{contract.end_date}", subject="ສັນຍາເຊົ່າໃກ້ໝົດ",
+                    message=f"{ref} · ໝົດ {contract.end_date} (ອີກ {days_left} ວັນ)", **notify)
+            nxt = await _next_billing_start(db, contract)
+            if nxt is not None and 0 <= (nxt - today).days <= RENTAL_BILLING_WARN_DAYS:
+                created += await _notify_once(
+                    db, event_type=f"rental.billing_soon.{nxt}", subject="ໃກ້ຮອບເກັບເງິນຄ່າເຊົ່າ",
+                    message=f"{ref} · ຮອບໃໝ່ເລີ່ມ {nxt}", **notify)
+        await db.commit()
+    finally:
+        await _release_lock(db, RENTAL_SCAN_JOB)
+    logger.info("rental_scan: created %s notification(s)", created)
+    return created
+
+
+async def stock_scan(db: AsyncSession | None = None) -> int:
+    """
+    Low-stock reminders for spare parts: when a part's available quantity (summed over
+    warehouses) is at or below its min_stock_level, post one admin-feed notification
+    per part per ISO week until it is restocked. Returns the number created.
+    """
+    if db is None:
+        async with AsyncSessionLocal() as session:
+            return await _run_stock_scan(session)
+    return await _run_stock_scan(db)
+
+
+async def _run_stock_scan(db: AsyncSession) -> int:
+    if not await _try_acquire_lock(db, STOCK_SCAN_JOB):
+        logger.info("stock_scan: lock held by another run, skipping this cycle")
+        return 0
+    created = 0
+    try:
+        year, week, _ = date.today().isocalendar()
+        rows = (await db.execute(
+            select(SparePart, func.coalesce(func.sum(InventoryBalance.quantity_available), 0.0))
+            .join(InventoryBalance, InventoryBalance.spare_part_id == SparePart.id)
+            .where(SparePart.is_active.is_(True))
+            .group_by(SparePart.id)
+        )).all()
+        for part, available in rows:
+            if available > part.min_stock_level:
+                continue
+            created += await _notify_once(
+                db, user_id=None, event_type=f"stock.low.{year}-W{week:02d}", entity_type="spare_part", entity_id=part.id,
+                subject="ອາໄຫຼ່ໃກ້ໝົດສະຕັອກ",
+                message=f"{part.part_number} — {part.name} · ເຫຼືອ {available:g} (ຂັ້ນຕ່ຳ {part.min_stock_level}, ສັ່ງເພີ່ມ {part.reorder_quantity})",
+            )
+        await db.commit()
+    finally:
+        await _release_lock(db, STOCK_SCAN_JOB)
+    logger.info("stock_scan: created %s notification(s)", created)
+    return created
+
+
 scheduler = AsyncIOScheduler()
 
 
@@ -375,6 +520,22 @@ def start_scheduler() -> None:
         max_instances=1,
         coalesce=True,
         misfire_grace_time=1800,
+    )
+    scheduler.add_job(
+        rental_scan,
+        trigger=CronTrigger(hour=7, minute=30),
+        id=RENTAL_SCAN_JOB,
+        max_instances=1,
+        coalesce=True,
+        misfire_grace_time=3600,
+    )
+    scheduler.add_job(
+        stock_scan,
+        trigger=CronTrigger(hour=7, minute=45),
+        id=STOCK_SCAN_JOB,
+        max_instances=1,
+        coalesce=True,
+        misfire_grace_time=3600,
     )
     scheduler.start()
 

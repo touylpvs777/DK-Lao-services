@@ -59,6 +59,7 @@ class InventoryService:
         part = SparePart(
             part_number=data.part_number.strip(), name=data.name.strip(), description=data.description,
             part_category=data.part_category.value, brand_id=data.brand_id, product_id=data.product_id, unit=data.unit,
+            oem_number=data.oem_number, equivalent_numbers=data.equivalent_numbers, compatible_models=data.compatible_models,
             unit_price=data.unit_price, currency=data.currency, min_stock_level=data.min_stock_level,
             reorder_quantity=data.reorder_quantity, lead_time_days=data.lead_time_days, image_url=data.image_url,
         )

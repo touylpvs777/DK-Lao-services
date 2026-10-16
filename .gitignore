@@ -7,3 +7,8 @@ dk_service.db
 .env
 .env.*
 !.env.example
+
+# Local runtime artefacts
+.pytest_cache/
+backend/uploads/
+*_run.log

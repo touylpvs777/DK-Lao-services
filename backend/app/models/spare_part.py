@@ -38,6 +38,11 @@ class SparePart(Base):
     product_id: Mapped[int | None] = mapped_column(
         Integer, ForeignKey("products.id", ondelete="SET NULL"), nullable=True, index=True,
     )
+    # Cross-reference numbers: the manufacturer's OEM number, other brands' equivalent numbers
+    # (free text, separated by commas/newlines so a plain ILIKE search finds them) and the models it fits.
+    oem_number: Mapped[str | None] = mapped_column(String(100), nullable=True, index=True)
+    equivalent_numbers: Mapped[str | None] = mapped_column(Text, nullable=True)
+    compatible_models: Mapped[str | None] = mapped_column(Text, nullable=True)
     unit: Mapped[str] = mapped_column(String(30), default="piece", nullable=False)
     unit_price: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
     currency: Mapped[str] = mapped_column(String(3), default="LAK", nullable=False)

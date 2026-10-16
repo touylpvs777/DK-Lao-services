@@ -28,7 +28,7 @@ from app.database.session import AsyncSessionLocal, engine
 # Import all models so Base.metadata knows about every table before create_all runs.
 import app.models as _models  # noqa: F401, E402
 
-from app.core.security import hash_password
+from app.core.security import hash_password, verify_password
 from app.models.role import Role, RoleName
 from app.models.user import User
 from app.models.warehouse import Warehouse
@@ -318,23 +318,42 @@ async def _seed_defaults(db: AsyncSession) -> None:
         admin = (
             await db.execute(select(User).where(User.email == _DEFAULT_ADMIN_EMAIL))
         ).scalar_one_or_none()
-        if admin is None:
-            role = (
-                await db.execute(select(Role).where(Role.name == RoleName.SUPER_ADMIN.value))
-            ).scalar_one_or_none()
-            db.add(User(
-                email=_DEFAULT_ADMIN_EMAIL,
-                username=_DEFAULT_ADMIN_USERNAME,
-                full_name="System Administrator",
-                hashed_password=hash_password(_DEFAULT_ADMIN_PASSWORD),
-                is_active=True,
-                is_superuser=True,
-                role_id=role.id if role else None,
-            ))
-            logger.warning(
-                "No admin account found on startup - auto-created %s with the default "
-                "password. Log in and change it.", _DEFAULT_ADMIN_EMAIL,
+        if admin is not None and settings.is_production and verify_password(_DEFAULT_ADMIN_PASSWORD, admin.hashed_password):
+            logger.critical(
+                "The admin account %s still uses the well-known default password. "
+                "Change it now: anyone who knows it can sign in as super admin.", _DEFAULT_ADMIN_EMAIL,
             )
+        if admin is None:
+            # Production never gets the well-known default password: the owner supplies the first admin.
+            if settings.is_production:
+                admin_email, admin_password = settings.DEFAULT_ADMIN_EMAIL, settings.DEFAULT_ADMIN_PASSWORD
+                admin_username = settings.DEFAULT_ADMIN_USERNAME
+                if not admin_email or len(admin_password) < 12:
+                    logger.error(
+                        "No admin account exists and none was created: set DEFAULT_ADMIN_EMAIL and a "
+                        "DEFAULT_ADMIN_PASSWORD of at least 12 characters, then run seed_admin.py."
+                    )
+                    admin_email = ""
+            else:
+                admin_email, admin_password = _DEFAULT_ADMIN_EMAIL, _DEFAULT_ADMIN_PASSWORD
+                admin_username = _DEFAULT_ADMIN_USERNAME
+            if admin_email:
+                role = (
+                    await db.execute(select(Role).where(Role.name == RoleName.SUPER_ADMIN.value))
+                ).scalar_one_or_none()
+                db.add(User(
+                    email=admin_email,
+                    username=admin_username,
+                    full_name="System Administrator",
+                    hashed_password=hash_password(admin_password),
+                    is_active=True,
+                    is_superuser=True,
+                    role_id=role.id if role else None,
+                ))
+                logger.warning(
+                    "No admin account found on startup - auto-created %s%s.", admin_email,
+                    "" if settings.is_production else " with the default password. Log in and change it",
+                )
 
         warehouse = (await db.execute(select(Warehouse).limit(1))).scalar_one_or_none()
         if warehouse is None:
@@ -425,11 +444,20 @@ async def lifespan(app: FastAPI):
     await engine.dispose()
 
 
+if settings.is_production:
+    _errors, _warnings = settings.production_problems()
+    for _warning in _warnings:
+        logger.warning("Production setting: %s", _warning)
+    if _errors:
+        raise RuntimeError("Refusing to start in production: " + "; ".join(_errors))
+
 app = FastAPI(
     title=settings.APP_NAME,
     version=settings.APP_VERSION,
-    docs_url="/docs",
-    redoc_url="/redoc",
+    # The API description is useful to attackers, so production hides it unless ENABLE_API_DOCS=true.
+    docs_url="/docs" if settings.docs_enabled else None,
+    redoc_url="/redoc" if settings.docs_enabled else None,
+    openapi_url="/openapi.json" if settings.docs_enabled else None,
     lifespan=lifespan,
 )
 

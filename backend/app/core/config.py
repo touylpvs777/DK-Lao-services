@@ -16,6 +16,11 @@ class Settings(BaseSettings):
     APP_NAME: str = "DK CRM API"
     APP_VERSION: str = "1.0.0"
     DEBUG: bool = False
+    # Set to "production" on the public server. Production turns off the API docs, refuses to start
+    # with unsafe settings (see production_problems) and does not create a default admin account.
+    ENVIRONMENT: str = "development"
+    # Production only: set true to keep /docs and /openapi.json reachable.
+    ENABLE_API_DOCS: bool = False
 
     DATABASE_URL: str = "sqlite+aiosqlite:///./crm.db"
 
@@ -68,6 +73,34 @@ class Settings(BaseSettings):
     ]
 
     SERVICE_API_KEY: str = os.getenv("SERVICE_API_KEY", "")
+
+    @property
+    def is_production(self) -> bool:
+        return self.ENVIRONMENT.strip().lower() == "production"
+
+    @property
+    def docs_enabled(self) -> bool:
+        return (not self.is_production) or self.ENABLE_API_DOCS
+
+    def production_problems(self) -> tuple[list[str], list[str]]:
+        """Return (errors, warnings). Errors must stop a production start; warnings are logged."""
+        errors: list[str] = []
+        warnings: list[str] = []
+        if self.SECRET_KEY.lower().startswith("changeme") or len(self.SECRET_KEY) < 32:
+            errors.append("SECRET_KEY is the placeholder or shorter than 32 characters, so login tokens could be forged")
+        if self.DEBUG:
+            errors.append("DEBUG must be false")
+        if "*" in self.ALLOWED_ORIGINS:
+            errors.append("ALLOWED_ORIGINS must list your real domains, not *")
+        if self.STOREFRONT_INTEGRATION_TOKEN and len(self.STOREFRONT_INTEGRATION_TOKEN) < 32:
+            errors.append("STOREFRONT_INTEGRATION_TOKEN is shorter than 32 characters")
+        local = [o for o in self.ALLOWED_ORIGINS if "localhost" in o or "127.0.0.1" in o]
+        if local:
+            warnings.append(f"ALLOWED_ORIGINS still lists local addresses: {', '.join(local)}")
+        insecure = [o for o in self.ALLOWED_ORIGINS if o.startswith("http://") and o not in local]
+        if insecure:
+            warnings.append(f"ALLOWED_ORIGINS has non-HTTPS origins: {', '.join(insecure)}")
+        return errors, warnings
 
 
 settings = Settings()

@@ -16,6 +16,9 @@ services:
     ports:
       # Local only: the public reaches the API through the HTTPS reverse proxy, never this port directly.
       - "127.0.0.1:8001:8001"
+    volumes:
+      # Uploaded product images survive a rebuild.
+      - uploads:/app/uploads
     depends_on:
       db:
         condition: service_healthy
@@ -57,5 +60,19 @@ services:
       timeout: 5s
       retries: 5
 
+  # Optional HTTPS entry without opening any router port: `docker compose --profile tunnel up -d`.
+  # In the Cloudflare Zero Trust dashboard, point the tunnel's public hostname at http://frontend:80.
+  cloudflared:
+    image: cloudflare/cloudflared:2025.9.0
+    container_name: dk-tunnel
+    command: tunnel --no-autoupdate run
+    environment:
+      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
+    depends_on:
+      - frontend
+    profiles: ["tunnel"]
+    restart: unless-stopped
+
 volumes:
   pgdata:
+  uploads:

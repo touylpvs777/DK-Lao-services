@@ -331,7 +331,7 @@ async def _seed_defaults(db: AsyncSession) -> None:
                 if not admin_email or len(admin_password) < 12:
                     logger.error(
                         "No admin account exists and none was created: set DEFAULT_ADMIN_EMAIL and a "
-                        "DEFAULT_ADMIN_PASSWORD of at least 12 characters, then run seed_admin.py."
+                        "DEFAULT_ADMIN_PASSWORD of at least 12 characters, then restart the backend."
                     )
                     admin_email = ""
             else:

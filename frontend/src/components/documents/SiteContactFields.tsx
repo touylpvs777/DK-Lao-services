@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useFormContext } from 'react-hook-form'
 import { useQuery } from '@tanstack/react-query'
 import { getContacts, getSites } from '@/api/customers'
@@ -16,6 +17,7 @@ interface LinkFormValues {
  * new customer's lists load.
  */
 export default function SiteContactFields({ readOnly }: { readOnly: boolean }) {
+  const { t } = useTranslation()
   const { register, watch, setValue } = useFormContext<LinkFormValues>()
   const customerId = watch('customer_id')
   const siteId = watch('site_id')
@@ -46,14 +48,14 @@ export default function SiteContactFields({ readOnly }: { readOnly: boolean }) {
   return (
     <>
       <div className="form-group">
-        <label>ສະຖານທີ່ / ໄຊທ໌</label>
+        <label>{t('crmWork.siteShort')}</label>
         <select {...register('site_id', toNum)} disabled={readOnly || !customerId}>
           <option value="">—</option>
           {sites.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
         </select>
       </div>
       <div className="form-group">
-        <label>ຜູ້ຕິດຕໍ່</label>
+        <label>{t('crmWork.contact')}</label>
         <select {...register('contact_id', toNum)} disabled={readOnly || !customerId}>
           <option value="">—</option>
           {contacts.map((c) => <option key={c.id} value={c.id}>{c.name}{c.position ? ` (${c.position})` : ''}</option>)}

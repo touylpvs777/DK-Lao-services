@@ -100,3 +100,20 @@ async def test_activity_task_lifecycle(client: AsyncClient, db_session: AsyncSes
     timeline = (await client.get(f"/api/v1/crm/activities/?customer_id={a}", headers=h)).json()
     assert len(timeline) == 2
     assert (await client.delete(f"/api/v1/crm/activities/{t['id']}", headers=h)).status_code == 204
+
+
+async def test_task_scan_notifies_assignee_once(client: AsyncClient, db_session: AsyncSession):
+    from app.scheduler import task_scan
+
+    h = await _admin_headers(client, db_session)
+    cid = (await client.post("/api/v1/customers/", json={"first_name": "A", "last_name": "B", "company": "ACME"}, headers=h)).json()["id"]
+    await client.post("/api/v1/crm/activities/", headers=h, json={
+        "type": "call", "subject": "Call back", "customer_id": cid, "due_at": "2020-01-01T00:00:00Z",
+    })
+    await client.post("/api/v1/crm/activities/", headers=h, json={
+        "type": "call", "subject": "Future", "customer_id": cid, "due_at": "2999-01-01T00:00:00Z",
+    })
+    assert await task_scan(db_session) == 1
+    assert await task_scan(db_session) == 0  # no duplicates
+    feed = (await client.get("/api/v1/notifications/me", headers=h)).json()
+    assert any("Call back" in n["message"] for n in (feed if isinstance(feed, list) else feed.get("items", [])))

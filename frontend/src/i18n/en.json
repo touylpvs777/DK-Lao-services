@@ -3571,5 +3571,62 @@
         "voided": "Receipt voided"
       }
     }
+  },
+  "crmWork": {
+    "save": "Save",
+    "add": "Add",
+    "delete": "Delete",
+    "saveFailed": "Could not save",
+    "actionFailed": "Action failed",
+    "loading": "Loading…",
+    "loadFailed": "Failed to load data",
+    "sites": "Sites",
+    "siteShort": "Site",
+    "site": "Site",
+    "siteName": "Site name *",
+    "address": "Address",
+    "province": "Province",
+    "noSites": "No sites yet",
+    "confirmDeleteSite": "Delete this site?",
+    "contacts": "Contacts",
+    "contact": "Contact",
+    "contactName": "Name *",
+    "position": "Position",
+    "phone": "Phone",
+    "noContacts": "No contacts yet",
+    "confirmDeleteContact": "Delete this contact?",
+    "activities": "Activities & follow-ups",
+    "type": "Type",
+    "subject": "Subject *",
+    "dueAt": "Due (for a follow-up task)",
+    "notes": "Details",
+    "alreadyDone": "Already done (log after the fact)",
+    "noActivities": "No activities yet. Click \"Add\" to log a call, a site visit or schedule a follow-up.",
+    "completedOn": "Done {{date}}",
+    "overdueAt": "Overdue · {{date}}",
+    "dueOn": "Due {{date}}",
+    "reopen": "Reopen",
+    "complete": "Mark done",
+    "confirmDeleteActivity": "Delete this item?",
+    "types": {
+      "call": "Call",
+      "visit": "Site visit",
+      "meeting": "Meeting",
+      "whatsapp": "WhatsApp",
+      "email": "Email",
+      "note": "Note",
+      "task": "Follow-up"
+    },
+    "tasks": {
+      "title": "Follow-ups",
+      "mine": "Mine only",
+      "open": "Open",
+      "overdue": "Overdue",
+      "dueToday": "Due today",
+      "tabOpen": "Pending",
+      "tabOverdue": "Overdue",
+      "tabDone": "Done",
+      "empty": "Nothing here. Add follow-ups from a customer page (Customer 360)."
+    }
   }
 }

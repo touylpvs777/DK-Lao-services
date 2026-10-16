@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { MapPin, Users, Plus, Trash2, Star } from 'lucide-react'
 import {
@@ -15,6 +16,7 @@ const gridStyle = (min: number) => ({
 
 /** Customer 360: physical sites and people (contacts) of a customer. */
 export default function SitesContactsCard({ customerId }: { customerId: number }) {
+  const { t } = useTranslation()
   const qc = useQueryClient()
   const sitesQ = useQuery({ queryKey: ['customer-sites', customerId], queryFn: () => getSites(customerId).then((r) => r.data) })
   const contactsQ = useQuery({ queryKey: ['customer-contacts', customerId], queryFn: () => getContacts(customerId).then((r) => r.data) })
@@ -28,7 +30,7 @@ export default function SitesContactsCard({ customerId }: { customerId: number }
     qc.invalidateQueries({ queryKey: ['customer-sites', customerId] })
     qc.invalidateQueries({ queryKey: ['customer-contacts', customerId] })
   }
-  const onError = () => toast.error('ບັນທຶກບໍ່ສຳເລັດ')
+  const onError = () => toast.error(t('crmWork.saveFailed'))
 
   const addSite = useMutation({
     mutationFn: (f: Form) => createSite(customerId, {
@@ -60,22 +62,22 @@ export default function SitesContactsCard({ customerId }: { customerId: number }
     <>
       <div className="c360-card">
         <div className="c360-card-header">
-          <MapPin size={16} /> ສະຖານທີ່ / ໄຊທ໌ (Sites) <span className="c360-card-count">({sites.length})</span>
+          <MapPin size={16} /> {t('crmWork.sites')} <span className="c360-card-count">({sites.length})</span>
           <button className="btn btn-ghost btn-sm" style={{ marginLeft: 'auto' }} onClick={() => setSiteForm(siteForm ? null : { ...empty })}>
-            <Plus size={13} /> ເພີ່ມ
+            <Plus size={13} /> {t('crmWork.add')}
           </button>
         </div>
         {siteForm && (
           <form className="c360-card-body" style={gridStyle(180)}
             onSubmit={(e) => { e.preventDefault(); if (siteForm.name.trim()) addSite.mutate(siteForm) }}>
-            {field(siteForm, setSiteForm, 'name', 'ຊື່ສະຖານທີ່ *', true)}
-            {field(siteForm, setSiteForm, 'address', 'ທີ່ຢູ່')}
-            {field(siteForm, setSiteForm, 'province', 'ແຂວງ')}
-            <button className="btn btn-primary" disabled={addSite.isPending || !siteForm.name.trim()}>ບັນທຶກ</button>
+            {field(siteForm, setSiteForm, 'name', t('crmWork.siteName'), true)}
+            {field(siteForm, setSiteForm, 'address', t('crmWork.address'))}
+            {field(siteForm, setSiteForm, 'province', t('crmWork.province'))}
+            <button className="btn btn-primary" disabled={addSite.isPending || !siteForm.name.trim()}>{t('crmWork.save')}</button>
           </form>
         )}
         {sites.length === 0 && !siteForm ? (
-          <div className="c360-empty">ຍັງບໍ່ມີສະຖານທີ່</div>
+          <div className="c360-empty">{t('crmWork.noSites')}</div>
         ) : (
           <div className="table-wrap"><table className="data-table"><tbody>
             {sites.map((s) => (
@@ -83,7 +85,7 @@ export default function SitesContactsCard({ customerId }: { customerId: number }
                 <td>{s.is_primary && <Star size={12} style={{ color: '#f59e0b', marginRight: 6 }} />}{s.name}</td>
                 <td className="cell-muted">{[s.address, s.province].filter(Boolean).join(', ') || '—'}</td>
                 <td style={{ width: 40 }}>
-                  <button className="btn btn-ghost btn-sm" title="ລຶບ" onClick={() => window.confirm('ລຶບສະຖານທີ່ນີ້?') && delSite.mutate(s.id)}><Trash2 size={13} /></button>
+                  <button className="btn btn-ghost btn-sm" title={t('crmWork.delete')} onClick={() => window.confirm(t('crmWork.confirmDeleteSite')) && delSite.mutate(s.id)}><Trash2 size={13} /></button>
                 </td>
               </tr>
             ))}
@@ -93,30 +95,30 @@ export default function SitesContactsCard({ customerId }: { customerId: number }
 
       <div className="c360-card">
         <div className="c360-card-header">
-          <Users size={16} /> ຜູ້ຕິດຕໍ່ (Contacts) <span className="c360-card-count">({contacts.length})</span>
+          <Users size={16} /> {t('crmWork.contacts')} <span className="c360-card-count">({contacts.length})</span>
           <button className="btn btn-ghost btn-sm" style={{ marginLeft: 'auto' }} onClick={() => setContactForm(contactForm ? null : { ...empty })}>
-            <Plus size={13} /> ເພີ່ມ
+            <Plus size={13} /> {t('crmWork.add')}
           </button>
         </div>
         {contactForm && (
           <form className="c360-card-body" style={gridStyle(160)}
             onSubmit={(e) => { e.preventDefault(); if (contactForm.name.trim()) addContact.mutate(contactForm) }}>
-            {field(contactForm, setContactForm, 'name', 'ຊື່ *', true)}
-            {field(contactForm, setContactForm, 'position', 'ຕຳແໜ່ງ')}
-            {field(contactForm, setContactForm, 'phone', 'ໂທ')}
+            {field(contactForm, setContactForm, 'name', t('crmWork.contactName'), true)}
+            {field(contactForm, setContactForm, 'position', t('crmWork.position'))}
+            {field(contactForm, setContactForm, 'phone', t('crmWork.phone'))}
             {field(contactForm, setContactForm, 'whatsapp', 'WhatsApp')}
             <div className="form-group">
-              <label>ສະຖານທີ່</label>
+              <label>{t('crmWork.site')}</label>
               <select value={contactForm.site_id} onChange={(e) => setContactForm({ ...contactForm, site_id: e.target.value })}>
                 <option value="">—</option>
                 {sites.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
               </select>
             </div>
-            <button className="btn btn-primary" disabled={addContact.isPending || !contactForm.name.trim()}>ບັນທຶກ</button>
+            <button className="btn btn-primary" disabled={addContact.isPending || !contactForm.name.trim()}>{t('crmWork.save')}</button>
           </form>
         )}
         {contacts.length === 0 && !contactForm ? (
-          <div className="c360-empty">ຍັງບໍ່ມີຜູ້ຕິດຕໍ່</div>
+          <div className="c360-empty">{t('crmWork.noContacts')}</div>
         ) : (
           <div className="table-wrap"><table className="data-table"><tbody>
             {contacts.map((c) => (
@@ -126,7 +128,7 @@ export default function SitesContactsCard({ customerId }: { customerId: number }
                 <td className="cell-muted">{[c.phone, c.whatsapp && `WA ${c.whatsapp}`].filter(Boolean).join(' · ') || '—'}</td>
                 <td className="cell-muted">{siteName(c.site_id) ?? '—'}</td>
                 <td style={{ width: 40 }}>
-                  <button className="btn btn-ghost btn-sm" title="ລຶບ" onClick={() => window.confirm('ລຶບຜູ້ຕິດຕໍ່ນີ້?') && delContact.mutate(c.id)}><Trash2 size={13} /></button>
+                  <button className="btn btn-ghost btn-sm" title={t('crmWork.delete')} onClick={() => window.confirm(t('crmWork.confirmDeleteContact')) && delContact.mutate(c.id)}><Trash2 size={13} /></button>
                 </td>
               </tr>
             ))}

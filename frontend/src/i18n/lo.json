@@ -3553,5 +3553,62 @@
         "voided": "ໃບຮັບເງິນຖືກຍົກເລີກແລ້ວ"
       }
     }
+  },
+  "crmWork": {
+    "save": "ບັນທຶກ",
+    "add": "ເພີ່ມ",
+    "delete": "ລຶບ",
+    "saveFailed": "ບັນທຶກບໍ່ສຳເລັດ",
+    "actionFailed": "ດຳເນີນການບໍ່ສຳເລັດ",
+    "loading": "ກຳລັງໂຫຼດ…",
+    "loadFailed": "ໂຫຼດຂໍ້ມູນບໍ່ສຳເລັດ",
+    "sites": "ສະຖານທີ່ / ໄຊທ໌ (Sites)",
+    "siteShort": "ສະຖານທີ່ / ໄຊທ໌",
+    "site": "ສະຖານທີ່",
+    "siteName": "ຊື່ສະຖານທີ່ *",
+    "address": "ທີ່ຢູ່",
+    "province": "ແຂວງ",
+    "noSites": "ຍັງບໍ່ມີສະຖານທີ່",
+    "confirmDeleteSite": "ລຶບສະຖານທີ່ນີ້?",
+    "contacts": "ຜູ້ຕິດຕໍ່ (Contacts)",
+    "contact": "ຜູ້ຕິດຕໍ່",
+    "contactName": "ຊື່ *",
+    "position": "ຕຳແໜ່ງ",
+    "phone": "ໂທ",
+    "noContacts": "ຍັງບໍ່ມີຜູ້ຕິດຕໍ່",
+    "confirmDeleteContact": "ລຶບຜູ້ຕິດຕໍ່ນີ້?",
+    "activities": "ກິດຈະກຳ & ງານຕິດຕາມ",
+    "type": "ປະເພດ",
+    "subject": "ຫົວຂໍ້ *",
+    "dueAt": "ກຳນົດວັນ (ຖ້າເປັນງານຕິດຕາມ)",
+    "notes": "ລາຍລະອຽດ",
+    "alreadyDone": "ເຮັດສຳເລັດແລ້ວ (ບັນທຶກຍ້ອນຫຼັງ)",
+    "noActivities": "ຍັງບໍ່ມີກິດຈະກຳ. ກົດ \"ເພີ່ມ\" ເພື່ອບັນທຶກການໂທ, ການລົງພື້ນທີ່ ຫຼື ນັດຕິດຕາມ.",
+    "completedOn": "ສຳເລັດ {{date}}",
+    "overdueAt": "ເກີນກຳນົດ · {{date}}",
+    "dueOn": "ກຳນົດ {{date}}",
+    "reopen": "ເປີດຄືນ",
+    "complete": "ສຳເລັດ",
+    "confirmDeleteActivity": "ລຶບລາຍການນີ້?",
+    "types": {
+      "call": "ໂທ",
+      "visit": "ລົງພື້ນທີ່",
+      "meeting": "ນັດພົບ",
+      "whatsapp": "WhatsApp",
+      "email": "Email",
+      "note": "ໂນ໊ດ",
+      "task": "ງານຕິດຕາມ"
+    },
+    "tasks": {
+      "title": "ງານຕິດຕາມ",
+      "mine": "ສະເພາະຂອງຂ້ອຍ",
+      "open": "ເປີດຢູ່",
+      "overdue": "ເກີນກຳນົດ",
+      "dueToday": "ຄົບກຳນົດມື້ນີ້",
+      "tabOpen": "ກຳລັງລໍຖ້າ",
+      "tabOverdue": "ເກີນກຳນົດ",
+      "tabDone": "ສຳເລັດແລ້ວ",
+      "empty": "ບໍ່ມີລາຍການ. ເພີ່ມງານຕິດຕາມໄດ້ຈາກໜ້າລູກຄ້າ (Customer 360)."
+    }
   }
 }

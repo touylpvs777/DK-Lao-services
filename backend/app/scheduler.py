@@ -37,7 +37,10 @@ from sqlalchemy.orm import selectinload
 
 from app.database.session import AsyncSessionLocal
 from app.events import event_bus
+from app.models.crm_activity import CrmActivity
+from app.models.customer import Customer
 from app.models.forklift import Forklift
+from app.models.notification import Notification, NotificationChannel, NotificationStatus
 from app.models.maintenance_schedule import MaintenanceSchedule, ScheduleStatus
 from app.models.rental_billing_cycle import BillingType, RentalBillingCycle
 from app.models.rental_contract import RentalContract, RentalContractStatus
@@ -53,6 +56,8 @@ logger = logging.getLogger("app.scheduler")
 
 PM_SCAN_JOB = "pm_scan"
 BILLING_SCAN_JOB = "billing_scan"
+TASK_SCAN_JOB = "task_scan"
+TASK_OVERDUE_EVENT = "activity.overdue"
 LOCK_STALE_AFTER = timedelta(hours=1)
 _OPEN_WORK_ORDER_STATUSES = {
     WorkOrderStatus.SCHEDULED.value,
@@ -288,6 +293,59 @@ async def _run_billing_scan(db: AsyncSession) -> int:
     return invoices_created
 
 
+async def task_scan(db: AsyncSession | None = None) -> int:
+    """
+    Raise one in-app notification per overdue CRM follow-up task, addressed to
+    its assignee. Idempotent: a task that already has an `activity.overdue`
+    notification is skipped, so hourly re-runs never duplicate alerts.
+    Returns the number of notifications created.
+    """
+    if db is None:
+        async with AsyncSessionLocal() as session:
+            return await _run_task_scan(session)
+    return await _run_task_scan(db)
+
+
+async def _run_task_scan(db: AsyncSession) -> int:
+    if not await _try_acquire_lock(db, TASK_SCAN_JOB):
+        logger.info("task_scan: lock held by another run, skipping this cycle")
+        return 0
+    created = 0
+    try:
+        now = datetime.now(UTC)
+        already = select(Notification.entity_id).where(
+            Notification.event_type == TASK_OVERDUE_EVENT, Notification.entity_type == "crm_activity",
+        )
+        rows = (await db.execute(
+            select(CrmActivity, Customer.company, Customer.first_name, Customer.last_name)
+            .outerjoin(Customer, Customer.id == CrmActivity.customer_id)
+            .where(
+                CrmActivity.completed_at.is_(None), CrmActivity.due_at.is_not(None), CrmActivity.due_at < now,
+                CrmActivity.assigned_to.is_not(None), CrmActivity.id.not_in(already),
+            )
+        )).all()
+        for activity, company, first, last in rows:
+            who = company or " ".join(x for x in (first, last) if x)
+            db.add(Notification(
+                channel=NotificationChannel.IN_APP.value,
+                status=NotificationStatus.SENT.value,
+                recipient=f"user:{activity.assigned_to}",
+                subject="ງານຕິດຕາມເກີນກຳນົດ",
+                message=f"{activity.subject}" + (f" — {who}" if who else ""),
+                event_type=TASK_OVERDUE_EVENT,
+                entity_type="crm_activity",
+                entity_id=activity.id,
+                recipient_user_id=activity.assigned_to,
+                sent_at=now,
+            ))
+            created += 1
+        await db.commit()
+    finally:
+        await _release_lock(db, TASK_SCAN_JOB)
+    logger.info("task_scan: created %s notification(s)", created)
+    return created
+
+
 scheduler = AsyncIOScheduler()
 
 
@@ -309,6 +367,14 @@ def start_scheduler() -> None:
         max_instances=1,
         coalesce=True,
         misfire_grace_time=3600,
+    )
+    scheduler.add_job(
+        task_scan,
+        trigger=CronTrigger(minute=5),  # hourly
+        id=TASK_SCAN_JOB,
+        max_instances=1,
+        coalesce=True,
+        misfire_grace_time=1800,
     )
     scheduler.start()
 

@@ -45,12 +45,12 @@ export const completeActivity = (id: number) => client.post<CrmActivity>(`/crm/a
 export const reopenActivity = (id: number) => client.post<CrmActivity>(`/crm/activities/${id}/reopen`)
 export const deleteActivity = (id: number) => client.delete(`/crm/activities/${id}`)
 
-export const ACTIVITY_TYPES: { value: ActivityType; label: string }[] = [
-  { value: 'call', label: 'ໂທ' },
-  { value: 'visit', label: 'ລົງພື້ນທີ່' },
-  { value: 'meeting', label: 'ນັດພົບ' },
-  { value: 'whatsapp', label: 'WhatsApp' },
-  { value: 'email', label: 'Email' },
-  { value: 'note', label: 'ໂນ໊ດ' },
-  { value: 'task', label: 'ງານຕິດຕາມ' },
+export const ACTIVITY_TYPES: { value: ActivityType; labelKey: string }[] = [
+  { value: 'call', labelKey: 'crmWork.types.call' },
+  { value: 'visit', labelKey: 'crmWork.types.visit' },
+  { value: 'meeting', labelKey: 'crmWork.types.meeting' },
+  { value: 'whatsapp', labelKey: 'crmWork.types.whatsapp' },
+  { value: 'email', labelKey: 'crmWork.types.email' },
+  { value: 'note', labelKey: 'crmWork.types.note' },
+  { value: 'task', labelKey: 'crmWork.types.task' },
 ]

@@ -143,9 +143,8 @@ const NAV_GROUPS: NavGroup[] = [
       { to: '/iot-management', labelKey: 'nav.items.iotTelemetry', icon: Radio, adminOnly: true },
     ],
   },
-  // Marketing/website group (4S service centre, forklift store, client fleet) is hidden:
-  // those are customer-facing pages that live in the separate storefront app.
-  // Routes in App.tsx are kept for now so the pages can be restored if needed.
+  // Customer-facing pages (store, 4S services, client portal) live in the separate
+  // storefront app, which talks to this backend's /storefront and /portal APIs.
 ]
 
 export default function Sidebar() {

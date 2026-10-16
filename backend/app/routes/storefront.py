@@ -1,3 +1,5 @@
+import json
+import re
 import secrets
 
 from fastapi import APIRouter, Depends, Header, HTTPException, Query, status
@@ -10,7 +12,9 @@ from app.models.brand import Brand
 from app.models.inventory_balance import InventoryBalance
 from app.models.spare_part import SparePart
 from app.models.warehouse import Warehouse
+from app.models.lead import Lead, LeadSource, LeadStatus
 from app.schemas.customer_portal import StorefrontCatalogItem, StorefrontCatalogOut
+from app.schemas.public_inquiry import PublicOrderTrackItem, PublicOrderTrackOut
 
 router = APIRouter(prefix="/storefront", tags=["Storefront"])
 _RETAIL_MARKUP_RATE = 1.65
@@ -84,3 +88,63 @@ async def get_public_catalog(
         for part, brand_name, available in rows.all()
     ]
     return StorefrontCatalogOut(items=items, total=total, skip=skip, limit=limit)
+
+
+_REFERENCE_RE = re.compile(r"^WEB-(\d{1,9})$", re.IGNORECASE)
+# A customer sees only these states. Only "won" means staff have confirmed the order.
+_TRACK_STATUS = {LeadStatus.WON: "CONFIRMED", LeadStatus.LOST: "CANCELLED"}
+
+
+def _phone_digits(value: str | None) -> str:
+    return re.sub(r"\D", "", value or "")
+
+
+def _same_phone(a: str | None, b: str | None) -> bool:
+    """Match +856 20 5555 1234 with 020 5555 1234: compare the last 8 digits."""
+    x, y = _phone_digits(a), _phone_digits(b)
+    if len(x) < 8 or len(y) < 8:
+        return False
+    return x[-8:] == y[-8:]
+
+
+@router.get("/orders/track", response_model=PublicOrderTrackOut)
+async def track_website_order(
+    reference: str = Query(..., min_length=4, max_length=20),
+    phone: str = Query(..., min_length=3, max_length=50),
+    db: AsyncSession = Depends(get_db),
+    storefront_token: str | None = Header(default=None, alias="X-Storefront-Token"),
+):
+    """Let a customer follow a website order with its reference number and the phone used to place it."""
+    _require_storefront_token(storefront_token)
+    not_found = HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Order not found")
+
+    match = _REFERENCE_RE.match(reference.strip())
+    if not match:
+        raise not_found
+    lead = await db.get(Lead, int(match.group(1)))
+    if lead is None or lead.source != LeadSource.WEBSITE.value or not lead.description:
+        raise not_found
+    try:
+        details = json.loads(lead.description.split("\n\n", 1)[1])
+    except (IndexError, ValueError):
+        raise not_found
+    # Same answer for "no such order" and "wrong phone" so references cannot be probed.
+    if details.get("inquiry_type") != "store_order" or not _same_phone(phone, details.get("phone_number")):
+        raise not_found
+
+    return PublicOrderTrackOut(
+        reference_number=f"WEB-{lead.id:06d}",
+        status=_TRACK_STATUS.get(lead.status, "PENDING"),
+        customer_name=details.get("customer_name", ""),
+        payment_method=details.get("payment_method"),
+        total_usd=details.get("total_usd") or 0,
+        total_lak=details.get("total_lak") or 0,
+        created_at=lead.created_at.isoformat() if lead.created_at else "",
+        items=[
+            PublicOrderTrackItem(
+                sku_code=i["sku_code"], part_name=i["part_name"], unit_price=i["unit_price"],
+                quantity=i["quantity"], subtotal=round(i["unit_price"] * i["quantity"], 2),
+            )
+            for i in details.get("items", [])
+        ],
+    )

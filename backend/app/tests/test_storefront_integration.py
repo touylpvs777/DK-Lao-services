@@ -139,3 +139,76 @@ async def test_portal_account_login_and_scoped_dashboard(client: AsyncClient, db
 
 async def test_portal_accounts_require_superuser(client: AsyncClient):
     assert (await client.get("/api/v1/portal/accounts")).status_code == 401
+
+
+_ORDER = {
+    "inquiry_type": "store_order", "category": "store_order",
+    "customer_name": "Noy", "phone_number": "+856 20 5555 1234", "payment_method": "BANK_TRANSFER",
+    "total_lak": 330000,
+    "items": [{"sku_code": "P-1", "part_name": "Filter", "unit_price": 165000, "quantity": 2}],
+}
+
+
+async def _place(client: AsyncClient, payload: dict | None = None) -> str:
+    r = await client.post("/api/v1/leads/website-inquiries", json=payload or _ORDER, headers=SF)
+    assert r.status_code == 201, r.text
+    return r.json()["reference_number"]
+
+
+async def test_website_order_sets_lead_value(client: AsyncClient, db_session: AsyncSession):
+    await _place(client)
+    assert (await db_session.execute(select(Lead))).scalars().one().value == 330000
+
+
+async def test_contact_message_with_email_only_is_accepted(client: AsyncClient, db_session: AsyncSession):
+    payload = {
+        "inquiry_type": "service", "category": "standard", "customer_name": "Somsak",
+        "email": "somsak@example.com", "details": "Need a PM quote for 3 forklifts",
+    }
+    r = await client.post("/api/v1/leads/website-inquiries", json=payload, headers=SF)
+    assert r.status_code == 201, r.text
+    # No contact route at all is rejected, and so is an email that is not one.
+    no_contact = {**payload}
+    no_contact.pop("email")
+    assert (await client.post("/api/v1/leads/website-inquiries", json=no_contact, headers=SF)).status_code == 422
+    bad = {**payload, "email": "not-an-email"}
+    assert (await client.post("/api/v1/leads/website-inquiries", json=bad, headers=SF)).status_code == 422
+    # A store order still needs a phone, even when an email is given.
+    order = {**_ORDER, "email": "a@b.co"}
+    order.pop("phone_number")
+    assert (await client.post("/api/v1/leads/website-inquiries", json=order, headers=SF)).status_code == 422
+
+
+async def test_track_order_needs_reference_and_matching_phone(client: AsyncClient, db_session: AsyncSession):
+    ref = await _place(client)
+    q = {"reference": ref}
+
+    assert (await client.get("/api/v1/storefront/orders/track", params={**q, "phone": "020 5555 1234"})).status_code == 401
+
+    r = await client.get("/api/v1/storefront/orders/track", params={**q, "phone": "020 5555 1234"}, headers=SF)
+    assert r.status_code == 200, r.text
+    body = r.json()
+    assert body["reference_number"] == ref
+    assert body["status"] == "PENDING"
+    assert body["items"][0]["subtotal"] == 330000
+    assert "description" not in body and "phone_number" not in body
+
+    # Wrong phone, unknown reference and a malformed reference all look the same.
+    for params in ({**q, "phone": "020 9999 0000"}, {"reference": "WEB-999999", "phone": "020 5555 1234"},
+                   {"reference": "1; DROP", "phone": "020 5555 1234"}):
+        assert (await client.get("/api/v1/storefront/orders/track", params=params, headers=SF)).status_code == 404
+
+
+async def test_track_order_follows_lead_status_and_ignores_service_inquiries(client: AsyncClient, db_session: AsyncSession):
+    ref = await _place(client)
+    lead = (await db_session.execute(select(Lead))).scalars().one()
+    lead.status = "won"
+    await db_session.commit()
+    r = await client.get("/api/v1/storefront/orders/track", params={"reference": ref, "phone": "+85620 5555 1234"}, headers=SF)
+    assert r.json()["status"] == "CONFIRMED"
+
+    service_ref = await _place(client, {
+        "inquiry_type": "service", "category": "standard", "customer_name": "S", "phone_number": "020 5555 1234",
+    })
+    assert (await client.get("/api/v1/storefront/orders/track",
+                             params={"reference": service_ref, "phone": "020 5555 1234"}, headers=SF)).status_code == 404

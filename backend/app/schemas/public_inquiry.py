@@ -34,7 +34,9 @@ class PublicInquiryCreate(BaseModel):
     inquiry_type: PublicInquiryType
     category: PublicInquiryCategory
     customer_name: str = Field(..., min_length=1, max_length=200)
-    phone_number: str = Field(..., min_length=3, max_length=50)
+    # A phone number is required, except for contact-form messages that give an email instead.
+    phone_number: str | None = Field(default=None, min_length=3, max_length=50)
+    email: str | None = Field(default=None, max_length=200, pattern=r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
     company_name: str | None = Field(default=None, max_length=200)
     province: str | None = Field(default=None, max_length=120)
     district: str | None = Field(default=None, max_length=120)
@@ -52,7 +54,11 @@ class PublicInquiryCreate(BaseModel):
 
     @model_validator(mode="after")
     def validate_inquiry_shape(self):
+        if not self.phone_number and not self.email:
+            raise ValueError("A phone number or an email is required so staff can reply")
         if self.inquiry_type == PublicInquiryType.STORE_ORDER:
+            if not self.phone_number:
+                raise ValueError("Store orders need a phone number")
             if self.category != PublicInquiryCategory.STORE_ORDER or not self.items:
                 raise ValueError("Store inquiries need the store_order category and at least one item")
         elif self.category == PublicInquiryCategory.STORE_ORDER:
@@ -63,3 +69,23 @@ class PublicInquiryCreate(BaseModel):
 class PublicInquiryOut(BaseModel):
     reference_number: str
     status: str = "received"
+
+
+class PublicOrderTrackItem(BaseModel):
+    sku_code: str
+    part_name: str
+    unit_price: float
+    quantity: int
+    subtotal: float
+
+
+class PublicOrderTrackOut(BaseModel):
+    """What a customer may see about their website order: no staff notes, no other contacts."""
+    reference_number: str
+    status: str  # PENDING | CONFIRMED | CANCELLED
+    customer_name: str
+    payment_method: str | None = None
+    total_usd: float = 0
+    total_lak: float = 0
+    created_at: str
+    items: list[PublicOrderTrackItem] = Field(default_factory=list)

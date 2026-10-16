@@ -102,6 +102,8 @@ async def create_website_inquiry(
     lead = Lead(
         title=title,
         description=description,
+        # Shows the order value in the pipeline; staff re-price before quoting.
+        value=data.total_lak if data.total_lak else None,
         source=LeadSource.WEBSITE.value,
         status=LeadStatus.NEW,
         created_by=None,

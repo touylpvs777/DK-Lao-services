@@ -1,4 +1,5 @@
 import json
+import logging
 import secrets
 
 from fastapi import APIRouter, Depends, Header, HTTPException, status
@@ -22,8 +23,10 @@ from app.schemas.lead import (
 )
 from app.services.activity_log_service import ActivityLogService
 from app.services.lead_service import LeadService
+from app.services.website_leads import find_customer_for_inquiry, notify_sales_of_website_lead
 
 router = APIRouter(prefix="/leads", tags=["Leads"])
+logger = logging.getLogger(__name__)
 
 
 @router.get("/", response_model=list[LeadOut])
@@ -99,9 +102,19 @@ async def create_website_inquiry(
         "prices, stock, and payment have not been verified.\n\n"
         + json.dumps(details, ensure_ascii=False)
     )
+    # Link a returning customer automatically. A failed lookup must never lose the customer's request.
+    try:
+        customer = await find_customer_for_inquiry(db, data)
+    except Exception:
+        logger.exception("Customer lookup for a website inquiry failed")
+        customer = None
+    # Read now: the customer row is expired once the session commits.
+    matched_customer = f"{customer.first_name} {customer.last_name}".strip() if customer else None
+
     lead = Lead(
         title=title,
         description=description,
+        customer_id=customer.id if customer else None,
         # Shows the order value in the pipeline; staff re-price before quoting.
         value=data.total_lak if data.total_lak else None,
         source=LeadSource.WEBSITE.value,
@@ -111,7 +124,16 @@ async def create_website_inquiry(
     db.add(lead)
     await db.commit()
     await db.refresh(lead)
-    return PublicInquiryOut(reference_number=f"WEB-{lead.id:06d}")
+    reference = f"WEB-{lead.id:06d}"
+
+    # The lead is saved; alerting staff is best effort and must not fail the customer's request.
+    try:
+        await notify_sales_of_website_lead(db, lead, data, matched_customer, reference)
+    except Exception:
+        await db.rollback()
+        logger.exception("Could not alert sales about website lead %s", reference)
+
+    return PublicInquiryOut(reference_number=reference)
 
 
 @router.get("/{lead_id}", response_model=LeadDetail)

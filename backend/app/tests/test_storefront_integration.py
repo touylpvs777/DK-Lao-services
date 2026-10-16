@@ -212,3 +212,88 @@ async def test_track_order_follows_lead_status_and_ignores_service_inquiries(cli
     })
     assert (await client.get("/api/v1/storefront/orders/track",
                              params={"reference": service_ref, "phone": "020 5555 1234"}, headers=SF)).status_code == 404
+
+
+async def _sales_user(db: AsyncSession, username: str, *, active: bool = True):
+    from app.core.security import hash_password
+    from app.models.role import Role, RoleName
+    from app.models.user import User
+
+    role = (await db.execute(select(Role).where(Role.name == RoleName.SALES.value))).scalar_one_or_none()
+    if role is None:
+        role = Role(name=RoleName.SALES.value, description="sales", is_active=True)
+        db.add(role)
+        await db.commit()
+    user = User(
+        email=f"{username}@example.com", username=username, hashed_password=hash_password("Test@1234"),
+        is_active=active, is_superuser=False, role_id=role.id,
+    )
+    db.add(user)
+    await db.commit()
+    return user
+
+
+async def test_website_order_alerts_sales_team_and_admin_feed(client: AsyncClient, db_session: AsyncSession):
+    from app.models.notification import Notification
+
+    anna = await _sales_user(db_session, "anna")
+    away = await _sales_user(db_session, "away", active=False)
+    ref = await _place(client)
+
+    rows = (await db_session.execute(select(Notification).where(Notification.event_type == "lead.website"))).scalars().all()
+    assert {n.recipient_user_id for n in rows if n.recipient_user_id} == {anna.id}
+    assert away.id not in {n.recipient_user_id for n in rows}
+    assert [n.target_role for n in rows if n.target_role] == ["admin"]
+    note = rows[0]
+    assert note.subject == f"New website order {ref}"
+    assert note.entity_type == "lead" and note.entity_id == int(ref.split("-")[1])
+    assert "New contact" in note.message and "2 items" not in note.subject
+    assert not note.is_read
+
+
+async def test_returning_customer_is_linked_by_phone_and_named_in_alert(client: AsyncClient, db_session: AsyncSession):
+    from app.models.notification import Notification
+
+    known = Customer(first_name="Kham", last_name="Vong", company="Known Co", phone="020-5555 1234")
+    db_session.add(known)
+    await db_session.commit()
+    await _place(client)  # placed with +856 20 5555 1234
+
+    lead = (await db_session.execute(select(Lead))).scalars().one()
+    assert lead.customer_id == known.id
+    admin_note = (await db_session.execute(select(Notification).where(Notification.target_role == "admin"))).scalars().one()
+    assert "Existing customer: Kham Vong" in admin_note.message
+
+
+async def test_ambiguous_or_unknown_phone_is_not_linked(client: AsyncClient, db_session: AsyncSession):
+    db_session.add_all([
+        Customer(first_name="A", last_name="One", phone="020 5555 1234"),
+        Customer(first_name="B", last_name="Two", phone="+856 20 5555 1234"),
+    ])
+    await db_session.commit()
+    await _place(client)
+    assert (await db_session.execute(select(Lead))).scalars().one().customer_id is None
+
+
+async def test_contact_message_is_linked_by_email(client: AsyncClient, db_session: AsyncSession):
+    known = Customer(first_name="Somsak", last_name="K", email="Somsak@Example.com")
+    db_session.add(known)
+    await db_session.commit()
+    r = await client.post("/api/v1/leads/website-inquiries", headers=SF, json={
+        "inquiry_type": "service", "category": "standard", "customer_name": "Somsak",
+        "email": "somsak@example.com", "details": "Need a quote",
+    })
+    assert r.status_code == 201
+    assert (await db_session.execute(select(Lead))).scalars().one().customer_id == known.id
+
+
+async def test_alert_failure_does_not_lose_the_customers_request(client: AsyncClient, db_session: AsyncSession, monkeypatch):
+    import app.routes.leads as leads_route
+
+    async def boom(*args, **kwargs):
+        raise RuntimeError("notifications are down")
+
+    monkeypatch.setattr(leads_route, "notify_sales_of_website_lead", boom)
+    ref = await _place(client)
+    assert ref.startswith("WEB-")
+    assert len((await db_session.execute(select(Lead))).scalars().all()) == 1

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 import { Bell, CheckCheck, AlertTriangle } from 'lucide-react'
 import { getMyNotifications, getMyUnreadCount, markNotificationRead, markAllNotificationsRead } from '@/api/notifications'
 import type { NotificationItem } from '@/types/notification'
@@ -23,8 +24,12 @@ function eventLabel(eventType: string | null): string {
   return eventType.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
 }
 
+// How often the badge re-checks for new alerts, so a new website order shows up without a page reload.
+const UNREAD_POLL_MS = 60_000
+
 export default function NotificationCenter() {
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const relativeTime = useRelativeTime()
   const [isOpen, setIsOpen] = useState(false)
   const [items, setItems] = useState<NotificationItem[]>([])
@@ -37,6 +42,8 @@ export default function NotificationCenter() {
 
   useEffect(() => {
     loadUnreadCount()
+    const timer = window.setInterval(loadUnreadCount, UNREAD_POLL_MS)
+    return () => window.clearInterval(timer)
   }, [loadUnreadCount])
 
   useEffect(() => {
@@ -58,6 +65,11 @@ export default function NotificationCenter() {
   }, [])
 
   const handleItemClick = async (item: NotificationItem) => {
+    // A new website order or inquiry opens the leads board, where staff follow it up.
+    if (item.entity_type === 'lead') {
+      setIsOpen(false)
+      navigate('/leads')
+    }
     if (item.is_read) return
     try {
       await markNotificationRead(item.id)

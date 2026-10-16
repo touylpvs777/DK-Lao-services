@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Building2 } from 'lucide-react'
 import { Badge, type BadgeVariant } from '@/components/ui/Badge'
 import type { QuotationEditorFormValues } from '@/schemas/quotationEditorSchema'
+import SiteContactFields from '@/components/documents/SiteContactFields'
 import './DocumentEditor.css'
 
 const CURRENCY_OPTIONS = ['LAK', 'THB', 'USD', 'CNY']
@@ -85,6 +86,7 @@ export default function DocumentEditorHeader({
           <label>{t('documentEditor.header.telephone')}</label>
           <input value={selectedCustomer?.phone ?? ''} readOnly disabled />
         </div>
+        <SiteContactFields readOnly={readOnly} />
 
         <div className="form-group">
           <label>{documentNumberLabel}</label>

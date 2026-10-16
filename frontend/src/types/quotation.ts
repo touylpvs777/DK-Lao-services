@@ -107,6 +107,8 @@ export interface Quotation {
 }
 
 export interface QuotationDetail extends Quotation {
+  site_id?: number | null
+  contact_id?: number | null
   parent_id: number | null
   contact_name: string | null
   contact_email: string | null
@@ -152,6 +154,8 @@ export interface QuotationCreate {
   quotation_type: QuotationType
   title: string
   customer_id?: number | null
+  site_id?: number | null
+  contact_id?: number | null
   lead_id?: number | null
   assigned_to?: number | null
   contact_name?: string
@@ -182,6 +186,8 @@ export interface QuotationCreate {
 export interface QuotationUpdate {
   title?: string
   customer_id?: number | null
+  site_id?: number | null
+  contact_id?: number | null
   lead_id?: number | null
   assigned_to?: number | null
   contact_name?: string

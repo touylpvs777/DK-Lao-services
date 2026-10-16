@@ -129,6 +129,8 @@ export default function DeliveryNoteEditorPage() {
       methods.reset({
         sales_order_id: data.sales_order?.id ?? null,
         customer_id: data.customer?.id ?? null,
+        site_id: data.site_id ?? null,
+        contact_id: data.contact_id ?? null,
         assigned_to: data.assigned_user?.id ?? null,
         delivery_date: data.delivery_date ?? '',
         delivery_address: data.delivery_address ?? '',
@@ -196,6 +198,8 @@ export default function DeliveryNoteEditorPage() {
         const payload: DeliveryNoteCreate = {
           sales_order_id: form.sales_order_id,
           customer_id: form.customer_id || null,
+          site_id: form.site_id ?? null,
+          contact_id: form.contact_id ?? null,
           assigned_to: form.assigned_to || null,
           delivery_date: form.delivery_date || undefined,
           delivery_address: form.delivery_address || undefined,
@@ -222,6 +226,8 @@ export default function DeliveryNoteEditorPage() {
       } else {
         const payload: DeliveryNoteUpdate = {
           customer_id: form.customer_id || null,
+          site_id: form.site_id ?? null,
+          contact_id: form.contact_id ?? null,
           assigned_to: form.assigned_to || null,
           delivery_date: form.delivery_date || undefined,
           delivery_address: form.delivery_address,

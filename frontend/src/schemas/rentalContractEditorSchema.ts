@@ -2,6 +2,8 @@ import { z } from 'zod'
 
 export const rentalContractHeaderSchema = z.object({
   customer_id: z.number().nullable(),
+  site_id: z.number().nullable().optional(),
+  contact_id: z.number().nullable().optional(),
   contract_type: z.enum(['short_term', 'long_term', 'project']),
   start_date: z.string().min(1, 'Start date is required'),
   end_date: z.string().min(1, 'End date is required'),
@@ -28,6 +30,8 @@ export type RentalContractEditorFormValues = z.infer<typeof rentalContractHeader
 
 export const RENTAL_CONTRACT_EDITOR_DEFAULTS: RentalContractEditorFormValues = {
   customer_id: null,
+  site_id: null,
+  contact_id: null,
   contract_type: 'short_term',
   start_date: '',
   end_date: '',

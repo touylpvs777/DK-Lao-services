@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Building2 } from 'lucide-react'
 import { Badge, type BadgeVariant } from '@/components/ui/Badge'
 import type { DeliveryNoteEditorFormValues } from '@/schemas/deliveryNoteEditorSchema'
+import SiteContactFields from '@/components/documents/SiteContactFields'
 import './DocumentEditor.css'
 
 export interface DeliveryNoteEditorHeaderProps {
@@ -83,6 +84,7 @@ export default function DeliveryNoteEditorHeader({
           <label>{t('deliveryNotes.editor.deliveryDate')}</label>
           <input type="date" {...register('delivery_date')} disabled={readOnly} />
         </div>
+        <SiteContactFields readOnly={readOnly} />
 
         <div className="form-group">
           <label>{t('deliveryNotes.editor.warehouse')}</label>

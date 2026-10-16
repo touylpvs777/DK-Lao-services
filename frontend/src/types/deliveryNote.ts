@@ -63,6 +63,8 @@ export interface DeliveryNote {
 }
 
 export interface DeliveryNoteDetail extends DeliveryNote {
+  site_id?: number | null
+  contact_id?: number | null
   delivery_address: string | null
   driver_name: string | null
   vehicle_plate: string | null
@@ -88,6 +90,8 @@ export interface DeliveryNoteListResponse {
 export interface DeliveryNoteCreate {
   sales_order_id: number
   customer_id?: number | null
+  site_id?: number | null
+  contact_id?: number | null
   assigned_to?: number | null
   delivery_date?: string | null
   delivery_address?: string
@@ -102,6 +106,8 @@ export interface DeliveryNoteCreate {
 
 export interface DeliveryNoteUpdate {
   customer_id?: number | null
+  site_id?: number | null
+  contact_id?: number | null
   assigned_to?: number | null
   delivery_date?: string | null
   delivery_address?: string

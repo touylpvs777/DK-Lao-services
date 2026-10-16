@@ -7,6 +7,7 @@ from fastapi import HTTPException, status
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.services.customer_links import validate_site_contact
 from app.models.sales_order import SalesOrder, SalesOrderStatus
 from app.models.sales_order_item import SalesOrderItem
 from app.models.sales_order_status_history import SalesOrderStatusHistory
@@ -85,6 +86,8 @@ class SalesOrderService:
     # ── Create ───────────────────────────────────────────────────────────────
 
     async def create_sales_order(self, data: SalesOrderCreate, created_by: int) -> SalesOrder:
+        await validate_site_contact(self.db, data.customer_id, data.site_id, data.contact_id)
+
         number = await self._generate_number()
 
         sales_order = SalesOrder(
@@ -93,6 +96,8 @@ class SalesOrderService:
             title=data.title.strip(),
             quotation_id=data.quotation_id,
             customer_id=data.customer_id,
+            site_id=data.site_id,
+            contact_id=data.contact_id,
             assigned_to=data.assigned_to or created_by,
             contact_name=data.contact_name,
             contact_email=data.contact_email,
@@ -152,6 +157,11 @@ class SalesOrderService:
         self._require_draft(sales_order)
 
         changes = data.model_dump(exclude_unset=True)
+        if {"customer_id", "site_id", "contact_id"} & changes.keys():
+            await validate_site_contact(
+                self.db, changes.get("customer_id", sales_order.customer_id),
+                changes.get("site_id", sales_order.site_id), changes.get("contact_id", sales_order.contact_id),
+            )
         recalc = "tax_rate" in changes or "discount_amount" in changes or "round_amount" in changes
         changes["updated_by"] = updated_by
 

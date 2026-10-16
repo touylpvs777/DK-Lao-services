@@ -57,6 +57,8 @@ class LeadBrief(BaseModel):
 
 class RentalContractCreate(BaseModel):
     customer_id: int
+    site_id: int | None = None
+    contact_id: int | None = None
     contract_type: ContractType
     start_date: date
     end_date: date
@@ -84,6 +86,8 @@ class RentalContractCreate(BaseModel):
 
 
 class RentalContractUpdate(BaseModel):
+    site_id: int | None = None
+    contact_id: int | None = None
     contract_type: ContractType | None = None
     start_date: date | None = None
     end_date: date | None = None
@@ -140,6 +144,8 @@ class RentalContractOut(BaseModel):
 
 
 class RentalContractDetail(RentalContractOut):
+    site_id: int | None = None
+    contact_id: int | None = None
     billing_cycle_day: int
     payment_terms_days: int
     tax_rate: float

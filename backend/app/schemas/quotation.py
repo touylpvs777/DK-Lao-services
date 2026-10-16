@@ -49,6 +49,8 @@ class QuotationCreate(BaseModel):
     quotation_type: QuotationType
     title: str = Field(..., min_length=1, max_length=500)
     customer_id: int | None = None
+    site_id: int | None = None
+    contact_id: int | None = None
     lead_id: int | None = None
     assigned_to: int | None = None
     contact_name: str | None = Field(default=None, max_length=200)
@@ -86,6 +88,8 @@ class QuotationCreate(BaseModel):
 class QuotationUpdate(BaseModel):
     title: str | None = Field(default=None, min_length=1, max_length=500)
     customer_id: int | None = None
+    site_id: int | None = None
+    contact_id: int | None = None
     lead_id: int | None = None
     assigned_to: int | None = None
     contact_name: str | None = None
@@ -138,6 +142,8 @@ class QuotationOut(BaseModel):
 
 
 class QuotationDetail(QuotationOut):
+    site_id: int | None = None
+    contact_id: int | None = None
     parent_id: int | None = None
     contact_name: str | None = None
     contact_email: str | None = None

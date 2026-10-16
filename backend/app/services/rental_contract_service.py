@@ -8,6 +8,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
+from app.services.customer_links import validate_site_contact
 from app.models.rental_contract import RentalContract, RentalContractStatus
 from app.models.rental_contract_item import RentalContractItem, ContractItemStatus
 from app.models.rental_contract_status_history import RentalContractStatusHistory
@@ -131,6 +132,8 @@ class RentalContractService:
                 detail="end_date must be after start_date.",
             )
 
+        await validate_site_contact(self.db, data.customer_id, data.site_id, data.contact_id)
+
         number = await self._generate_number()
 
         contract = RentalContract(
@@ -138,6 +141,8 @@ class RentalContractService:
             status=RentalContractStatus.RESERVATION.value,
             contract_type=data.contract_type.value,
             customer_id=data.customer_id,
+            site_id=data.site_id,
+            contact_id=data.contact_id,
             quotation_id=data.quotation_id,
             lead_id=data.lead_id,
             assigned_to=data.assigned_to or created_by,
@@ -194,6 +199,11 @@ class RentalContractService:
         self._require_editable(contract)
 
         changes = data.model_dump(exclude_unset=True)
+        if {"customer_id", "site_id", "contact_id"} & changes.keys():
+            await validate_site_contact(
+                self.db, changes.get("customer_id", contract.customer_id),
+                changes.get("site_id", contract.site_id), changes.get("contact_id", contract.contact_id),
+            )
 
         sd = changes.get("start_date", contract.start_date)
         ed = changes.get("end_date", contract.end_date)
@@ -594,6 +604,8 @@ class RentalContractService:
             status=RentalContractStatus.RESERVATION.value,
             quotation_id=quotation.id,
             customer_id=quotation.customer_id,
+            site_id=quotation.site_id,
+            contact_id=quotation.contact_id,
             lead_id=quotation.lead_id,
             assigned_to=quotation.assigned_to or user_id,
             start_date=start_date,

@@ -7,6 +7,7 @@ from fastapi import HTTPException, status
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.services.customer_links import validate_site_contact
 from app.models.delivery_note import DeliveryNote, DeliveryNoteStatus
 from app.models.delivery_note_item import DeliveryNoteItem
 from app.models.delivery_note_status_history import DeliveryNoteStatusHistory
@@ -90,13 +91,19 @@ class DeliveryNoteService:
         if sales_order is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Sales order not found")
 
+        customer_id = data.customer_id if data.customer_id is not None else sales_order.customer_id
+        same_customer = customer_id == sales_order.customer_id
+        await validate_site_contact(self.db, customer_id, data.site_id, data.contact_id)
+
         number = await self._generate_number()
 
         delivery_note = DeliveryNote(
             dn_number=number,
             status=DeliveryNoteStatus.DRAFT.value,
             sales_order_id=data.sales_order_id,
-            customer_id=data.customer_id if data.customer_id is not None else sales_order.customer_id,
+            customer_id=customer_id,
+            site_id=data.site_id if data.site_id is not None else (sales_order.site_id if same_customer else None),
+            contact_id=data.contact_id if data.contact_id is not None else (sales_order.contact_id if same_customer else None),
             assigned_to=data.assigned_to or created_by,
             delivery_date=data.delivery_date or date.today(),
             delivery_address=data.delivery_address,
@@ -139,6 +146,11 @@ class DeliveryNoteService:
         self._require_draft(delivery_note)
 
         changes = data.model_dump(exclude_unset=True)
+        if {"customer_id", "site_id", "contact_id"} & changes.keys():
+            await validate_site_contact(
+                self.db, changes.get("customer_id", delivery_note.customer_id),
+                changes.get("site_id", delivery_note.site_id), changes.get("contact_id", delivery_note.contact_id),
+            )
         changes["updated_by"] = updated_by
 
         try:

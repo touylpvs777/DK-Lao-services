@@ -32,6 +32,12 @@ class DeliveryNote(Base):
     customer_id: Mapped[int | None] = mapped_column(
         Integer, ForeignKey("customers.id", ondelete="SET NULL"), nullable=True, index=True,
     )
+    site_id: Mapped[int | None] = mapped_column(
+        Integer, ForeignKey("customer_sites.id", ondelete="SET NULL"), nullable=True, index=True,
+    )
+    contact_id: Mapped[int | None] = mapped_column(
+        Integer, ForeignKey("customer_contacts.id", ondelete="SET NULL"), nullable=True, index=True,
+    )
     assigned_to: Mapped[int | None] = mapped_column(
         Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True, index=True,
     )

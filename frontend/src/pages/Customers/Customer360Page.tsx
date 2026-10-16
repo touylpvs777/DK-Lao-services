@@ -7,6 +7,7 @@ import {
 } from 'lucide-react'
 import { getCustomerOverview } from '@/api/customers'
 import SitesContactsCard from '@/components/customers/SitesContactsCard'
+import ActivityTimelineCard from '@/components/customers/ActivityTimelineCard'
 import { CustomerStatusBadge } from '@/components/ui/Badge'
 import { ForkliftStatusBadge } from '@/components/equipment/ForkliftStatusBadge'
 import { RentalStatusBadge } from '@/components/rental/RentalStatusBadge'
@@ -150,6 +151,8 @@ export default function Customer360Page() {
             </div>
           </div>
         )}
+
+        <ActivityTimelineCard customerId={customer.id} />
 
         <SitesContactsCard customerId={customer.id} />
 

@@ -4,6 +4,7 @@ from app.models.movement_history import MovementHistory
 from app.models.brand import Brand
 from app.models.category import ProductCategory
 from app.models.customer import Customer
+from app.models.crm_activity import CrmActivity
 from app.models.customer_site import CustomerContact, CustomerSite
 from app.models.deposit import Deposit
 from app.models.forklift import Forklift
@@ -68,6 +69,7 @@ from app.models.setting import Setting
 from app.models.user import User
 
 __all__ = [
+    "CrmActivity",
     "CustomerContact",
     "CustomerSite",
     "Role", "User", "Customer", "Lead", "LeadNote", "ActivityLog", "RevokedToken", "Notification",

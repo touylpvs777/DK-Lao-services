@@ -9,8 +9,10 @@ import {
   Box, Receipt, CreditCard, Landmark, FileSpreadsheet, Warehouse, LogOut, ShoppingCart,
   UserCircle, KeyRound, PanelLeftClose, PanelLeftOpen, ChevronDown,
   FileCheck2, ReceiptText, Undo2, Banknote, FileOutput, PackageCheck, PackageMinus,
-  BadgeCheck, Camera, LayoutGrid,
+  BadgeCheck, Camera, LayoutGrid, CheckSquare,
 } from 'lucide-react'
+import { useQuery } from '@tanstack/react-query'
+import { getActivitySummary } from '@/api/crmActivities'
 import ThemeToggle from '@/components/ui/ThemeToggle'
 import { useAuthStore } from '@/store/authStore'
 import { useSidebarStore } from '@/store/sidebarStore'
@@ -64,6 +66,7 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       { to: '/customers', labelKey: 'nav.items.customers', icon: Users },
       { to: '/leads', labelKey: 'nav.items.leads', icon: TrendingUp },
+      { to: '/tasks', labelKey: 'nav.items.tasks', icon: CheckSquare },
     ],
   },
   {
@@ -162,6 +165,11 @@ export default function Sidebar() {
   const collapsedGroups = useSidebarStore((s) => s.collapsedGroups)
   const toggleGroup = useSidebarStore((s) => s.toggleGroup)
   const isExpanded = sidebarState === 'expanded'
+  const { data: taskSummary } = useQuery({
+    queryKey: ['activity-summary'], queryFn: () => getActivitySummary().then((r) => r.data),
+    refetchInterval: 120_000, enabled: !!user,
+  })
+  const overdueTasks = taskSummary?.overdue ?? 0
 
   const initials = user
     ? (user.full_name ?? user.username).split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase()
@@ -288,6 +296,16 @@ export default function Sidebar() {
                       >
                         <item.icon className="sidebar-nav-icon" size={16} />
                         {isExpanded && <span className="sidebar-nav-label">{t(item.labelKey)}</span>}
+                        {item.to === '/tasks' && overdueTasks > 0 && (
+                          <span
+                            title={String(overdueTasks)}
+                            style={{
+                              marginLeft: isExpanded ? 'auto' : 0, background: '#dc2626', color: '#fff', borderRadius: 999,
+                              fontSize: 10.5, fontWeight: 600, minWidth: 18, height: 18, padding: '0 5px',
+                              display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                            }}
+                          >{overdueTasks > 99 ? '99+' : overdueTasks}</span>
+                        )}
                       </NavLink>
                     ))}
                   </div>

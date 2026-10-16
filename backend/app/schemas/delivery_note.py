@@ -32,6 +32,8 @@ class SalesOrderBrief(BaseModel):
 class DeliveryNoteCreate(BaseModel):
     sales_order_id: int
     customer_id: int | None = None
+    site_id: int | None = None
+    contact_id: int | None = None
     assigned_to: int | None = None
     delivery_date: date | None = None
     delivery_address: str | None = None
@@ -53,6 +55,8 @@ class DeliveryNoteCreate(BaseModel):
 
 class DeliveryNoteUpdate(BaseModel):
     customer_id: int | None = None
+    site_id: int | None = None
+    contact_id: int | None = None
     assigned_to: int | None = None
     delivery_date: date | None = None
     delivery_address: str | None = None
@@ -83,6 +87,8 @@ class DeliveryNoteOut(BaseModel):
 
 
 class DeliveryNoteDetail(DeliveryNoteOut):
+    site_id: int | None = None
+    contact_id: int | None = None
     delivery_address: str | None = None
     driver_name: str | None = None
     vehicle_plate: str | None = None

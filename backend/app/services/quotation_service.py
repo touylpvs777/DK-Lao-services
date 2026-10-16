@@ -6,6 +6,7 @@ from fastapi import HTTPException, status
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.services.customer_links import validate_site_contact
 from app.models.quotation import Quotation, QuotationStatus
 from app.models.quotation_item import QuotationItem
 from app.models.quotation_status_history import QuotationStatusHistory
@@ -105,6 +106,8 @@ class QuotationService:
                 detail="valid_until must be on or after valid_from.",
             )
 
+        await validate_site_contact(self.db, data.customer_id, data.site_id, data.contact_id)
+
         number = await self._generate_number(data.quotation_type.value)
 
         quotation = Quotation(
@@ -113,6 +116,8 @@ class QuotationService:
             status=QuotationStatus.DRAFT.value,
             title=data.title.strip(),
             customer_id=data.customer_id,
+            site_id=data.site_id,
+            contact_id=data.contact_id,
             lead_id=data.lead_id,
             assigned_to=data.assigned_to or created_by,
             contact_name=data.contact_name,
@@ -175,6 +180,11 @@ class QuotationService:
         self._require_draft(quotation)
 
         changes = data.model_dump(exclude_unset=True)
+        if {"customer_id", "site_id", "contact_id"} & changes.keys():
+            await validate_site_contact(
+                self.db, changes.get("customer_id", quotation.customer_id),
+                changes.get("site_id", quotation.site_id), changes.get("contact_id", quotation.contact_id),
+            )
 
         vf = changes.get("valid_from", quotation.valid_from)
         vu = changes.get("valid_until", quotation.valid_until)

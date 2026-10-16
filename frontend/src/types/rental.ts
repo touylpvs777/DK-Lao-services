@@ -221,6 +221,8 @@ export interface RentalContract {
 }
 
 export interface RentalContractDetail extends RentalContract {
+  site_id?: number | null
+  contact_id?: number | null
   billing_cycle_day: number
   payment_terms_days: number
   tax_rate: number
@@ -259,6 +261,8 @@ export interface RentalContractListResponse {
 
 // Create/Update inputs
 export interface RentalContractCreate {
+  site_id?: number | null
+  contact_id?: number | null
   customer_id: number
   contract_type: ContractType
   start_date: string
@@ -282,6 +286,8 @@ export interface RentalContractCreate {
 }
 
 export interface RentalContractUpdate {
+  site_id?: number | null
+  contact_id?: number | null
   contract_type?: ContractType
   start_date?: string
   end_date?: string

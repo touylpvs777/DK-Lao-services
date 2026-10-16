@@ -12,6 +12,7 @@ const DashboardPage = lazy(() => import('@/pages/Dashboard/DashboardPage'))
 const CustomersPage = lazy(() => import('@/pages/Customers/CustomersPage'))
 const Customer360Page = lazy(() => import('@/pages/Customers/Customer360Page'))
 const LeadsPage = lazy(() => import('@/pages/Leads/LeadsPage'))
+const TasksPage = lazy(() => import('@/pages/Tasks/TasksPage'))
 const ActivityPage = lazy(() => import('@/pages/Activity/ActivityPage'))
 const ReportsPage = lazy(() => import('@/pages/Reports/ReportsPage'))
 const CatalogPage = lazy(() => import('@/pages/Catalog/CatalogPage'))
@@ -103,6 +104,7 @@ export default function App() {
             <Route path="/customers" element={<Suspense fallback={<PageLoader />}><CustomersPage /></Suspense>} />
             <Route path="/customers/:id" element={<Suspense fallback={<PageLoader />}><Customer360Page /></Suspense>} />
             <Route path="/leads"    element={<Suspense fallback={<PageLoader />}><LeadsPage /></Suspense>} />
+            <Route path="/tasks"    element={<Suspense fallback={<PageLoader />}><TasksPage /></Suspense>} />
             <Route path="/activity" element={<Suspense fallback={<PageLoader />}><ActivityPage /></Suspense>} />
             <Route path="/activities" element={<Suspense fallback={<PageLoader />}><ActivityPage /></Suspense>} />
             <Route path="/reports"  element={<Suspense fallback={<PageLoader />}><ReportsPage /></Suspense>} />

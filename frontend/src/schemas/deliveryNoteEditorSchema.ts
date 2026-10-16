@@ -3,6 +3,8 @@ import { z } from 'zod'
 export const deliveryNoteHeaderSchema = z.object({
   sales_order_id: z.number({ message: 'Sales order is required' }).nullable(),
   customer_id: z.number().nullable(),
+  site_id: z.number().nullable().optional(),
+  contact_id: z.number().nullable().optional(),
   assigned_to: z.number().nullable(),
   delivery_date: z.string().optional().or(z.literal('')),
   delivery_address: z.string().optional(),
@@ -20,6 +22,8 @@ export type DeliveryNoteEditorFormValues = z.infer<typeof deliveryNoteHeaderSche
 export const DELIVERY_NOTE_EDITOR_DEFAULTS: DeliveryNoteEditorFormValues = {
   sales_order_id: null,
   customer_id: null,
+  site_id: null,
+  contact_id: null,
   assigned_to: null,
   delivery_date: '',
   delivery_address: '',

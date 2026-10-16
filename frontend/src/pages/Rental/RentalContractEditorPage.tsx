@@ -1,3 +1,4 @@
+import SiteContactFields from '@/components/documents/SiteContactFields'
 import { useEffect, useMemo, useState } from 'react'
 import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import { useForm, FormProvider, useFormContext } from 'react-hook-form'
@@ -80,6 +81,7 @@ function RentalContractHeaderFields({ customers, readOnly }: { customers: Custom
         <label>{t('rental.form.currencyLabel')}</label>
         <input {...register('currency')} maxLength={3} />
       </div>
+      <SiteContactFields readOnly={readOnly} />
 
       <div className="form-group">
         <label>{t('rental.form.startDate')} <span className="required">*</span></label>
@@ -192,6 +194,8 @@ export default function RentalContractEditorPage() {
       setCt(data)
       methods.reset({
         customer_id: data.customer.id,
+        site_id: data.site_id ?? null,
+        contact_id: data.contact_id ?? null,
         contract_type: data.contract_type as RentalContractEditorFormValues['contract_type'],
         start_date: data.start_date ?? '',
         end_date: data.end_date ?? '',
@@ -260,6 +264,8 @@ export default function RentalContractEditorPage() {
       if (validItems.length === 0) { setError(t('rental.editor.itemRequired')); setIsSaving(false); return }
       const payload: RentalContractCreate = {
         customer_id: form.customer_id!,
+        site_id: form.site_id ?? null,
+        contact_id: form.contact_id ?? null,
         contract_type: form.contract_type,
         start_date: form.start_date,
         end_date: form.end_date,
@@ -311,6 +317,8 @@ export default function RentalContractEditorPage() {
     setError(null)
     try {
       await updateRentalContract(ct.id, {
+        site_id: form.site_id ?? null,
+        contact_id: form.contact_id ?? null,
         contract_type: form.contract_type,
         start_date: form.start_date,
         end_date: form.end_date,

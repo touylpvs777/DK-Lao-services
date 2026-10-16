@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { LocaleProvider } from "@/lib/locale";
 import { SiteHeader } from "@/components/SiteHeader";
+import { CartProvider } from "@/context/CartContext";
+import { InternalModeProvider } from "@/components/internal/InternalModeContext";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -27,8 +29,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <LocaleProvider>
-          <SiteHeader />
-          {children}
+          <CartProvider>
+            <InternalModeProvider>
+              <SiteHeader />
+              {children}
+            </InternalModeProvider>
+          </CartProvider>
         </LocaleProvider>
       </body>
     </html>

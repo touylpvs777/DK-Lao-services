@@ -110,6 +110,10 @@ async def test_portal_account_login_and_scoped_dashboard(client: AsyncClient, db
         "customer_id": mine.id, "username": "second", "password": "Portal@12345",
     })
     assert dup.status_code == 409
+    # The customer page looks up its own account by customer_id.
+    listed = await client.get(f"/api/v1/portal/accounts?customer_id={mine.id}", headers=admin)
+    assert [a["username"] for a in listed.json()] == ["mine.login"]
+    assert (await client.get(f"/api/v1/portal/accounts?customer_id={other.id}", headers=admin)).json() == []
 
     bad = await client.post("/api/v1/portal/auth/login", json={"username": "mine.login", "password": "wrong-pass"})
     assert bad.status_code == 401

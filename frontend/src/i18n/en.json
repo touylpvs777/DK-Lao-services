@@ -3654,5 +3654,23 @@
     "save": "Save",
     "cancel": "Cancel",
     "saveFailed": "Could not save"
+  },
+  "portalAccess": {
+    "title": "Customer portal access",
+    "hint": "Login for the customer portal on the website. The customer sees only their own forklifts, rentals, work orders and invoices.",
+    "none": "No portal login yet.",
+    "create": "Create login",
+    "username": "Username",
+    "password": "Password",
+    "passwordHint": "At least 8 characters",
+    "active": "Active",
+    "inactive": "Disabled",
+    "activate": "Enable",
+    "deactivate": "Disable",
+    "resetPassword": "Reset password",
+    "created": "Portal login created",
+    "updated": "Portal login updated",
+    "passwordReset": "Password reset; the customer must sign in again",
+    "conflict": "This customer already has a login, or the username is taken"
   }
 }

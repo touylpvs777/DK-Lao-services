@@ -239,17 +239,17 @@ async def get_dashboard(
 
 @router.get("/accounts", response_model=list[CustomerPortalAccountOut])
 async def list_portal_accounts(
+    customer_id: int | None = Query(default=None, gt=0),
     skip: int = Query(default=0, ge=0),
     limit: int = Query(default=100, ge=1, le=500),
     db: AsyncSession = Depends(get_db),
     _: User = Depends(get_current_superuser),
 ):
+    query = select(CustomerPortalAccount).options(selectinload(CustomerPortalAccount.customer))
+    if customer_id is not None:
+        query = query.where(CustomerPortalAccount.customer_id == customer_id)
     result = await db.execute(
-        select(CustomerPortalAccount)
-        .options(selectinload(CustomerPortalAccount.customer))
-        .order_by(CustomerPortalAccount.id)
-        .offset(skip)
-        .limit(limit)
+        query.order_by(CustomerPortalAccount.id).offset(skip).limit(limit)
     )
     return [_account_out(account) for account in result.scalars().all()]
 

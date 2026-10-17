@@ -558,7 +558,7 @@ export default function QuotationEditorPage() {
           {error && <div className="page-error"><AlertCircle size={16} /> {error}</div>}
 
           {viewMode === 'edit' ? (
-            <div style={{ display: 'grid', gap: 16, marginTop: 16 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: 16, marginTop: 16 }}>
               <DocumentEditorHeader
                 documentNumber={quotation?.quotation_number ?? ''}
                 documentNumberLabel={t('quotations.editor.header.quotationNo')}

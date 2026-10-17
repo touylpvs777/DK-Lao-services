@@ -3654,5 +3654,26 @@
     "updated": "ອັບເດດບັນຊີພອດທັລແລ້ວ",
     "passwordReset": "ຕັ້ງລະຫັດຜ່ານໃໝ່ແລ້ວ; ລູກຄ້າຕ້ອງເຂົ້າລະບົບໃໝ່",
     "conflict": "ລູກຄ້ານີ້ມີບັນຊີແລ້ວ ຫຼື ຊື່ຜູ້ໃຊ້ນີ້ຖືກໃຊ້ແລ້ວ"
+  },
+  "shell": {
+    "new": "ໃໝ່",
+    "createMenu": "ສ້າງໃໝ່",
+    "newLead": "Lead (ລູກຄ້າເປົ້າໝາຍ)",
+    "newCustomer": "ລູກຄ້າ",
+    "newQuotation": "ໃບສະເໜີລາຄາ",
+    "newSalesOrder": "ໃບສັ່ງຂາຍ",
+    "newContract": "ສັນຍາເຊົ່າ",
+    "newWorkOrder": "ໃບສັ່ງງານ",
+    "newInvoice": "ໃບແຈ້ງໜີ້",
+    "newLeads": "Lead ໃໝ່",
+    "overdueTasks": "ວຽກເກີນກຳນົດ",
+    "togglePanel": "ສະແດງ ຫຼື ເຊື່ອງແຜງຂ້າງ",
+    "modules": "ໂມດູນ",
+    "greeting": "ສະບາຍດີ, {{name}}",
+    "openPipeline": "ມູນຄ່າ Pipeline ທີ່ເປີດ",
+    "winRate": "ອັດຕາຊະນະ",
+    "today": "ມື້ນີ້",
+    "receivables": "ລູກໜີ້ຄ້າງຊຳລະ",
+    "viewLeads": "ເບິ່ງ Lead"
   }
 }

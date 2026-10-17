@@ -3672,5 +3672,26 @@
     "updated": "Portal login updated",
     "passwordReset": "Password reset; the customer must sign in again",
     "conflict": "This customer already has a login, or the username is taken"
+  },
+  "shell": {
+    "new": "New",
+    "createMenu": "Create new",
+    "newLead": "Lead",
+    "newCustomer": "Customer",
+    "newQuotation": "Quotation",
+    "newSalesOrder": "Sales order",
+    "newContract": "Rental contract",
+    "newWorkOrder": "Work order",
+    "newInvoice": "Invoice",
+    "newLeads": "New leads",
+    "overdueTasks": "Overdue tasks",
+    "togglePanel": "Show or hide the side panel",
+    "modules": "Modules",
+    "greeting": "Hello, {{name}}",
+    "openPipeline": "Open pipeline",
+    "winRate": "Win rate",
+    "today": "Today",
+    "receivables": "Receivables",
+    "viewLeads": "View leads"
   }
 }

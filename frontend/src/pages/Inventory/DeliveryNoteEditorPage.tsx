@@ -323,7 +323,7 @@ export default function DeliveryNoteEditorPage() {
 
         {error && <div className="page-error"><AlertCircle size={16} /> {error}</div>}
 
-        <div style={{ display: 'grid', gap: 16, marginTop: 16 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: 16, marginTop: 16 }}>
           <DeliveryNoteEditorHeader
             documentNumber={deliveryNote?.dn_number ?? ''}
             documentNumberLabel={t('deliveryNotes.editor.dnNumber')}

@@ -406,7 +406,7 @@ export default function PurchaseOrderEditorPage() {
           {error && <div className="page-error"><AlertCircle size={16} /> {error}</div>}
 
           {viewMode === 'edit' ? (
-            <div style={{ display: 'grid', gap: 16, marginTop: 16 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: 16, marginTop: 16 }}>
               <DocumentFlowStrip steps={flowSteps} currentIndex={2} />
 
               <div className="doc-editor-header">

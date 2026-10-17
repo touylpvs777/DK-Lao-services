@@ -389,7 +389,7 @@
 /* ─── Hero Banner (Feature area) ───────────────────────────────────────── */
 
 .mp-hero {
-  background: #003366;
+  background: #213b89;
   border-radius: var(--radius-xl);
   padding: 28px 32px;
   margin-bottom: 24px;
@@ -399,7 +399,7 @@
 }
 
 [data-theme="dark"] .mp-hero {
-  background: #003366;
+  background: #213b89;
   border: 1px solid var(--color-border);
 }
 

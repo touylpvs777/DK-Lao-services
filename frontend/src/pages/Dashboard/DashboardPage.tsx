@@ -42,9 +42,9 @@ function KpiCard({ label, value, sublabel, icon: Icon, accent, to }: KpiCardProp
   const content = (
     <>
       <div className="flex items-start justify-between">
-        <div className="min-w-0">
+        <div className="min-w-0 flex-1 [container-type:inline-size]">
           <p className={`${sizeClass} text-slate-500 dark:text-zinc-400`}>{label}</p>
-          <p className="mt-2 truncate text-2xl font-bold tracking-tight text-slate-900 dark:text-white">{value}</p>
+          <p className="mt-2 whitespace-nowrap text-[clamp(1.05rem,11cqw,1.5rem)] font-bold tracking-tight text-slate-900 dark:text-white">{value}</p>
           {sublabel && <p className={`mt-1 ${sizeClass} text-slate-500 dark:text-zinc-400`}>{sublabel}</p>}
         </div>
         <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${accent}`}>
@@ -162,7 +162,7 @@ export default function DashboardPage() {
   return (
     <div className="min-h-full py-8">
       {/* Header: premium DK Blue enterprise banner */}
-      <header className="mb-8 rounded-2xl border border-blue-800 bg-[#003366] px-6 py-6 shadow-sm sm:px-8">
+      <header className="mb-8 rounded-2xl border border-transparent bg-[linear-gradient(135deg,#213b89_0%,#162a6b_100%)] shadow-[inset_0_-4px_0_0_#e62e2d] px-6 py-6 sm:px-8">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <p className={`${sizeClass} font-semibold uppercase tracking-wider text-blue-200`}>{t('dashboard.erp.eyebrow')}</p>

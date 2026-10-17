@@ -1,15 +1,22 @@
 :root {
-  /* ── Primary Blue ─────────────────────────────────────── */
-  --color-primary-50:  #eff6ff;
-  --color-primary-100: #dbeafe;
-  --color-primary-200: #bfdbfe;
-  --color-primary-300: #93c5fd;
-  --color-primary-400: #60a5fa;
-  --color-primary-500: #3b82f6;
-  --color-primary-600: #2563eb;
-  --color-primary-700: #1d4ed8;
-  --color-primary-800: #1e40af;
-  --color-primary-900: #1e3a5f;
+  /* ── DK Lao brand (sampled from the logo) ────────────── */
+  --brand-red:      #e62e2d;
+  --brand-red-dark: #c81f1f;
+  --brand-red-50:   #fdecec;
+  --brand-red-100:  #fbd5d5;
+  --brand-navy:     #213b89;
+
+  /* ── Primary: DK navy (600 = logo blue) ───────────────── */
+  --color-primary-50:  #eef2fb;
+  --color-primary-100: #dce5f7;
+  --color-primary-200: #bccaee;
+  --color-primary-300: #92a6de;
+  --color-primary-400: #6279c8;
+  --color-primary-500: #3f58ae;
+  --color-primary-600: #213b89;
+  --color-primary-700: #1a2f6e;
+  --color-primary-800: #142458;
+  --color-primary-900: #0e1a40;
 
   /* ── Success Green ────────────────────────────────────── */
   --color-success-50:  #f0fdf4;
@@ -92,9 +99,12 @@
   --color-warning:       var(--color-warning-500);
 
   /* ── Layout ───────────────────────────────────────────── */
-  --sidebar-width-expanded:  280px;
-  --sidebar-width-collapsed: 72px;
+  --sidebar-width-expanded:  264px;
+  --sidebar-width-collapsed: 76px;
   --topbar-height:           64px;
+  --shell-gap:               16px;
+  --dock-space:              104px;
+  --right-panel-width:       300px;
   --content-max-width:       none;
 
   /* ── Radius ───────────────────────────────────────────── */
@@ -128,13 +138,25 @@
   --duration-slow:   300ms;
   --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* ── Sidebar Colors (DK Blue enterprise) ─────────────────── */
-  --sidebar-bg:         #003366;
-  --sidebar-text:       #bfdbfe;
-  --sidebar-text-hover: #ffffff;
-  --sidebar-text-active:#ffffff;
-  --sidebar-border:     rgba(255,255,255,0.12);
-  --sidebar-active-bg:  rgba(255,255,255,0.14);
+  /* ── Glass surfaces (floating shell) ──────────────────── */
+  --app-bg:
+    radial-gradient(900px 520px at 88% -8%, rgba(230,46,45,0.13), transparent 60%),
+    radial-gradient(1000px 640px at -6% 108%, rgba(33,59,137,0.18), transparent 62%),
+    linear-gradient(135deg, #eef2fb 0%, #f6f4fa 52%, #e9eefa 100%);
+  --glass-bg:        rgba(255,255,255,0.68);
+  --glass-bg-strong: rgba(255,255,255,0.9);
+  --glass-border:    rgba(255,255,255,0.75);
+  --glass-edge:      rgba(33,59,137,0.10);
+  --glass-shadow:    0 10px 36px rgba(33,59,137,0.12), 0 2px 8px rgba(33,59,137,0.06);
+  --glass-blur:      blur(18px) saturate(1.35);
+
+  /* ── Sidebar (glass card) ─────────────────────────────── */
+  --sidebar-bg:         var(--glass-bg);
+  --sidebar-text:       #44507a;
+  --sidebar-text-hover: #213b89;
+  --sidebar-text-active:#213b89;
+  --sidebar-border:     rgba(33,59,137,0.10);
+  --sidebar-active-bg:  rgba(33,59,137,0.10);
 }
 
 /* ── Semantic Color Aliases (light) ─────────────────────── */
@@ -201,20 +223,44 @@
    step up from the canvas so they read as elevated tiles. */
 [data-theme="dark"] {
   /* Surfaces */
-  --color-bg:             #151515;
-  --color-bg-subtle:      #1c1c1c;
-  --color-surface:        #1f1f1f;
-  --color-surface-raised: #272727;
-  --color-border:         #2c2c2c;
-  --color-border-strong:  #3a3a3a;
-  --color-text:           #f2f2f2;
-  --color-text-secondary: #b8b8b8;
-  --color-text-muted:     #9ca3af;
+  --color-bg:             #0d1428;
+  --color-bg-subtle:      #111a33;
+  --color-surface:        #152040;
+  --color-surface-raised: #1b2850;
+  --color-border:         #26335c;
+  --color-border-strong:  #34447c;
+  --color-text:           #f1f4fb;
+  --color-text-secondary: #b9c3de;
+  --color-text-muted:     #98a5c9;
   --color-text-inverse:   #0f172a;
 
+  /* Primary needs to be lighter on dark surfaces */
+  --color-primary-600: #5573d6;
+  --color-primary-700: #4560c2;
+  --color-primary-500: #7089e0;
+  --color-primary-400: #8da2ec;
+  --color-primary-300: #b0bff3;
+  --brand-red-50:  #3a1519;
+  --brand-red-100: #5a1d22;
+
+  --app-bg:
+    radial-gradient(900px 520px at 88% -8%, rgba(230,46,45,0.16), transparent 60%),
+    radial-gradient(1000px 640px at -6% 108%, rgba(63,88,174,0.28), transparent 62%),
+    linear-gradient(135deg, #0a1124 0%, #0e1630 55%, #0b1228 100%);
+  --glass-bg:        rgba(21,32,64,0.72);
+  --glass-bg-strong: rgba(18,27,54,0.92);
+  --glass-border:    rgba(140,162,230,0.16);
+  --glass-edge:      rgba(140,162,230,0.14);
+  --glass-shadow:    0 12px 40px rgba(0,0,0,0.45), 0 2px 8px rgba(0,0,0,0.3);
+  --sidebar-text:       #b9c3de;
+  --sidebar-text-hover: #ffffff;
+  --sidebar-text-active:#ffffff;
+  --sidebar-border:     rgba(140,162,230,0.14);
+  --sidebar-active-bg:  rgba(110,135,225,0.22);
+
   /* Palette shifts for dark readability */
-  --color-primary-50:  #172554;
-  --color-primary-100: #1e3a5f;
+  --color-primary-50:  #14204a;
+  --color-primary-100: #1c2d63;
   --color-success-50:  #052e16;
   --color-success-100: #14532d;
   --color-warning-50:  #451a03;
@@ -226,12 +272,12 @@
   --color-purple-50:   #2e1065;
   --color-purple-100:  #3b0764;
 
-  --color-gray-50:  #1f1f1f;
-  --color-gray-100: #272727;
-  --color-gray-200: #2c2c2c;
-  --color-gray-300: #3a3a3a;
-  --color-gray-800: #f2f2f2;
-  --color-gray-900: #fafafa;
+  --color-gray-50:  #152040;
+  --color-gray-100: #1b2850;
+  --color-gray-200: #26335c;
+  --color-gray-300: #34447c;
+  --color-gray-800: #f1f4fb;
+  --color-gray-900: #fafbff;
 
   /* Shadows */
   --shadow-xs: 0 1px 2px rgba(0,0,0,0.3);
@@ -239,8 +285,6 @@
   --shadow-md: 0 4px 6px -1px rgba(0,0,0,.4);
   --shadow-lg: 0 10px 15px -3px rgba(0,0,0,.4);
 
-  /* Sidebar */
-  --sidebar-bg: #1e1e1e;
 
   /* Semantic overrides */
   --color-on-primary:     #ffffff;

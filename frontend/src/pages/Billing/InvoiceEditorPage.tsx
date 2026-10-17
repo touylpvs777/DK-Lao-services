@@ -417,7 +417,7 @@ export default function InvoiceEditorPage() {
           {error && <div className="page-error"><AlertCircle size={16} /> {error}</div>}
 
           {viewMode === 'edit' ? (
-            <div style={{ display: 'grid', gap: 16, marginTop: 16 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: 16, marginTop: 16 }}>
               <InvoiceEditorHeader
                 documentNumber={invoice?.invoice_number ?? ''}
                 statusVariant={STATUS_VARIANT[invoice?.status ?? 'draft'] ?? 'gray'}

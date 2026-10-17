@@ -3,29 +3,28 @@ import { createPortal } from 'react-dom'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
-  LayoutDashboard, Users, TrendingUp, Activity, BarChart2, Settings,
-  Package, Truck, Car, FileText, ClipboardList,
-  Building2, ArrowRightLeft, Wrench, Radio,
-  Box, Receipt, CreditCard, Landmark, FileSpreadsheet, Warehouse, LogOut, ShoppingCart,
-  UserCircle, KeyRound, PanelLeftClose, PanelLeftOpen, ChevronDown,
-  FileCheck2, ReceiptText, Undo2, Banknote, FileOutput, PackageCheck, PackageMinus,
-  BadgeCheck, Camera, LayoutGrid, CheckSquare,
+  Settings, Truck, Car, LogOut, UserCircle, KeyRound, PanelLeftClose, PanelLeftOpen, ChevronDown,
+  Camera, Plus, TrendingUp, Users, FileText, FileCheck2, ClipboardList, Wrench, Receipt,
 } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import { getActivitySummary } from '@/api/crmActivities'
 import ThemeToggle from '@/components/ui/ThemeToggle'
 import { useAuthStore } from '@/store/authStore'
 import { useSidebarStore } from '@/store/sidebarStore'
-import { useCompanyStore } from '@/store/companyStore'
 import { useAvatarStore } from '@/store/avatarStore'
 import { resolveMediaUrl } from '@/utils/media'
+import { NAV_GROUPS } from './navConfig'
 import './Sidebar.css'
 
-interface NavGroup {
-  id: string
-  labelKey: string
-  items: { to: string; labelKey: string; icon: React.ElementType; adminOnly?: boolean }[]
-}
+const QUICK_CREATE = [
+  { to: '/leads', labelKey: 'shell.newLead', icon: TrendingUp },
+  { to: '/customers', labelKey: 'shell.newCustomer', icon: Users },
+  { to: '/quotations/new', labelKey: 'shell.newQuotation', icon: FileText },
+  { to: '/sales-orders/new', labelKey: 'shell.newSalesOrder', icon: FileCheck2 },
+  { to: '/rental-contracts/new', labelKey: 'shell.newContract', icon: ClipboardList },
+  { to: '/maintenance/work-orders/new', labelKey: 'shell.newWorkOrder', icon: Wrench },
+  { to: '/billing/invoices/new', labelKey: 'shell.newInvoice', icon: Receipt },
+]
 
 // Maps a user's `avatar_icon` value to a Lucide icon, used when they have
 // no uploaded photo but picked a stand-in icon instead (e.g. drivers/dispatchers).
@@ -48,104 +47,6 @@ function SidebarAvatarContent({
   if (Icon) return <Icon size={16} />
   return <>{initials}</>
 }
-
-// Module architecture: one group per business module, ordered the way work flows
-// (customer -> sale -> asset -> rental -> service -> parts -> project -> money -> reports).
-// Marketing/website pages sit last: they duplicate the public site, not daily ERP work.
-const NAV_GROUPS: NavGroup[] = [
-  {
-    id: 'dashboard',
-    labelKey: 'nav.groups.dashboard',
-    items: [
-      { to: '/dashboard', labelKey: 'nav.items.overview', icon: LayoutDashboard },
-    ],
-  },
-  {
-    id: 'crm',
-    labelKey: 'nav.groups.crm',
-    items: [
-      { to: '/customers', labelKey: 'nav.items.customers', icon: Users },
-      { to: '/leads', labelKey: 'nav.items.leads', icon: TrendingUp },
-      { to: '/tasks', labelKey: 'nav.items.tasks', icon: CheckSquare },
-    ],
-  },
-  {
-    id: 'sales',
-    labelKey: 'nav.groups.sales',
-    items: [
-      { to: '/quotations', labelKey: 'nav.items.quotations', icon: FileText },
-      { to: '/sales-orders', labelKey: 'nav.items.salesOrders', icon: FileCheck2 },
-      { to: '/inventory/delivery-notes', labelKey: 'nav.items.deliveryNotes', icon: FileOutput },
-    ],
-  },
-  {
-    id: 'equipment',
-    labelKey: 'nav.groups.equipment',
-    items: [
-      { to: '/equipment', labelKey: 'nav.items.registry', icon: Truck },
-      { to: '/movements', labelKey: 'nav.items.movements', icon: ArrowRightLeft },
-    ],
-  },
-  {
-    id: 'rental',
-    labelKey: 'nav.groups.rental',
-    items: [
-      { to: '/rental-contracts', labelKey: 'nav.items.contracts', icon: ClipboardList },
-    ],
-  },
-  {
-    id: 'maintenance',
-    labelKey: 'nav.groups.maintenance',
-    items: [
-      { to: '/maintenance', labelKey: 'nav.items.maintenance', icon: Wrench },
-    ],
-  },
-  {
-    id: 'inventory',
-    labelKey: 'nav.groups.inventory',
-    items: [
-      { to: '/inventory', labelKey: 'nav.items.inventory', icon: Box },
-      { to: '/catalog', labelKey: 'nav.items.products', icon: Package },
-      { to: '/inventory/pos', labelKey: 'nav.items.partsPOS', icon: LayoutGrid },
-      { to: '/inventory/purchase-orders', labelKey: 'nav.items.purchaseOrders', icon: ShoppingCart },
-      { to: '/inventory/goods-receive', labelKey: 'nav.items.goodsReceive', icon: PackageCheck },
-      { to: '/inventory/goods-issue', labelKey: 'nav.items.goodsIssue', icon: PackageMinus },
-    ],
-  },
-  {
-    id: 'projects',
-    labelKey: 'nav.groups.projects',
-    items: [
-      { to: '/projects', labelKey: 'nav.items.warehouseProjects', icon: Warehouse },
-    ],
-  },
-  {
-    id: 'finance',
-    labelKey: 'nav.groups.finance',
-    items: [
-      { to: '/billing', labelKey: 'nav.items.billing', icon: Receipt },
-      { to: '/billing/invoices', labelKey: 'nav.items.invoices', icon: FileText },
-      { to: '/billing/tax-invoices', labelKey: 'nav.items.taxInvoices', icon: ReceiptText },
-      { to: '/billing/credit-notes', labelKey: 'nav.items.creditNotes', icon: Undo2 },
-      { to: '/billing/payments', labelKey: 'nav.items.payments', icon: CreditCard },
-      { to: '/billing/receipts', labelKey: 'nav.items.receipts', icon: BadgeCheck },
-      { to: '/billing/payment-vouchers', labelKey: 'nav.items.paymentVouchers', icon: Banknote },
-      { to: '/billing/deposits', labelKey: 'nav.items.deposits', icon: Landmark },
-      { to: '/billing/statements', labelKey: 'nav.items.statements', icon: FileSpreadsheet },
-    ],
-  },
-  {
-    id: 'executive',
-    labelKey: 'nav.groups.executive',
-    items: [
-      { to: '/reports', labelKey: 'nav.items.reports', icon: BarChart2 },
-      { to: '/activities', labelKey: 'nav.items.activity', icon: Activity, adminOnly: true },
-      { to: '/iot-management', labelKey: 'nav.items.iotTelemetry', icon: Radio, adminOnly: true },
-    ],
-  },
-  // Customer-facing pages (store, 4S services, client portal) live in the separate
-  // storefront app, which talks to this backend's /storefront and /portal APIs.
-]
 
 export default function Sidebar() {
   const { t } = useTranslation()
@@ -189,6 +90,8 @@ export default function Sidebar() {
     if (window.innerWidth <= 768) setState('hidden')
   }
 
+  const [newMenuOpen, setNewMenuOpen] = useState(false)
+  const newMenuRef = useRef<HTMLDivElement>(null)
   const [isUserMenuOpen, setUserMenuOpen] = useState(false)
   const [menuPos, setMenuPos] = useState<{ left: number; bottom: number } | null>(null)
   const userTriggerRef = useRef<HTMLButtonElement>(null)
@@ -217,19 +120,26 @@ export default function Sidebar() {
     return () => document.removeEventListener('mousedown', handler)
   }, [isUserMenuOpen])
 
+  useEffect(() => {
+    if (!newMenuOpen) return
+    const onDown = (e: MouseEvent) => {
+      if (newMenuRef.current && !newMenuRef.current.contains(e.target as Node)) setNewMenuOpen(false)
+    }
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setNewMenuOpen(false) }
+    document.addEventListener('mousedown', onDown)
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('mousedown', onDown)
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [newMenuOpen])
+
   const handleLogout = () => {
     setUserMenuOpen(false)
     logout()
     navigate('/login', { replace: true })
   }
 
-  const companyProfile = useCompanyStore((s) => s.profile)
-  const fetchCompanyProfile = useCompanyStore((s) => s.fetch)
-  useEffect(() => {
-    fetchCompanyProfile()
-  }, [fetchCompanyProfile])
-  const brandLogoUrl = resolveMediaUrl(companyProfile?.logo_url)
-  const brandCompanyName = companyProfile?.company_name || t('common.brandName')
 
   return (
     <>
@@ -240,19 +150,45 @@ export default function Sidebar() {
       />
 
       <aside className="sidebar transition-all duration-300" data-state={sidebarState} aria-label={t('common.mainNavigation')}>
-        {/* Brand */}
-        <div className="sidebar-brand">
-          <NavLink to="/portal" className="sidebar-brand-icon-link" onClick={closeMobile} title={brandCompanyName}>
-            <div className={`sidebar-brand-icon${brandLogoUrl ? ' sidebar-brand-icon--logo' : ''}`}>
-              {brandLogoUrl
-                ? <img src={brandLogoUrl} alt="" className="sidebar-brand-logo-img" />
-                : <Building2 size={18} />}
-            </div>
-          </NavLink>
-
-          {isExpanded && (
-            <span className="sidebar-brand-name-text">{brandCompanyName}</span>
-          )}
+        {/* Create + collapse */}
+        <div className="sidebar-top">
+          <div className="sidebar-new-wrap" ref={newMenuRef}>
+            <button
+              type="button"
+              className="sidebar-new-btn"
+              onClick={() => setNewMenuOpen((v) => !v)}
+              aria-haspopup="true"
+              aria-expanded={newMenuOpen}
+              title={t('shell.createMenu')}
+            >
+              <Plus size={18} />
+              {isExpanded && <span>{t('shell.new')}</span>}
+            </button>
+            {newMenuOpen && (
+              <div className="sidebar-new-menu" role="menu">
+                {QUICK_CREATE.map((item) => (
+                  <button
+                    key={item.to}
+                    type="button"
+                    role="menuitem"
+                    className="sidebar-new-menu-item"
+                    onClick={() => { setNewMenuOpen(false); closeMobile(); navigate(item.to) }}
+                  >
+                    <item.icon size={15} /> {t(item.labelKey)}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+          <button
+            type="button"
+            className="sidebar-collapse-btn"
+            onClick={toggle}
+            title={isExpanded ? t('nav.collapseSidebar') : t('nav.expandSidebar')}
+            aria-label={isExpanded ? t('nav.collapseSidebar') : t('nav.expandSidebar')}
+          >
+            {isExpanded ? <PanelLeftClose size={17} /> : <PanelLeftOpen size={17} />}
+          </button>
         </div>
 
         {/* Navigation */}
@@ -322,17 +258,6 @@ export default function Sidebar() {
             </NavLink>
           )}
         </nav>
-
-        {/* Expand / collapse toggle */}
-        <button
-          type="button"
-          className="sidebar-toggle-btn"
-          onClick={toggle}
-          title={isExpanded ? t('nav.collapseSidebar') : t('nav.expandSidebar')}
-        >
-          {isExpanded ? <PanelLeftClose size={16} /> : <PanelLeftOpen size={16} />}
-          {isExpanded && <span className="sidebar-nav-label">{t('nav.collapseSidebar')}</span>}
-        </button>
 
         {/* Footer */}
         <div className="sidebar-footer">

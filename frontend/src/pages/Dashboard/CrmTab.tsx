@@ -18,9 +18,9 @@ const CARD = 'rounded-2xl border border-slate-200/60 bg-white p-5 shadow-[0_8px_
 
 function Kpi({ label, value, hint }: { label: string; value: string; hint?: string }) {
   return (
-    <div className={CARD}>
+    <div className={`${CARD} [container-type:inline-size]`}>
       <p className="text-sm text-slate-500 dark:text-zinc-400">{label}</p>
-      <p className="mt-2 truncate text-2xl font-bold tracking-tight text-slate-900 dark:text-white">{value}</p>
+      <p className="mt-2 whitespace-nowrap text-[clamp(1.05rem,11cqw,1.5rem)] font-bold tracking-tight text-slate-900 dark:text-white">{value}</p>
       {hint && <p className="mt-1 text-xs text-slate-500 dark:text-zinc-400">{hint}</p>}
     </div>
   )

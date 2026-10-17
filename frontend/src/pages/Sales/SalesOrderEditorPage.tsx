@@ -553,7 +553,7 @@ export default function SalesOrderEditorPage() {
           {error && <div className="page-error"><AlertCircle size={16} /> {error}</div>}
 
           {viewMode === 'edit' ? (
-            <div style={{ display: 'grid', gap: 16, marginTop: 16 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: 16, marginTop: 16 }}>
               <SalesOrderEditorHeader
                 documentNumber={salesOrder?.so_number ?? ''}
                 documentNumberLabel={t('salesOrders.editor.soNumber')}

@@ -30,6 +30,8 @@ html, body, #root {
 body {
   font-family: 'Inter', 'Noto Sans Lao', system-ui, sans-serif;
   background: var(--color-bg);
+  background: var(--app-bg);
+  background-attachment: fixed;
   color: var(--color-text);
   font-size: 14px;
   line-height: 1.5;
@@ -75,7 +77,7 @@ select:focus-visible,
 textarea:focus-visible {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  box-shadow: 0 0 0 3px rgba(33, 59, 137, 0.16);
 }
 
 /* ── Skip to content (keyboard nav) ───────────────────── */

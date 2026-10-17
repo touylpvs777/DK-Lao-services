@@ -49,6 +49,9 @@
   .sidebar,
   .sidebar-overlay,
   .header,
+  .dock,
+  .right-panel,
+  .window-titlebar,
   .modal-overlay,
   .notification-dropdown,
   .user-dropdown-menu,
@@ -74,8 +77,16 @@
   }
 
   .app-main {
-    margin-left: 0 !important;
-    padding-top: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+  }
+
+  .app-window {
+    min-height: 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
     background: #fff !important;
   }
 

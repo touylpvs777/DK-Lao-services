@@ -73,6 +73,18 @@ services:
     profiles: ["tunnel"]
     restart: unless-stopped
 
+  # Temporary HTTPS address with no Cloudflare account setup or domain: `docker compose --profile quicktunnel up -d`.
+  # The address (https://<random>.trycloudflare.com) is printed in `docker logs dk-quicktunnel` and changes
+  # every time this container restarts, so the website's CRM_API_URL must be updated with it. Testing only.
+  quicktunnel:
+    image: cloudflare/cloudflared:2025.9.0
+    container_name: dk-quicktunnel
+    command: tunnel --no-autoupdate --url http://backend:8001
+    depends_on:
+      - backend
+    profiles: ["quicktunnel"]
+    restart: unless-stopped
+
 volumes:
   pgdata:
   uploads:

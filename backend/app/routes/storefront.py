@@ -26,7 +26,10 @@ def _require_storefront_token(token: str | None) -> None:
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="Storefront integration is not configured",
         )
-    if not token or not secrets.compare_digest(token, settings.STOREFRONT_INTEGRATION_TOKEN):
+    # Compare bytes: compare_digest raises TypeError (a 500) on a non-ASCII str, e.g. a token with a BOM.
+    if not token or not secrets.compare_digest(
+        token.encode(), settings.STOREFRONT_INTEGRATION_TOKEN.encode()
+    ):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid storefront token")
 
 

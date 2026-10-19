@@ -88,8 +88,9 @@ async def create_website_inquiry(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="Storefront inquiry integration is not configured",
         )
+    # Compare bytes: compare_digest raises TypeError (a 500) on a non-ASCII str, e.g. a token with a BOM.
     if not storefront_token or not secrets.compare_digest(
-        storefront_token, settings.STOREFRONT_INTEGRATION_TOKEN
+        storefront_token.encode(), settings.STOREFRONT_INTEGRATION_TOKEN.encode()
     ):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid storefront token")
 

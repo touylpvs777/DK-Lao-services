@@ -12,3 +12,25 @@ dk_service.db
 .pytest_cache/
 backend/uploads/
 *_run.log
+
+# Dependencies and virtualenvs
+node_modules/
+.venv/
+.venv-1/
+
+# Build output and framework caches (Next.js, Vite, OpenNext/Cloudflare)
+.next/
+out/
+dist/
+build/
+.open-next/
+.wrangler/
+.turbo/
+.vite/
+.cache/
+*.tsbuildinfo
+
+# Local databases and logs
+*.db
+*.sqlite3
+*.log

@@ -30,5 +30,22 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    ".open-next",
+    "lib/api.ts",
+    "lib/auth.ts",
+    "lib/prisma.ts",
+    "lib/watermark.ts",
+    "actions/admin.ts",
+    "actions/audit.ts",
+    "actions/employees.ts",
+    "actions/investor.ts",
+    "actions/projects.ts",
+    "actions/documents.ts",
+    "actions/quickbooks.ts",
+    "data/documents.ts",
+    "data/chart_of_accounts.ts",
+    "components/store/page.tsx"
+  ]
 }

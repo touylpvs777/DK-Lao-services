@@ -23,6 +23,9 @@ class Settings(BaseSettings):
     ENABLE_API_DOCS: bool = False
 
     DATABASE_URL: str = "sqlite+aiosqlite:///./crm.db"
+    # Connections kept open per backend process (overflow allows twice as many more). Lower it on a
+    # free hosted database with a small connection limit.
+    DB_POOL_SIZE: int = 10
 
     SECRET_KEY: str = "changeme-use-a-strong-secret-in-production"
     ALGORITHM: str = "HS256"

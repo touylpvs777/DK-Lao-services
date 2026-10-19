@@ -1,0 +1,30 @@
+# Render Blueprint for the CRM backend on the free plan. See DEPLOY-FREE.md.
+# Render dashboard → New → Blueprint → pick this repository. Values marked sync: false are asked for once.
+services:
+  - type: web
+    name: dk-crm-api
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerContext: ./backend
+    dockerfilePath: ./backend/Dockerfile.backend
+    # /livez does not query the database, so Render's frequent health checks let the free Neon database suspend.
+    healthCheckPath: /livez
+    autoDeploy: true
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: DATABASE_URL
+        sync: false # Neon connection string, as Neon prints it
+      - key: SECRET_KEY
+        generateValue: true
+      - key: STOREFRONT_INTEGRATION_TOKEN
+        sync: false # the same value as CRM_STOREFRONT_TOKEN on the dk-lud Worker
+      - key: ALLOWED_ORIGINS
+        value: '["https://dk-crm.dk-lud.workers.dev"]'
+      - key: DB_POOL_SIZE
+        value: "3"
+      - key: DEFAULT_ADMIN_EMAIL
+        sync: false # only used if the database has no admin yet
+      - key: DEFAULT_ADMIN_PASSWORD
+        sync: false # 12+ characters

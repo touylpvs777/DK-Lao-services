@@ -9,6 +9,14 @@ export function resolveMediaUrl(url?: string | null): string {
     return url;
   }
   // ກໍລະນີອື່ນໆ ເຊັ່ນຮູບທີ່ອັບໂຫຼດເຂົ້າ Backend
-  const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8001';
-  return `${baseUrl}${url.startsWith('/') ? '' : '/'}${url}`;
+  return `${backendOrigin()}${url.startsWith('/') ? '' : '/'}${url}`;
+}
+
+// Uploads are served next to the API: the origin of an absolute VITE_API_BASE_URL (local dev),
+// or this page's own origin when the API path is relative (nginx or the Cloudflare Worker proxy it).
+function backendOrigin(): string {
+  const explicit = import.meta.env.VITE_API_URL as string | undefined;
+  if (explicit) return explicit.replace(/\/+$/, '');
+  const apiBase = (import.meta.env.VITE_API_BASE_URL as string | undefined) ?? '';
+  return /^https?:\/\//.test(apiBase) ? new URL(apiBase).origin : '';
 }

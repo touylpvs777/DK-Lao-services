@@ -431,9 +431,10 @@ async def _apply_postgres_migrations(conn) -> None:
 async def lifespan(app: FastAPI):
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
-        if settings.DATABASE_URL.startswith("sqlite"):
+        # The dialect, not the URL text: a hosted database URL may start with postgres://.
+        if engine.dialect.name == "sqlite":
             await _apply_sqlite_migrations(conn)
-        elif settings.DATABASE_URL.startswith("postgresql"):
+        elif engine.dialect.name == "postgresql":
             await _apply_postgres_migrations(conn)
     async with AsyncSessionLocal() as db:
         await RBACService(db).seed_roles()
@@ -566,6 +567,12 @@ async def unhandled_exception_handler(request: Request, exc: Exception):
             "error_id": error_id,
         },
     )
+
+
+@app.get("/livez", tags=["Health"])
+async def liveness_check():
+    """Process is up; does not touch the database, so a keep-awake ping lets a hosted database suspend."""
+    return {"status": "alive"}
 
 
 @app.get("/health", tags=["Health"])

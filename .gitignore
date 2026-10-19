@@ -7,6 +7,8 @@ dk_service.db
 .env
 .env.*
 !.env.example
+# Build mode file with no secrets (frontend Cloudflare deploy)
+!frontend/.env.cloudflare
 
 # Local runtime artefacts
 .pytest_cache/

@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "cf:build": "tsc -b && vite build --mode cloudflare",
-    "cf:deploy": "npm run cf:build && npx wrangler@4.151.0 deploy"
+    "cf:deploy": "npm run cf:build && cd .. && npx wrangler deploy"
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",

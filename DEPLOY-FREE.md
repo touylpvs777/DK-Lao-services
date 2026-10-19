@@ -3,11 +3,11 @@
 | Part | Where | Address |
 |---|---|---|
 | Website (DK-LUD repo) | Cloudflare Worker `dk-lud` | https://dk-lud.dk-lud.workers.dev |
-| Staff CRM screens (`frontend/`) | Cloudflare Worker `dk-crm` | https://dk-crm.dk-lud.workers.dev |
+| Staff CRM screens (`frontend/`) | Cloudflare Worker `dk-lao-services` | https://dk-lao-services.dk-lud.workers.dev |
 | CRM API (`backend/`) | Render free web service `dk-crm-api` | https://dk-crm-api.onrender.com |
 | Database | Neon free Postgres | — |
 
-The `dk-crm` Worker serves the screens and forwards `/api`, `/uploads` and `/health` to Render, like
+The `dk-lao-services` Worker serves the screens and forwards `/api`, `/uploads` and `/health` to Render, like
 nginx does in Docker, so the browser needs no CORS. Every 10 minutes its cron pings the backend's `/livez`
 so the free Render service does not fall asleep. `/livez` skips the database, so Neon can still suspend
 when nobody is using the CRM.
@@ -32,12 +32,16 @@ when nobody is using the CRM.
 
 ## 3. Staff screens (Cloudflare)
 
+The Worker `dk-lao-services` is connected to this repository in the Cloudflare dashboard, so every push
+to `main` builds and deploys it. Its build settings: root directory empty (`/`), build command
+`npm run build`, deploy command `npx wrangler deploy`. To deploy by hand instead:
+
 ```bash
 cd frontend
 npm run cf:deploy
 ```
-If the backend address differs, change `BACKEND_URL` in `frontend/wrangler.jsonc` first.
-If the `dk-crm` Worker address differs, add it to `ALLOWED_ORIGINS` on Render.
+If the backend address differs, change `BACKEND_URL` in `wrangler.jsonc` (repository root) first.
+If the Worker address differs, add it to `ALLOWED_ORIGINS` on Render.
 
 ## 4. Point the website at the cloud backend
 

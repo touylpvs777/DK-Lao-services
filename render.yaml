@@ -21,7 +21,7 @@ services:
       - key: STOREFRONT_INTEGRATION_TOKEN
         sync: false # the same value as CRM_STOREFRONT_TOKEN on the dk-lud Worker
       - key: ALLOWED_ORIGINS
-        value: '["https://dk-crm.dk-lud.workers.dev"]'
+        value: '["https://dk-lao-services.dk-lud.workers.dev"]'
       - key: DB_POOL_SIZE
         value: "3"
       - key: DEFAULT_ADMIN_EMAIL

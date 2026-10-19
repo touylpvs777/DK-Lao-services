@@ -1,8 +1,16 @@
 {
+	"private": true,
+	"scripts": {
+		"build": "npm ci --prefix frontend && npm run cf:build --prefix frontend",
+		"deploy": "npm run build && wrangler deploy"
+	},
 	"dependencies": {
 		"axios": "^1.20.0",
 		"cheerio": "^1.2.0",
 		"fuse.js": "^7.5.0",
 		"puppeteer": "^25.9.0"
+	},
+	"devDependencies": {
+		"wrangler": "4.151.0"
 	}
 }

@@ -1,0 +1,2 @@
+# Shell scripts run in Git Bash and Linux containers; CRLF line endings break them.
+*.sh text eol=lf

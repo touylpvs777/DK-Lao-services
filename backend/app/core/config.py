@@ -30,7 +30,8 @@ class Settings(BaseSettings):
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
 
     # Shared secret for the public storefront server (catalog reads and inquiry intake).
-    # Must match CRM_STOREFRONT_TOKEN in storefront/.env.local. Empty disables those endpoints.
+    # Must match CRM_STOREFRONT_TOKEN of the website (DK-LUD repo: .env.local, or the dk-lud Worker secret).
+    # Empty disables those endpoints.
     STOREFRONT_INTEGRATION_TOKEN: str = ""
 
     UPLOAD_DIR: str = "uploads/images"

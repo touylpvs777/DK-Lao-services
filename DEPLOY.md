@@ -43,9 +43,10 @@ and add a public hostname (for example `crm.example.com`) with the service `http
 
 ## Connect the website
 
-On the website's Cloudflare Worker set `CRM_API_URL=https://crm.example.com` and the secret
-`CRM_STOREFRONT_TOKEN` (same value as `STOREFRONT_INTEGRATION_TOKEN`). One address serves both the staff
-screens and the API, so no separate API hostname is needed.
+The website is the DK-LUD repo, deployed as the `dk-lud` Worker. On it set `CRM_API_URL=https://crm.example.com`
+and the secret `CRM_STOREFRONT_TOKEN` (same value as `STOREFRONT_INTEGRATION_TOKEN`). One address serves both
+the staff screens and the API, so no separate API hostname is needed. The website calls the CRM from its
+server only, so its domain does not go in `ALLOWED_ORIGINS`. Check the connection at `https://<website>/api/health`.
 
 ## Keep in mind
 

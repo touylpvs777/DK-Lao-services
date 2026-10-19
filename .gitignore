@@ -34,3 +34,6 @@ build/
 *.db
 *.sqlite3
 *.log
+
+# Retired copy of the website; the live site is the DK-LUD repo (tag archive/storefront-2026-10-19)
+/storefront/

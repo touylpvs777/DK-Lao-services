@@ -36,12 +36,19 @@ export default {
     headers.set("x-forwarded-proto", "https");
 
     try {
-      return await fetch(backendOrigin(env) + url.pathname + url.search, {
+      const res = await fetch(backendOrigin(env) + url.pathname + url.search, {
         method: request.method,
         headers,
         body: request.method === "GET" || request.method === "HEAD" ? undefined : request.body,
         redirect: "manual",
       });
+      // 530 is Cloudflare's own "origin DNS error" page: BACKEND_URL points at a host that no longer
+      // resolves (typically an expired trycloudflare.com quick tunnel). Say so instead of showing HTML.
+      if (res.status === 530) {
+        console.error("BACKEND_URL does not resolve:", backendOrigin(env));
+        return Response.json({ detail: "The CRM server address (BACKEND_URL) no longer resolves." }, { status: 502 });
+      }
+      return res;
     } catch (error) {
       console.error("Backend unreachable:", error);
       return Response.json({ detail: "The CRM server is starting or unreachable. Try again in a minute." }, { status: 502 });

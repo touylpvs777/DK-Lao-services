@@ -1,10 +1,11 @@
-"""Storefront integration: token-protected catalog, website inquiries, customer portal."""
+"""Storefront integration: token-protected catalog and website inquiries (the customer portal is off)."""
 import pytest
 from httpx import AsyncClient
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
+from app.main import app
 from app.models.customer import Customer
 from app.models.forklift import Forklift
 from app.models.inventory_balance import InventoryBalance
@@ -88,57 +89,10 @@ async def test_website_inquiry_rejects_store_order_without_items(client: AsyncCl
     assert (await client.post("/api/v1/leads/website-inquiries", json=payload, headers=SF)).status_code == 422
 
 
-async def test_portal_account_login_and_scoped_dashboard(client: AsyncClient, db_session: AsyncSession):
-    admin = await _admin_headers(client, db_session)
-    mine = Customer(first_name="Kham", last_name="P", company="Mine Co")
-    other = Customer(first_name="Other", last_name="C", company="Other Co")
-    db_session.add_all([mine, other])
-    await db_session.commit()
-    db_session.add_all([
-        Forklift(serial_number="FL-MINE", slug="fl-mine", name_en="Mitsubishi FD30", customer_id=mine.id),
-        Forklift(serial_number="FL-OTHER", slug="fl-other", name_en="Other forklift", customer_id=other.id),
-    ])
-    await db_session.commit()
-
-    r = await client.post("/api/v1/portal/accounts", headers=admin, json={
-        "customer_id": mine.id, "username": "Mine.Login", "password": "Portal@12345",
-    })
-    assert r.status_code == 201, r.text
-    account_id = r.json()["id"]
-    # One account per customer.
-    dup = await client.post("/api/v1/portal/accounts", headers=admin, json={
-        "customer_id": mine.id, "username": "second", "password": "Portal@12345",
-    })
-    assert dup.status_code == 409
-    # The customer page looks up its own account by customer_id.
-    listed = await client.get(f"/api/v1/portal/accounts?customer_id={mine.id}", headers=admin)
-    assert [a["username"] for a in listed.json()] == ["mine.login"]
-    assert (await client.get(f"/api/v1/portal/accounts?customer_id={other.id}", headers=admin)).json() == []
-
-    bad = await client.post("/api/v1/portal/auth/login", json={"username": "mine.login", "password": "wrong-pass"})
-    assert bad.status_code == 401
-    r = await client.post("/api/v1/portal/auth/login", json={"username": "mine.login", "password": "Portal@12345"})
-    assert r.status_code == 200
-    portal = {"Authorization": f"Bearer {r.json()['access_token']}"}
-
-    dash = await client.get("/api/v1/portal/dashboard", headers=portal)
-    assert dash.status_code == 200
-    data = dash.json()
-    assert data["customer"]["company"] == "Mine Co"
-    assert [f["serial_number"] for f in data["forklifts"]] == ["FL-MINE"]
-
-    # A portal token is not an employee token, and an employee token is not a portal token.
-    assert (await client.get("/api/v1/customers/", headers=portal)).status_code == 401
-    assert (await client.get("/api/v1/portal/dashboard", headers=admin)).status_code == 401
-
-    # Deactivating the account invalidates its existing tokens.
-    r = await client.patch(f"/api/v1/portal/accounts/{account_id}", headers=admin, json={"is_active": False})
-    assert r.status_code == 200
-    assert (await client.get("/api/v1/portal/dashboard", headers=portal)).status_code == 401
-
-
-async def test_portal_accounts_require_superuser(client: AsyncClient):
-    assert (await client.get("/api/v1/portal/accounts")).status_code == 401
+async def test_customer_portal_is_off_in_the_staff_only_system(client: AsyncClient):
+    # Customers have no login: confirmations reach them by WhatsApp/email only.
+    assert settings.CUSTOMER_PORTAL_ENABLED is False
+    assert not [p for p in app.openapi()["paths"] if p.startswith("/api/v1/portal")]
 
 
 _ORDER = {

@@ -209,6 +209,39 @@ ROLE_PERMISSIONS: dict[RoleName, frozenset[PermissionName]] = {
 }
 
 
+async def assert_permission(current_user: User, db: AsyncSession, permission: PermissionName) -> None:
+    """Raise HTTP 403 unless `current_user` holds `permission`. Superusers always pass."""
+    if current_user.is_superuser:
+        return
+
+    if current_user.role_id is None:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="No role assigned to your account",
+        )
+
+    role: Role | None = await db.get(Role, current_user.role_id)
+    if role is None or not role.is_active:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Your role is inactive or does not exist",
+        )
+
+    try:
+        role_name = RoleName(role.name)
+    except ValueError:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f"Unrecognised role: {role.name!r}",
+        )
+
+    if permission not in ROLE_PERMISSIONS.get(role_name, frozenset()):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f"Permission denied: '{permission.value}' required",
+        )
+
+
 def require_permission(permission: PermissionName):
     """
     Dependency factory — returns a FastAPI Depends that enforces one permission.
@@ -224,36 +257,7 @@ def require_permission(permission: PermissionName):
         current_user: User = Depends(get_current_user),
         db: AsyncSession = Depends(get_db),
     ) -> User:
-        if current_user.is_superuser:
-            return current_user
-
-        if current_user.role_id is None:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="No role assigned to your account",
-            )
-
-        role: Role | None = await db.get(Role, current_user.role_id)
-        if role is None or not role.is_active:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Your role is inactive or does not exist",
-            )
-
-        try:
-            role_name = RoleName(role.name)
-        except ValueError:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail=f"Unrecognised role: {role.name!r}",
-            )
-
-        if permission not in ROLE_PERMISSIONS.get(role_name, frozenset()):
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail=f"Permission denied: '{permission.value}' required",
-            )
-
+        await assert_permission(current_user, db, permission)
         return current_user
 
     return Depends(_check)

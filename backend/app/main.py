@@ -32,7 +32,7 @@ from app.core.security import hash_password, verify_password
 from app.models.role import Role, RoleName
 from app.models.user import User
 from app.models.warehouse import Warehouse
-from app.routes import activity, auth, billing, crm_activities, customer_portal, customer_sites, customers,dashboard, delivery_notes, forklifts, inventory, iot_telemetry, leads, maintenance, movements, notifications, partners, projects, quotations, receipts, rentals, reports, roles, sales_orders, users, uploads
+from app.routes import activity, auth, billing, crm_activities, customer_portal, customer_sites, customers,dashboard, delivery_notes, forklifts, intake, inventory, iot_telemetry, leads, maintenance, movements, notifications, partners, projects, quotations, receipts, rentals, reports, roles, sales_orders, users, uploads
 from app.routes.catalog import router as catalog_router
 from app.routes.settings import router as settings_router
 from app.routes.storefront import router as storefront_router
@@ -478,6 +478,7 @@ app.include_router(customers.router, prefix="/api/v1")
 app.include_router(customer_sites.router, prefix="/api/v1")
 app.include_router(crm_activities.router, prefix="/api/v1")
 app.include_router(leads.router, prefix="/api/v1")
+app.include_router(intake.router, prefix="/api/v1")
 app.include_router(dashboard.router, prefix="/api/v1")
 app.include_router(activity.router, prefix="/api/v1")
 app.include_router(roles.router, prefix="/api/v1")
@@ -499,9 +500,11 @@ app.include_router(uploads.router, prefix="/api/v1")
 app.include_router(notifications.router, prefix="/api/v1")
 app.include_router(projects.router, prefix="/api/v1")
 app.include_router(settings_router, prefix="/api/v1")
-# Public storefront integration: token-protected catalog, and the customer self-service portal.
+# Website integration: token-protected catalog and inquiry intake (server to server, no customer login).
 app.include_router(storefront_router, prefix="/api/v1")
-app.include_router(customer_portal.router, prefix="/api/v1")
+# The customer self-service portal is off: customers get confirmations by WhatsApp/email, never a login.
+if settings.CUSTOMER_PORTAL_ENABLED:
+    app.include_router(customer_portal.router, prefix="/api/v1")
 
 _uploads_dir = Path(settings.UPLOAD_DIR)
 _uploads_dir.mkdir(parents=True, exist_ok=True)

@@ -37,6 +37,9 @@ class Settings(BaseSettings):
     # Empty disables those endpoints.
     STOREFRONT_INTEGRATION_TOKEN: str = ""
 
+    # Staff-only system: customers have no login. Turn on only to bring back the old customer portal API.
+    CUSTOMER_PORTAL_ENABLED: bool = False
+
     UPLOAD_DIR: str = "uploads/images"
     MAX_UPLOAD_SIZE_MB: int = 5
 

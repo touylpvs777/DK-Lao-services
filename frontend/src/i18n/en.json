@@ -2352,6 +2352,7 @@
       "marketing": "Website pages (marketing)"
     },
     "items": {
+      "intake": "Customer Intake",
       "workshop4s": "4S Service Hub",
       "forkliftStore": "Forklift Store",
       "clientFleet": "Client Fleet",
@@ -3100,6 +3101,7 @@
     "formatExcel": "Excel (.xlsx)"
   },
   "routes": {
+    "intake": "Customer Intake",
     "dashboard": "Dashboard",
     "customerDetail": "Customer 360",
     "customers": "Customers",
@@ -3693,5 +3695,111 @@
     "today": "Today",
     "receivables": "Receivables",
     "viewLeads": "View leads"
+  },
+  "intake": {
+    "title": "Customer Intake",
+    "subtitle": "Record what a customer asked for by phone or chat. It is linked to the right customer and the matching document is drafted.",
+    "sections": {
+      "customer": "Who is asking",
+      "request": "What they need",
+      "confirm": "Confirm"
+    },
+    "search": {
+      "label": "Find customer",
+      "placeholder": "Name, company, phone or email",
+      "none": "No customer found. Use “New customer” to add one."
+    },
+    "new": {
+      "button": "New customer",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "phone": "Phone / WhatsApp",
+      "email": "Email",
+      "company": "Company",
+      "hint": "A phone number or email is required so the confirmation can be sent. If they are already on file you will be told instead of getting a duplicate."
+    },
+    "searchInstead": "Search existing customers",
+    "change": "Change",
+    "useExisting": "Use existing customer: {{name}}",
+    "types": {
+      "quote_request": {
+        "label": "Inquiry / quotation",
+        "hint": "Logged as a lead, ready to quote"
+      },
+      "parts_order": {
+        "label": "Parts / goods order",
+        "hint": "Drafts a sales order"
+      },
+      "rental_reservation": {
+        "label": "Rental reservation",
+        "hint": "Drafts a rental contract and reserves the machine"
+      },
+      "service_request": {
+        "label": "Repair / service",
+        "hint": "Creates a work order"
+      }
+    },
+    "channel": {
+      "label": "Customer contacted us by",
+      "phone": "Phone",
+      "whatsapp": "WhatsApp",
+      "facebook": "Facebook",
+      "line": "LINE",
+      "email": "Email",
+      "walkIn": "Walk-in",
+      "other": "Other"
+    },
+    "subject": "Short subject",
+    "subjectPlaceholder": "e.g. Quote for a 3-ton forklift",
+    "details": "Details",
+    "detailsPlaceholder": "What the customer said, special requirements…",
+    "deliveryDate": "Needed by",
+    "address": "Delivery address / site",
+    "items": {
+      "description": "Item / part number",
+      "qty": "Qty",
+      "price": "Unit price",
+      "add": "Add item"
+    },
+    "forklift": {
+      "label": "Forklift",
+      "placeholder": "Search by name or serial number"
+    },
+    "rental": {
+      "start": "Start date",
+      "end": "End date",
+      "daily": "Rate per day",
+      "monthly": "Rate per month"
+    },
+    "service": {
+      "priority": "Priority",
+      "when": "Scheduled for",
+      "priorities": {
+        "low": "Low",
+        "normal": "Normal",
+        "high": "High",
+        "critical": "Critical"
+      }
+    },
+    "notify": "Send the customer a confirmation (WhatsApp, falling back to email)",
+    "notifyHint": "Customers have no login to this system; they only see the confirmation that is sent to them.",
+    "submit": "Record request",
+    "saved": "Recorded {{reference}}",
+    "errors": {
+      "pickCustomer": "Pick a customer or add a new one",
+      "needItems": "Add at least one item",
+      "pickForklift": "Pick a forklift",
+      "generic": "Could not save. Please try again."
+    },
+    "done": {
+      "title": "Request recorded",
+      "customer": "Customer",
+      "newCustomer": "newly created",
+      "lead": "History (lead)",
+      "document": "Document",
+      "notified": "Confirmation sent to the customer",
+      "notNotified": "No confirmation sent (not selected, no contact channel, or delivery failed)",
+      "another": "Record another"
+    }
   }
 }

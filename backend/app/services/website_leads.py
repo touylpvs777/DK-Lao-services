@@ -37,15 +37,15 @@ def _phone_digits_expr():
     return expr
 
 
-async def find_customer_for_inquiry(db: AsyncSession, data: PublicInquiryCreate) -> Customer | None:
-    """Return the one existing customer this inquiry belongs to, or None.
+async def find_customer_by_contact(db: AsyncSession, phone: str | None, email: str | None) -> Customer | None:
+    """Return the one existing customer with this phone or email, or None.
 
     Matches on phone first, then on email. When several customers share the number the match is
     ambiguous, so nothing is linked and staff decide.
     """
-    phone = _digits(data.phone_number)
-    if len(phone) >= _PHONE_TAIL_DIGITS:
-        tail = phone[-_PHONE_TAIL_DIGITS:]
+    digits = _digits(phone)
+    if len(digits) >= _PHONE_TAIL_DIGITS:
+        tail = digits[-_PHONE_TAIL_DIGITS:]
         rows = (await db.execute(
             select(Customer).where(Customer.phone.is_not(None), _phone_digits_expr().like(f"%{tail}"))
             .limit(2)
@@ -55,13 +55,17 @@ async def find_customer_for_inquiry(db: AsyncSession, data: PublicInquiryCreate)
         if len(rows) > 1:
             return None
 
-    if data.email:
+    if email:
         rows = (await db.execute(
-            select(Customer).where(func.lower(Customer.email) == data.email.strip().lower()).limit(2)
+            select(Customer).where(func.lower(Customer.email) == email.strip().lower()).limit(2)
         )).scalars().all()
         if len(rows) == 1:
             return rows[0]
     return None
+
+
+async def find_customer_for_inquiry(db: AsyncSession, data: PublicInquiryCreate) -> Customer | None:
+    return await find_customer_by_contact(db, data.phone_number, data.email)
 
 
 async def notify_sales_of_website_lead(

@@ -3,7 +3,7 @@ import {
   Package, Truck, FileText, ClipboardList, ArrowRightLeft, Wrench, Radio,
   Box, Receipt, CreditCard, Landmark, FileSpreadsheet, Warehouse, ShoppingCart,
   FileCheck2, ReceiptText, Undo2, Banknote, FileOutput, PackageCheck, PackageMinus,
-  BadgeCheck, LayoutGrid, CheckSquare,
+  BadgeCheck, LayoutGrid, CheckSquare, PhoneIncoming,
 } from 'lucide-react'
 
 export interface NavItem {
@@ -34,6 +34,7 @@ export const NAV_GROUPS: NavGroup[] = [
     id: 'crm',
     labelKey: 'nav.groups.crm',
     items: [
+      { to: '/intake', labelKey: 'nav.items.intake', icon: PhoneIncoming },
       { to: '/customers', labelKey: 'nav.items.customers', icon: Users },
       { to: '/leads', labelKey: 'nav.items.leads', icon: TrendingUp },
       { to: '/tasks', labelKey: 'nav.items.tasks', icon: CheckSquare },

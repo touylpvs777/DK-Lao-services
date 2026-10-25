@@ -8,6 +8,7 @@ export const ROUTE_CONFIG: RouteConfig[] = [
   { path: '/dashboard',             labelKey: 'routes.dashboard' },
   { path: '/customers',             labelKey: 'routes.customers' },
   { path: '/customers/:id',         labelKey: 'routes.customerDetail', parent: '/customers' },
+  { path: '/intake',                labelKey: 'routes.intake' },
   { path: '/leads',                 labelKey: 'routes.leads' },
   { path: '/activity',              labelKey: 'routes.activity' },
   { path: '/reports',               labelKey: 'routes.reports' },

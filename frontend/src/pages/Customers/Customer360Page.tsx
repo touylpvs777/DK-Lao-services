@@ -8,8 +8,6 @@ import {
 import { getCustomerOverview } from '@/api/customers'
 import SitesContactsCard from '@/components/customers/SitesContactsCard'
 import ActivityTimelineCard from '@/components/customers/ActivityTimelineCard'
-import PortalAccessCard from '@/components/customers/PortalAccessCard'
-import { useAuthStore } from '@/store/authStore'
 import { CustomerStatusBadge } from '@/components/ui/Badge'
 import { ForkliftStatusBadge } from '@/components/equipment/ForkliftStatusBadge'
 import { RentalStatusBadge } from '@/components/rental/RentalStatusBadge'
@@ -36,7 +34,6 @@ export default function Customer360Page() {
   const { t } = useTranslation()
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const isSuperuser = useAuthStore((s) => !!s.user?.is_superuser)
 
   const [data, setData] = useState<Customer360 | null>(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -159,7 +156,6 @@ export default function Customer360Page() {
 
         <SitesContactsCard customerId={customer.id} />
 
-        {isSuperuser && <PortalAccessCard customerId={customer.id} />}
 
         {/* Sales pipeline: leads, quotations, sales orders */}
         <div className="c360-card">

@@ -19,5 +19,11 @@
     // The backend's public address. Change it here, or override it in the Cloudflare dashboard.
     "BACKEND_URL": "https://dk-crm-api.onrender.com"
   },
+  // The Worker was once deployed with the Containers option (wrangler.containers.jsonc, tag v1). This drops
+  // its leftover Durable Object class so the default deploy is accepted again.
+  "migrations": [
+    { "tag": "v1", "new_sqlite_classes": ["CrmBackend"] },
+    { "tag": "v2", "deleted_classes": ["CrmBackend"] }
+  ],
   "observability": { "enabled": true }
 }

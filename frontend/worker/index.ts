@@ -46,7 +46,8 @@ export default {
       // resolves (typically an expired trycloudflare.com quick tunnel). Say so instead of showing HTML.
       if (res.status === 530) {
         console.error("BACKEND_URL does not resolve:", backendOrigin(env));
-        return Response.json({ detail: "The CRM server address (BACKEND_URL) no longer resolves." }, { status: 502 });
+        const hint = (await res.text()).replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").slice(0, 300);
+        return Response.json({ detail: "The CRM server address (BACKEND_URL) no longer resolves.", upstream: hint }, { status: 502 });
       }
       return res;
     } catch (error) {

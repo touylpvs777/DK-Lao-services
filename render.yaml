@@ -1,13 +1,13 @@
 # Render Blueprint for the CRM backend on the free plan. See DEPLOY-FREE.md.
-# Render dashboard → New → Blueprint → pick this repository. Values marked sync: false are asked for once.
+# One service serves both the screens and the API (Dockerfile.render). Render dashboard → New → Blueprint → pick this repository. Values marked sync: false are asked for once.
 services:
   - type: web
-    name: dk-crm-api
+    name: dk-crm-web
     runtime: docker
     plan: free
     region: singapore
-    dockerContext: ./backend
-    dockerfilePath: ./backend/Dockerfile.backend
+    dockerContext: .
+    dockerfilePath: ./Dockerfile.render
     # /livez does not query the database, so Render's frequent health checks let the free Neon database suspend.
     healthCheckPath: /livez
     autoDeploy: true

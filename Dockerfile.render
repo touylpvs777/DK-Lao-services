@@ -1,0 +1,41 @@
+# One image for the whole CRM on Render: the React screens plus the FastAPI backend that serves them.
+# Build context is the repository root (render.yaml). The backend already serves /frontend/dist
+# (backend/app/main.py), so staff open the Render address directly and the API is on the same origin.
+
+FROM node:22-alpine AS web
+WORKDIR /frontend
+COPY frontend/package.json frontend/package-lock.json ./
+RUN npm ci
+COPY frontend/ ./
+# --mode cloudflare sets VITE_API_BASE_URL=/api/v1 (frontend/.env.cloudflare): same-origin API calls.
+RUN npm run cf:build
+
+FROM python:3.12-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1
+
+WORKDIR /app
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY backend/requirements.txt .
+RUN pip install -r requirements.txt
+
+COPY backend/app ./app
+COPY backend/alembic.ini ./
+COPY backend/migrations ./migrations
+COPY --from=web /frontend/dist /frontend/dist
+
+RUN useradd --create-home --uid 10001 appuser \
+    && mkdir -p /app/uploads/images \
+    && chown -R appuser:appuser /app
+USER appuser
+
+ENV PORT=8001
+EXPOSE 8001
+
+CMD ["sh", "-c", "exec uvicorn app.main:app --host 0.0.0.0 --port ${PORT} --proxy-headers --forwarded-allow-ips='*'"]

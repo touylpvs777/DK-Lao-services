@@ -6,18 +6,9 @@
   "name": "dk-lao-services",
   "main": "frontend/worker/index.ts",
   "compatibility_date": "2026-10-01",
-  "assets": {
-    "directory": "./frontend/dist",
-    "binding": "ASSETS",
-    "not_found_handling": "single-page-application",
-    // These paths always reach the Worker (the backend proxy) instead of the SPA shell.
-    "run_worker_first": ["/api/*", "/uploads/*", "/health", "/livez"]
-  },
-  // Keeps a free Render backend awake (see frontend/worker/index.ts).
-  "triggers": { "crons": ["*/10 * * * *"] },
   "vars": {
-    // The backend's public address. Change it here, or override it in the Cloudflare dashboard.
-    "BACKEND_URL": "https://dk-crm-api.onrender.com"
+    // The Render service that now serves screens and API; this Worker only redirects to it.
+    "BACKEND_URL": "https://dk-crm-web.onrender.com"
   },
   // The Worker was once deployed with the Containers option (wrangler.containers.jsonc, tag v1). This drops
   // its leftover Durable Object class so the default deploy is accepted again.

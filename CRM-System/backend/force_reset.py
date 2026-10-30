@@ -1,4 +1,5 @@
 import asyncio
+import os
 
 from sqlalchemy import select
 
@@ -7,7 +8,11 @@ from app.database.session import AsyncSessionLocal
 from app.models.user import User
 
 
-async def force_reset_admin() -> None:
+async def reset_admin_password() -> None:
+    new_password = os.getenv("ADMIN_NEW_PASSWORD", "")
+    if len(new_password) < 12:
+        raise SystemExit("Set ADMIN_NEW_PASSWORD (12+ characters) before running this script.")
+
     async with AsyncSessionLocal() as db:
         result = await db.execute(
             select(User).where(User.email == "admin@dkservice.com")
@@ -17,13 +22,11 @@ async def force_reset_admin() -> None:
         if user is None:
             raise RuntimeError("Admin user with email admin@dkservice.com was not found.")
 
-        new_hash = hash_password("admin123")
-        user.hashed_password = new_hash
+        user.hashed_password = hash_password(new_password)
+        user.is_active = True
         await db.commit()
-
-        print("Success: admin password reset to admin123")
-        print(f"New hash: {new_hash}")
+        print("Success: admin password reset")
 
 
 if __name__ == "__main__":
-    asyncio.run(force_reset_admin())
+    asyncio.run(reset_admin_password())

@@ -1,8 +1,10 @@
+import time
+from collections import defaultdict, deque
 from datetime import UTC, datetime
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.security import HTTPAuthorizationCredentials
-from sqlalchemy import delete
+from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.security import create_access_token, create_refresh_token, decode_token
@@ -18,16 +20,43 @@ from app.services.user_service import UserService
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
+# Brute-force guard: failed logins per (client IP, username), kept in memory per process.
+_MAX_FAILED_LOGINS = 5
+_LOGIN_WINDOW_SECONDS = 15 * 60
+_failed_logins: dict[tuple[str, str], deque[float]] = defaultdict(deque)
+
+
+def _login_key(request: Request, username: str) -> tuple[str, str]:
+    return (request.client.host if request.client else "unknown", username.strip().lower())
+
+
+def _recent_failures(key: tuple[str, str]) -> deque[float]:
+    attempts = _failed_logins[key]
+    cutoff = time.monotonic() - _LOGIN_WINDOW_SECONDS
+    while attempts and attempts[0] < cutoff:
+        attempts.popleft()
+    if not attempts:
+        _failed_logins.pop(key, None)
+    return attempts
+
 
 @router.post("/login", response_model=TokenResponse)
-async def login(credentials: UserLogin, db: AsyncSession = Depends(get_db)):
+async def login(request: Request, credentials: UserLogin, db: AsyncSession = Depends(get_db)):
+    key = _login_key(request, credentials.username)
+    if len(_recent_failures(key)) >= _MAX_FAILED_LOGINS:
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail="Too many failed login attempts. Try again in 15 minutes.",
+        )
     user = await UserService(db).authenticate(credentials.username, credentials.password)
     if not user:
+        _failed_logins[key].append(time.monotonic())
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
+    _failed_logins.pop(key, None)
     await ActivityLogService(db).log(
         user_id=user.id,
         action=ActionType.USER_LOGIN,
@@ -76,14 +105,24 @@ async def refresh(body: RefreshRequest, db: AsyncSession = Depends(get_db)):
         if payload.get("type") != "refresh":
             raise ValueError("Not a refresh token")
         user_id = int(payload["sub"])
+        jti: str | None = payload.get("jti")
+        exp = payload.get("exp")
     except (ValueError, KeyError):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid refresh token",
         )
+    if jti:
+        revoked = await db.execute(select(RevokedToken).where(RevokedToken.jti == jti))
+        if revoked.scalar_one_or_none() is not None:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid refresh token")
     user = await UserService(db).get_by_id(user_id)
     if not user or not user.is_active:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found")
+    if jti and exp:
+        # Rotate: a refresh token works once, so a stolen copy dies after the real client refreshes.
+        db.add(RevokedToken(jti=jti, expires_at=datetime.fromtimestamp(exp, tz=UTC)))
+        await db.commit()
     return TokenResponse(
         access_token=create_access_token(user.id),
         refresh_token=create_refresh_token(user.id),

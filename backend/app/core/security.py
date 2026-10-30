@@ -45,7 +45,7 @@ def create_customer_portal_token(
 
 def create_refresh_token(subject: str | int) -> str:
     expire = datetime.now(UTC) + timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS)
-    payload = {"sub": str(subject), "exp": expire, "type": "refresh"}
+    payload = {"sub": str(subject), "exp": expire, "type": "refresh", "jti": str(uuid.uuid4())}
     return jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
 
 

@@ -1,0 +1,12 @@
+{
+	"name": "dk-web-scraper",
+	"private": true,
+	"type": "module",
+	"//": "Stands on its own so the repository root does not have to carry puppeteer. The root package.json is installed on every Cloudflare Workers build, and puppeteer's postinstall downloads Chrome and chrome-headless-shell (~300 MB) — a browser the Worker build has no use for. Run the scraper from this directory: npm install && node scrape-pro.mjs",
+	"scripts": {
+		"scrape": "node scrape-pro.mjs"
+	},
+	"dependencies": {
+		"puppeteer": "^25.9.0"
+	}
+}

@@ -62,3 +62,20 @@ Use Git Bash for `wrangler secret put`: PowerShell adds a byte-order mark to pip
   wakes in about a second.
 - If the backend is down, the website keeps working with the last known prices and offers WhatsApp for
   orders.
+
+## Option: frontend + backend in one Cloudflare deploy (Cloudflare Containers)
+
+Instead of Render, the backend can run inside the same Worker as a Cloudflare Container. Needs the
+**Workers Paid plan** ($5/month) and Docker running on the machine that deploys. The database stays on Neon.
+
+```bash
+npm install
+npm run secrets:all   # sets DATABASE_URL, SECRET_KEY, … from backend/.env as Worker secrets
+npm run deploy:all    # builds the screens, builds the backend image, deploys both (wrangler.containers.jsonc)
+```
+Then open `https://dk-lao-services.dk-lud.workers.dev/health` (`"database": "ok"`). The container sleeps after
+30 minutes without traffic and wakes on the next request. The default Render setup (`wrangler.jsonc`) is unchanged.
+
+`deploy:all` uses `wrangler deploy`, which applies the Durable Object migration in `wrangler.containers.jsonc`.
+Do not point the dashboard's Git builds at this config: pull-request builds run `wrangler versions upload`,
+which refuses any config with a pending migration.

@@ -3,7 +3,9 @@
 	"//": "Repository root. It exists so the Cloudflare Workers build finds a build command and wrangler.jsonc; the application lives in frontend/ and backend/. Keep runtime dependencies out of here: everything installed at this level is installed on every Cloudflare build.",
 	"scripts": {
 		"build": "npm ci --prefix frontend && npm run cf:build --prefix frontend",
-		"deploy": "npm run build && wrangler deploy"
+		"deploy": "npm run build && wrangler deploy",
+		"deploy:all": "npm run build && wrangler deploy -c wrangler.containers.jsonc",
+		"secrets:all": "node scripts/set-secrets.mjs"
 	},
 	"engines": {
 		"node": ">=22.12.0"

@@ -12,7 +12,7 @@ email-validator>=2.3.0
 # instead of ecdsa. Only HS256 is configured (app/core/config.py), but the crypto extra
 # keeps RS/ES algorithms available as python-jose[cryptography] did.
 pyjwt[crypto]>=2.10.1
-bcrypt>=4.0.0
+bcrypt>=5.0.0
 alembic>=1.14.0
 python-multipart>=0.0.9
 openpyxl>=3.1.0

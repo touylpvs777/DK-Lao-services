@@ -6,9 +6,18 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   backend-tests:
+    name: Backend tests
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     defaults:
       run:
@@ -32,7 +41,9 @@ jobs:
         run: pytest -v
 
   frontend-checks:
+    name: Frontend lint, type check, build
     runs-on: ubuntu-latest
+    timeout-minutes: 20
 
     defaults:
       run:
@@ -52,8 +63,48 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Reporting only: the codebase starts with 49 ESLint errors and 28
+      # warnings, mostly react-hooks/exhaustive-deps and the React Compiler's
+      # incompatible-library notice on React Hook Form's watch(). Work that
+      # number down, then delete continue-on-error so new breakage fails here.
+      - name: Lint
+        continue-on-error: true
+        run: npm run lint
+
       - name: Type check
         run: npx tsc -b
 
       - name: Build
         run: npm run build
+
+  dependency-audit:
+    name: Dependency audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # The Python side is clean (pip-audit reports nothing since the move to
+    # PyJWT), so a new Python advisory fails the build. The npm side still has
+    # a backlog of 26 advisories, 10 of them high, so it reports only. Work
+    # that down, then delete its `continue-on-error` line too.
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Audit Python dependencies
+        run: |
+          pip install pip-audit
+          pip-audit -r backend/requirements.txt --progress-spinner off
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Audit npm dependencies
+        continue-on-error: true
+        working-directory: frontend
+        run: npm audit --package-lock-only --audit-level=high

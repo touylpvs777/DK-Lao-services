@@ -15,7 +15,10 @@ export default defineConfig({
         navigateFallback: 'index.html',
       },
       workbox: {
-        globPatterns: ['**/*.{html,js,css,woff2,png,svg}'],
+        // The app shell and the built bundles only. Photos under public/images are
+        // fetched over the network when a screen asks for them; precaching them made
+        // the service worker download 145 MB on a staff member's first visit.
+        globPatterns: ['**/*.{html,js,css,woff2}', 'favicon.svg'],
         navigateFallback: '/index.html',
         maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
       },

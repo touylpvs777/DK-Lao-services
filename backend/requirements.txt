@@ -7,7 +7,11 @@ pydantic[email]>=2.10.0
 pydantic-settings>=2.6.0
 python-dotenv>=1.0.1
 email-validator>=2.3.0
-python-jose[cryptography]>=3.3.0
+# PyJWT, not python-jose: python-jose 3.5.0 carries PYSEC-2026-4298 and pulls ecdsa,
+# which carries PYSEC-2026-1325 — neither has a fixed release. PyJWT uses cryptography
+# instead of ecdsa. Only HS256 is configured (app/core/config.py), but the crypto extra
+# keeps RS/ES algorithms available as python-jose[cryptography] did.
+pyjwt[crypto]>=2.10.1
 bcrypt>=4.0.0
 alembic>=1.14.0
 python-multipart>=0.0.9

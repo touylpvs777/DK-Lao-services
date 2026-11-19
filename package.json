@@ -5,6 +5,9 @@
 		"build": "npm ci --prefix frontend && npm run cf:build --prefix frontend",
 		"deploy": "npm run build && wrangler deploy"
 	},
+	"engines": {
+		"node": ">=22.12.0"
+	},
 	"devDependencies": {
 		"wrangler": "4.151.0"
 	}

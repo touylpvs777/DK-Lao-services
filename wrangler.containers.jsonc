@@ -1,0 +1,29 @@
+{
+  "$schema": "https://unpkg.com/wrangler@4.151.0/config-schema.json",
+  // Frontend + backend in ONE Worker: the screens (frontend/dist) and the FastAPI backend as a Cloudflare
+  // Container. Deploy with `npm run deploy:all` (needs Docker running and the Workers Paid plan).
+  // The default free setup (wrangler.jsonc: Worker + Render backend) is unchanged.
+  "name": "dk-lao-services",
+  "main": "frontend/worker/container.ts",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./frontend/dist",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*", "/uploads/*", "/health", "/livez"]
+  },
+  "containers": [
+    {
+      "class_name": "CrmBackend",
+      "image": "./backend/Dockerfile.backend",
+      "instance_type": "basic",
+      "max_instances": 1
+    }
+  ],
+  "durable_objects": {
+    "bindings": [{ "class_name": "CrmBackend", "name": "BACKEND" }]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["CrmBackend"] }],
+  "triggers": { "crons": ["*/10 * * * *"] },
+  "observability": { "enabled": true }
+}

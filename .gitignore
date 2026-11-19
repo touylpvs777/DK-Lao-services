@@ -39,3 +39,10 @@ build/
 
 # Retired copy of the website; the live site is the DK-LUD repo (tag archive/storefront-2026-10-19)
 /storefront/
+
+# One-off codemods and tool output: run them, then delete them
+frontend/fix*.mjs
+frontend/fix*.cjs
+frontend/fix*.py
+frontend/clean_imports.cjs
+frontend/vite_output.txt

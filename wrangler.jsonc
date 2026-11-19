@@ -10,11 +10,18 @@
     // The Render service that now serves screens and API; this Worker only redirects to it.
     "BACKEND_URL": "https://dk-crm-web.onrender.com"
   },
-  // The Worker was once deployed with the Containers option (wrangler.containers.jsonc, tag v1). This drops
-  // its leftover Durable Object class so the default deploy is accepted again.
-  "migrations": [
-    { "tag": "v1", "new_sqlite_classes": ["CrmBackend"] },
-    { "tag": "v2", "deleted_classes": ["CrmBackend"] }
-  ],
+  // No "migrations" block on purpose. The Worker was once deployed with the Containers option
+  // (wrangler.containers.jsonc), which left a Durable Object class named CrmBackend behind; a
+  // v1/v2 pair was added here to create and then delete it. `wrangler deploy` applied that, which
+  // is why every build from main is Ready, and this Worker declares no Durable Object today.
+  //
+  // The pair had to go because Cloudflare builds a pull request with `wrangler versions upload`,
+  // not `wrangler deploy`, and that command refuses any config carrying a migration:
+  //
+  //   This Worker has a pending Durable Object migration, which cannot be applied by
+  //   `wrangler versions upload`. Durable Object migrations must be applied with `wrangler deploy`.
+  //
+  // So every PR build failed while every main build passed. `--dry-run` never caught it: the check
+  // runs behind `isDryRun`, so it is skipped locally and only fires against the real API.
   "observability": { "enabled": true }
 }

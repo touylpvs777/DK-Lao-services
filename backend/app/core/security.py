@@ -3,7 +3,7 @@ from datetime import UTC, datetime, timedelta
 from typing import Optional
 
 import bcrypt
-from jose import JWTError, jwt
+import jwt
 
 from app.core.config import settings
 
@@ -50,7 +50,11 @@ def create_refresh_token(subject: str | int) -> str:
 
 
 def decode_token(token: str) -> dict:
+    # PyJWTError is the base of every decode failure PyJWT raises: a bad signature, an
+    # algorithm that is not the configured one, a malformed token, and an expired one
+    # (ExpiredSignatureError), since decode checks "exp" by default. Callers only need
+    # to know the token is not usable, so they all see the same ValueError.
     try:
         return jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
-    except JWTError as exc:
+    except jwt.PyJWTError as exc:
         raise ValueError("Invalid or expired token") from exc

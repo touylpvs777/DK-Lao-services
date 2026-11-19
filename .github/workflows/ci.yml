@@ -81,11 +81,10 @@ jobs:
     name: Dependency audit
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    # Reporting only for now: the repository starts with a backlog of known
-    # advisories (python-jose/ecdsa on the backend, and a set on the frontend),
-    # and some have no fixed release yet. Read the job summary on every run and
-    # work the backlog down; once it is empty, delete the two
-    # `continue-on-error` lines below so a new advisory fails the build.
+    # The Python side is clean (pip-audit reports nothing since the move to
+    # PyJWT), so a new Python advisory fails the build. The npm side still has
+    # a backlog of 26 advisories, 10 of them high, so it reports only. Work
+    # that down, then delete its `continue-on-error` line too.
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -96,7 +95,6 @@ jobs:
           python-version: '3.12'
 
       - name: Audit Python dependencies
-        continue-on-error: true
         run: |
           pip install pip-audit
           pip-audit -r backend/requirements.txt --progress-spinner off
